@@ -119,7 +119,11 @@ public class JsonRPCClientImpl implements JsonRPCClient {
     public <T> Response<T> invoke(Request request) throws Throwable {
         Objects.requireNonNull(request);
         Channel channel = getChannel(request.getHost(), request.getPort());
-        if (channel == null || !channel.isActive()) {
+        if (channel == null) {
+            LOGGER.warn("jsonrpc.invoke() request = {} channel is null", request);
+            return null;
+        }
+        if (!channel.isActive()) {
             LOGGER.warn("jsonrpc.invoke() request = {} active = {}", request, channel.isActive());
             return null;
         }
@@ -153,11 +157,11 @@ public class JsonRPCClientImpl implements JsonRPCClient {
             synchronized (this) {
                 if (!this.addressChannel.containsKey(address)) {
                     ChannelFuture channelFuture = this.bootstrap.connect(new InetSocketAddress(host, port));
-                    channelFuture.syncUninterruptibly().addListener((Future<? super Void> future) -> {
-                        if (future.isSuccess()) {
+                    if (channelFuture.awaitUninterruptibly(3000)) {
+                        if (channelFuture.channel().isActive()) {
                             JsonRPCClientImpl.this.addressChannel.put(address, channelFuture.channel());
                         }
-                    });
+                    }
                 }
             }
         }
