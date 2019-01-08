@@ -56,7 +56,7 @@ public class JsonRPCServerTest {
         @Override
         public Object exec(Request request) {
             try {
-                Thread.sleep(50);
+                Thread.sleep(1);
             } catch (InterruptedException ex) {
             }
             return request.getParams();
