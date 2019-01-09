@@ -15,6 +15,7 @@
  */
 package com.github.xincao9.jsonrpc;
 
+import com.github.xincao9.jsonrpc.Response;
 import java.util.List;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;

@@ -13,13 +13,26 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.github.xincao9.jsonrpc;
+package com.github.xincao9.jsonrpc.client;
+
+import com.github.xincao9.jsonrpc.Request;
+import com.github.xincao9.jsonrpc.Response;
+import java.util.Map;
 
 /**
- * 
+ *
  * @author xincao9@gmail.com
  */
-public interface JsonRPCServer {
+public interface JsonRPCClient {
+
+    /**
+     *
+     * @param <T>
+     * @param request
+     * @return 
+     * @throws Throwable
+     */
+    <T> Response<T> invoke(Request request) throws Throwable;
 
     /**
      *
@@ -35,26 +48,16 @@ public interface JsonRPCServer {
 
     /**
      *
-     * @param method
-     */
-    void register(Method method);
-
-    /**
-     *
-     * @param name
      * @return
      */
-    Method getMethod(String name);
-
-
-    /**
-     *
-     * @param port
-     * @param boss
-     * @param worker
-     * @return
-     */
-    static JsonRPCServer defaultJsonRPCServer(Integer port, Integer boss, Integer worker) {
-        return new JsonRPCServerImpl(port, boss, worker);
+    static JsonRPCClient defaultJsonRPCClient() {
+        return new JsonRPCClientImpl();
     }
+
+
+    /**
+     *
+     * @return
+     */
+    Map<Long, Request> getRequests();
 }

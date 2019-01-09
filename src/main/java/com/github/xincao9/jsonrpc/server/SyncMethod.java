@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 caoxin.
+ * Copyright 2018 xingyunzhi.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,17 +13,21 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.github.xincao9.jsonrpc;
+package com.github.xincao9.jsonrpc.server;
+
+import com.github.xincao9.jsonrpc.Request;
 
 /**
  *
  * @author xincao9@gmail.com
+ * @param <T>
  */
-public interface Method {
+public interface SyncMethod<T> extends Method {
 
     /**
      * 
+     * @param request
      * @return 
      */
-    String getName();
+    T exec(Request request);
 }

@@ -15,6 +15,9 @@
  */
 package com.github.xincao9.jsonrpc;
 
+import com.github.xincao9.jsonrpc.client.JsonRPCClient;
+import com.github.xincao9.jsonrpc.server.SyncMethod;
+import com.github.xincao9.jsonrpc.server.JsonRPCServer;
 import com.alibaba.fastjson.JSONObject;
 import com.alibaba.fastjson.serializer.SerializerFeature;
 import java.util.Collections;

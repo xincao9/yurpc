@@ -13,9 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.github.xincao9.jsonrpc;
+package com.github.xincao9.jsonrpc.client;
 
+import com.github.xincao9.jsonrpc.Request;
 import com.alibaba.fastjson.JSONObject;
+import com.github.xincao9.jsonrpc.Response;
+import com.github.xincao9.jsonrpc.StringDecoder;
+import com.github.xincao9.jsonrpc.StringEncoder;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.buffer.PooledByteBufAllocator;
 import io.netty.channel.Channel;
