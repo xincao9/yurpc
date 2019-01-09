@@ -34,11 +34,11 @@ public class StringDecoder extends ByteToMessageDecoder {
     private static final Logger LOGGER = LoggerFactory.getLogger(StringDecoder.class);
 
     /**
-     * 
+     *
      * @param chc
      * @param byteBuf
      * @param list
-     * @throws Exception 
+     * @throws Exception
      */
     @Override
     protected void decode(ChannelHandlerContext chc, ByteBuf byteBuf, List<Object> list) throws Exception {
@@ -59,9 +59,9 @@ public class StringDecoder extends ByteToMessageDecoder {
                 ByteBuffer byteBuffer = ByteBuffer.allocate(4 + size);
                 byteBuf.readBytes(byteBuffer);
                 byte[] data = byteBuffer.array();
-//                if (LOGGER.isDebugEnabled()) {
-//                    LOGGER.debug("StringDecoder.decode() hex = {}", Hex.encodeHex(data));
-//                }
+                if (LOGGER.isDebugEnabled()) {
+                    LOGGER.debug("StringDecoder.decode() hex = {}", Hex.encodeHex(data));
+                }
                 byte[] body = Arrays.copyOfRange(data, 4, data.length);
                 list.add(new String(body, "UTF-8"));
             } while (byteBuf.isReadable());

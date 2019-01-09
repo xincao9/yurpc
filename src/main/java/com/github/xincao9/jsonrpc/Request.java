@@ -34,10 +34,10 @@ public class Request {
     private String method;
     private Long createTime;
     private String host;
-    private short port;
+    private int port;
     private final CountDownLatch countDownLatch = new CountDownLatch(1);
     private Object response;
-    private Boolean sendOk = false;
+    private Boolean sendOk;
 
     /**
      *
@@ -75,11 +75,13 @@ public class Request {
     /**
      *
      * @param <T>
+     * @param timeout
+     * @param timeUnit
      * @return
      * @throws InterruptedException
      */
-    public <T> Response<T> waitResponse() throws InterruptedException {
-        this.countDownLatch.await(1000, TimeUnit.MILLISECONDS);
+    public <T> Response<T> waitResponse(int timeout, TimeUnit timeUnit) throws InterruptedException {
+        this.countDownLatch.await(timeout, timeUnit);
         return (Response<T>) response;
     }
 
@@ -148,11 +150,11 @@ public class Request {
         this.host = host;
     }
 
-    public short getPort() {
+    public int getPort() {
         return port;
     }
 
-    public void setPort(short port) {
+    public void setPort(int port) {
         this.port = port;
     }
 

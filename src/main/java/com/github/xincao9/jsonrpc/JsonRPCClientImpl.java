@@ -37,6 +37,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.TimeUnit;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -133,12 +134,13 @@ public class JsonRPCClientImpl implements JsonRPCClient {
                 request.setSendOk(Boolean.TRUE);
                 return;
             }
+            request.setSendOk(Boolean.FALSE);
             this.requests.remove(request.getId());
             request.putResponse(null);
             LOGGER.warn("jsonrpc.invoke() request = {} failure exception = {}", request, f.cause());
         });
         try {
-            return request.waitResponse();
+            return request.waitResponse(1, TimeUnit.SECONDS);
         } catch (InterruptedException e) {
         }
         LOGGER.warn("jsonrpc.invoke() request = {} timeout", request);
@@ -151,7 +153,7 @@ public class JsonRPCClientImpl implements JsonRPCClient {
      * @param port
      * @return
      */
-    private Channel getChannel(String host, short port) {
+    private Channel getChannel(String host, int port) {
         String address = String.format("%s:%d", host, port);
         if (!this.addressChannel.containsKey(address)) {
             synchronized (this) {
