@@ -15,7 +15,6 @@
  */
 package com.github.xincao9.jsonrpc;
 
-import com.github.xincao9.jsonrpc.Response;
 import java.util.List;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
@@ -37,7 +36,7 @@ public class Request {
     private String host;
     private int port;
     private final CountDownLatch countDownLatch = new CountDownLatch(1);
-    private Object response;
+    private Response response;
     private Boolean sendOk;
 
     /**
@@ -83,14 +82,14 @@ public class Request {
      */
     public <T> Response<T> waitResponse(int timeout, TimeUnit timeUnit) throws InterruptedException {
         this.countDownLatch.await(timeout, timeUnit);
-        return (Response<T>) response;
+        return response;
     }
 
     /**
      *
      * @param response
      */
-    public void putResponse(Object response) {
+    public void putResponse(Response response) {
         this.response = response;
         this.countDownLatch.countDown();
     }
@@ -163,7 +162,7 @@ public class Request {
         return response;
     }
 
-    public void setResponse(Object response) {
+    public void setResponse(Response response) {
         this.response = response;
     }
 
@@ -173,6 +172,11 @@ public class Request {
 
     public void setSendOk(Boolean sendOk) {
         this.sendOk = sendOk;
+    }
+
+    @Override
+    public String toString() {
+        return "Request{" + "requestType=" + requestType + ", eventType=" + eventType + ", id=" + id + ", params=" + params + ", method=" + method + ", createTime=" + createTime + ", host=" + host + ", port=" + port + ", countDownLatch=" + countDownLatch + ", response=" + response + ", sendOk=" + sendOk + '}';
     }
 
 }
