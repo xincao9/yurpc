@@ -60,7 +60,7 @@ public class JsonRPCServerTest {
         @Override
         public Object exec(Request request) {
             try {
-                Thread.sleep(1);
+                Thread.sleep(50);
             } catch (InterruptedException ex) {
             }
             return request.getParams();
@@ -80,7 +80,7 @@ public class JsonRPCServerTest {
         jsonRPCServer.start();
         JsonRPCClient jsonRPCClient = JsonRPCClient.defaultJsonRPCClient();
         jsonRPCClient.start();
-        for (int no = 0; no < 5000; no++) {
+        for (int no = 0; no < 100; no++) {
             String value = RandomStringUtils.randomAscii(128);
             Request request = Request.createRequest(Boolean.TRUE, "ping", Collections.singletonList(value));
             request.setHost("127.0.0.1");

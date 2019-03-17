@@ -29,10 +29,12 @@ import io.netty.channel.epoll.EpollServerSocketChannel;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
+import io.netty.handler.timeout.IdleStateHandler;
 import io.netty.util.concurrent.Future;
 import java.util.Map;
 import java.util.Objects;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.TimeUnit;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -90,7 +92,10 @@ public class JsonRPCServerImpl implements JsonRPCServer {
                         ch.pipeline().addLast(
                                 new StringEncoder(),
                                 new StringDecoder(),
-                                serverHandler);
+                                serverHandler,
+                                new IdleStateHandler(0, 0, 60, TimeUnit.SECONDS),
+                                new ServerHeartbeatHandler()
+                        );
                     }
                 })
                 .childOption(ChannelOption.SO_KEEPALIVE, true)
