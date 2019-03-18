@@ -75,7 +75,7 @@ public class JsonRPCClientImpl implements JsonRPCClient {
         this.bootstrap.group(this.workerGroup).channel(Epoll.isAvailable() ? EpollSocketChannel.class : NioSocketChannel.class)
                 .option(ChannelOption.TCP_NODELAY, true)
                 .option(ChannelOption.SO_KEEPALIVE, true)
-                .option(ChannelOption.CONNECT_TIMEOUT_MILLIS, 3000)
+                .option(ChannelOption.CONNECT_TIMEOUT_MILLIS, ClientConfig.connectionTimeoutMS)
                 .option(ChannelOption.SO_SNDBUF, 65535)
                 .option(ChannelOption.SO_RCVBUF, 65535)
                 .option(ChannelOption.ALLOCATOR, PooledByteBufAllocator.DEFAULT)
@@ -125,11 +125,6 @@ public class JsonRPCClientImpl implements JsonRPCClient {
         Objects.requireNonNull(request);
         Channel channel = getChannel(request.getHost(), request.getPort());
         if (channel == null) {
-            LOGGER.warn("jsonrpc.invoke() request = {} channel is null", request);
-            return null;
-        }
-        if (!channel.isActive()) {
-            LOGGER.warn("jsonrpc.invoke() request = {} active = {}", request, channel.isActive());
             return null;
         }
         this.requests.put(request.getId(), request);
@@ -171,7 +166,17 @@ public class JsonRPCClientImpl implements JsonRPCClient {
                 }
             }
         }
-        return this.addressChannel.get(address);
+        Channel channel =  this.addressChannel.get(address);
+        if (channel == null) {
+            LOGGER.warn("getChannel() host = {} port = {} channel is null", host, port);
+            return null;
+        }
+        if (!channel.isActive()) {
+            this.addressChannel.remove(address);
+            LOGGER.warn("getChannel() host = {} port = {} channel is inactive", host, port);
+            return null;
+        }
+        return channel;
     }
 
     /**
