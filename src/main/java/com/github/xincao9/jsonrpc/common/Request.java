@@ -33,6 +33,7 @@ public class Request {
     private Boolean eventType; // whether the request is an event message
     private Long id; // request id
     private Object[] params;
+    private String[] paramTypes;
     private static final AtomicLong COUNTER = new AtomicLong(0);
     private String method;
     private Long createTime;
@@ -133,6 +134,14 @@ public class Request {
 
     public void setParams(Object[] params) {
         this.params = params;
+    }
+
+    public String[] getParamTypes() {
+        return paramTypes;
+    }
+
+    public void setParamTypes(String[] paramTypes) {
+        this.paramTypes = paramTypes;
     }
 
     public String getMethod() {

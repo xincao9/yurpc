@@ -17,9 +17,7 @@ package com.github.xincao9.jsonrpc;
 
 import com.alibaba.fastjson.JSONObject;
 import com.alibaba.fastjson.serializer.SerializerFeature;
-import com.github.xincao9.jsonrpc.common.Request;
 import com.github.xincao9.jsonrpc.client.JsonRPCClient;
-import com.github.xincao9.jsonrpc.server.SyncMethod;
 import com.github.xincao9.jsonrpc.server.JsonRPCServer;
 import java.util.Collections;
 import java.util.Map;
@@ -53,23 +51,6 @@ public class JsonRPCServerTest {
 
     @After
     public void tearDown() {
-    }
-
-    public static class SayMethodImpl implements SyncMethod {
-
-        @Override
-        public Object exec(Request request) {
-            try {
-                Thread.sleep(50);
-            } catch (InterruptedException ex) {
-            }
-            return request.getParams()[0];
-        }
-
-        @Override
-        public String getName() {
-            return "perform";
-        }
     }
 
     public static class Say {
@@ -113,7 +94,7 @@ public class JsonRPCServerTest {
     @Test
     public void testPingMethod() throws Throwable {
         JsonRPCServer jsonRPCServer = JsonRPCServer.defaultJsonRPCServer();
-        jsonRPCServer.register(new SayMethodImpl());
+        jsonRPCServer.register(new SayServiceImpl());
         jsonRPCServer.start();
         JsonRPCClient jsonRPCClient = JsonRPCClient.defaultJsonRPCClient();
         jsonRPCClient.start();
@@ -125,5 +106,14 @@ public class JsonRPCServerTest {
         }
         jsonRPCClient.shutdown();
         jsonRPCServer.shutdown();
+    }
+
+    public static class SayServiceImpl implements SayService {
+
+        @Override
+        public Map<Integer, Say> perform(Map<Integer, Say> saies) {
+            return saies;
+        }
+
     }
 }

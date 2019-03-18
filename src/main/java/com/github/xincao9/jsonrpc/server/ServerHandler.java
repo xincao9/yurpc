@@ -22,6 +22,7 @@ import com.github.xincao9.jsonrpc.constant.ResponseCode;
 import io.netty.channel.ChannelHandler.Sharable;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
+import java.lang.reflect.Method;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -47,38 +48,51 @@ public class ServerHandler extends SimpleChannelInboundHandler<String> {
     protected void channelRead0(ChannelHandlerContext ctx, String str) throws Exception {
         Request request = JSONObject.parseObject(str, Request.class);
         if (request.getEventType() == false) {
-            String name = request.getMethod();
-            if (StringUtils.isBlank(name)) {
-                return;
-            }
-            Method method = jsonRPCServer.getMethod(request.getMethod());
-            if (method != null) {
-                if (method instanceof SyncMethod) {
-                    SyncMethod syncMethod = (SyncMethod) method;
-                    Response response;
-                    try {
-                        if (request.getRequestType()) {
-                            response = Response.createResponse(request.getId(), syncMethod.exec(request));
-                        } else {
-                            syncMethod.exec(request);
-                            response = Response.createResponse(request.getId(), null);
-                        }
-                    } catch (Throwable e) {
-                        LOGGER.error(e.getMessage());
-                        response = Response.createResponse(request.getId(), ResponseCode.SERVER_ERROR, ResponseCode.SERVER_ERROR_MSG);
-                    }
+            Response response;
+            try {
+                String name = request.getMethod();
+                if (StringUtils.isBlank(name)) {
+                    response = Response.createResponse(request.getId(), ResponseCode.PARAMETER_ERROR, ResponseCode.PARAMETER_ERROR_MSG);
                     ctx.channel().writeAndFlush(response.toString());
-                } else {
-                    AsyncMethod asyncMethod = (AsyncMethod) method;
-                    try {
-                        asyncMethod.exec(request, ctx.channel());
-                    } catch (Throwable e) {
-                        LOGGER.error(e.getMessage());
-                    }
+                    return;
                 }
+                String classname = StringUtils.substringBeforeLast(name, ".");
+                String methodname = StringUtils.substringAfterLast(name, ".");
+                Object component = jsonRPCServer.getBean(classname);
+                if (component == null) {
+                    response = Response.createResponse(request.getId(), ResponseCode.NOT_FOUND_COMPONENT, ResponseCode.NOT_FOUND_COMPONENT_MSG);
+                    ctx.channel().writeAndFlush(response.toString());
+                    return;
+                }
+                String[] paramTypes = request.getParamTypes();
+                Class<?> clazz = Class.forName(classname);
+                Method method;
+                if (paramTypes == null || paramTypes.length <= 0) {
+                    method = clazz.getMethod(methodname);
+                } else {
+                    Class<?>[] clazzes = new Class<?>[paramTypes.length];
+                    for (int i = 0; i < paramTypes.length; i++) {
+                        clazzes[i] = Class.forName(paramTypes[i]);
+                    }
+                    method = clazz.getMethod(methodname, clazzes);
+                }
+                if (method == null) {
+                    response = Response.createResponse(request.getId(), ResponseCode.NOT_FOUND_METHOD, ResponseCode.NOT_FOUND_METHOD_MSG);
+                    ctx.channel().writeAndFlush(response.toString());
+                    return;
+                }
+                if (request.getRequestType()) {
+                    response = Response.createResponse(request.getId(), method.invoke(component, request.getParams()));
+                } else {
+                    method.invoke(component, request.getParams());
+                    response = Response.createResponse(request.getId(), null);
+                }
+            } catch (Throwable e) {
+                LOGGER.error(e.getMessage());
+                response = Response.createResponse(request.getId(), ResponseCode.SERVER_ERROR, ResponseCode.SERVER_ERROR_MSG);
             }
+            ctx.channel().writeAndFlush(response.toString());
         } else {
-
         }
     }
 

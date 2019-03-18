@@ -31,9 +31,9 @@ import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
 import io.netty.handler.timeout.IdleStateHandler;
 import io.netty.util.concurrent.Future;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.TimeUnit;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -49,10 +49,8 @@ public class JsonRPCServerImpl implements JsonRPCServer {
     private final Integer port;
     private EventLoopGroup bossGroup;
     private EventLoopGroup workerGroup;
-    private final Map<String, Method> methods = new ConcurrentHashMap();
     private final Integer boss;
     private final Integer worker;
-    private ServerInvocationHandler serverInvocationHandler;
 
     /**
      *
@@ -101,7 +99,6 @@ public class JsonRPCServerImpl implements JsonRPCServer {
         f.channel().closeFuture().addListener((Future<? super Void> future) -> {
             LOGGER.warn("turn off jsonrpc service port = {}, cause = {}", this.port, future.cause());
         });
-        this.serverInvocationHandler = new ServerInvocationHandler();
     }
 
     /**
@@ -118,23 +115,33 @@ public class JsonRPCServerImpl implements JsonRPCServer {
         }
     }
 
+    private final Map<String, Object> componentes = new HashMap();
+
     /**
-     *
-     * @param method
+     * 
+     * @param <T>
+     * @param obj 
      */
     @Override
-    public void register(Method method) {
-        Objects.requireNonNull(method);
-        this.methods.put(method.getName(), method);
+    public <T> void register (T obj) {
+        Objects.requireNonNull(obj);
+        Class<?>[] clazzes = obj.getClass().getInterfaces();
+        if (clazzes == null || clazzes.length <= 0) {
+            LOGGER.error("class = {} invalid format", obj.getClass().getCanonicalName());
+            return;
+        }
+        for (Class clazz : clazzes) {
+            componentes.put(clazz.getTypeName(), obj);
+        }
     }
-    
+
     /**
-     *
+     * 
      * @param name
-     * @return
+     * @return 
      */
     @Override
-    public Method getMethod(String name) {
-        return this.methods.get(name);
+    public Object getBean (String name) {
+        return componentes.get(name);
     }
 }

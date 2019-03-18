@@ -35,19 +35,6 @@ public interface JsonRPCServer {
 
     /**
      *
-     * @param method
-     */
-    void register(Method method);
-
-    /**
-     *
-     * @param name
-     * @return
-     */
-    Method getMethod(String name);
-
-    /**
-     *
      * @param filename
      * @return
      */
@@ -65,4 +52,18 @@ public interface JsonRPCServer {
     static JsonRPCServer defaultJsonRPCServer() {
         return defaultJsonRPCServer("");
     }
+
+    /**
+     *
+     * @param <T>
+     * @param obj
+     */
+    <T> void register(T obj);
+
+    /**
+     *
+     * @param name
+     * @return
+     */
+    Object getBean(String name);
 }

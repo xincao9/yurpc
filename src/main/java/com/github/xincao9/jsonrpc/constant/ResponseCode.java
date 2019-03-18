@@ -14,5 +14,13 @@ public class ResponseCode {
     public static final String CONNECTION_FAILURE_MSG = "CONNECTION FAILURE";
     public static final Integer SERVER_ERROR = 3;
     public static final String SERVER_ERROR_MSG = "SERVER ERROR";
-
+    public static final Integer PARAMETER_ERROR = 4;
+    public static final String PARAMETER_ERROR_MSG = "PARAMETER ERROR";
+    public static final Integer NOT_FOUND_COMPONENT = 5;
+    public static final String NOT_FOUND_COMPONENT_MSG = "NOT FOUND COMPONENT";
+    public static final Integer NOT_FOUND_METHOD = 6;
+    public static final String NOT_FOUND_METHOD_MSG = "NOT FOUND METHOD";
+    
+    
+    
 }

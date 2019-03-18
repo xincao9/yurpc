@@ -31,11 +31,20 @@ public class ClientInvocationHandler implements InvocationHandler {
         sb.append(method.getName());
         Type retureType = method.getReturnType();
         Request request;
-        if ("void".equalsIgnoreCase(retureType.getTypeName())) {
-            request = Request.createRequest(Boolean.FALSE, method.getName(), args);
-        } else {
-            request = Request.createRequest(Boolean.TRUE, method.getName(), args);
+        String[] paramTypes = null;
+        Class<?>[] clazzParamTypes = method.getParameterTypes();
+        if (clazzParamTypes != null && clazzParamTypes.length > 0) {
+            paramTypes = new String[clazzParamTypes.length];
+            for (int i = 0; i < clazzParamTypes.length; i++) {
+               paramTypes[i] = clazzParamTypes[i].getTypeName();
+            }
         }
+        if ("void".equalsIgnoreCase(retureType.getTypeName())) {
+            request = Request.createRequest(Boolean.FALSE, sb.toString(), args);
+        } else {
+            request = Request.createRequest(Boolean.TRUE, sb.toString(), args);
+        }
+        request.setParamTypes(paramTypes);
         Response response = jsonRPCClient.invoke(request);
         if (Objects.equals(response.getCode(), ResponseCode.OK) && !"void".equalsIgnoreCase(retureType.getTypeName())) {
             if (response.getData() == null) {
@@ -63,13 +72,3 @@ public class ClientInvocationHandler implements InvocationHandler {
     }
 
 }
-
-//            boolean isCollection = false;
-//            for (Class c : clazz.getInterfaces()) {
-//                if (c == Collection.class) {
-//                    isCollection = true;
-//                }
-//            }
-//            if (isCollection) {
-//                return response.getData();
-//            }
