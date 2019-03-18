@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.github.xincao9.jsonrpc;
+package com.github.xincao9.jsonrpc.common;
 
 import java.util.List;
 import java.util.concurrent.CountDownLatch;

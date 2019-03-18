@@ -16,7 +16,7 @@
 package com.github.xincao9.jsonrpc.server;
 
 /**
- * 
+ *
  * @author xincao9@gmail.com
  */
 public interface JsonRPCServer {
@@ -46,15 +46,23 @@ public interface JsonRPCServer {
      */
     Method getMethod(String name);
 
+    /**
+     *
+     * @param filename
+     * @return
+     */
+    static JsonRPCServer defaultJsonRPCServer(String filename) throws RuntimeException {
+        if (ServerConfig.init(filename) == false) {
+            throw new RuntimeException("server bootstrap failure");
+        }
+        return new JsonRPCServerImpl();
+    }
 
     /**
      *
-     * @param port
-     * @param boss
-     * @param worker
      * @return
      */
-    static JsonRPCServer defaultJsonRPCServer(Integer port, Integer boss, Integer worker) {
-        return new JsonRPCServerImpl(port, boss, worker);
+    static JsonRPCServer defaultJsonRPCServer() {
+        return defaultJsonRPCServer("");
     }
 }

@@ -15,6 +15,8 @@
  */
 package com.github.xincao9.jsonrpc;
 
+import com.github.xincao9.jsonrpc.common.Request;
+import com.github.xincao9.jsonrpc.common.Response;
 import com.github.xincao9.jsonrpc.client.JsonRPCClient;
 import com.github.xincao9.jsonrpc.server.SyncMethod;
 import com.github.xincao9.jsonrpc.server.JsonRPCServer;
@@ -75,7 +77,7 @@ public class JsonRPCServerTest {
     @Test
     public void testPingMethod() throws Throwable {
         int port = RandomUtils.nextInt(1025, 65535);
-        JsonRPCServer jsonRPCServer = JsonRPCServer.defaultJsonRPCServer(port, 1, Runtime.getRuntime().availableProcessors());
+        JsonRPCServer jsonRPCServer = JsonRPCServer.defaultJsonRPCServer();
         jsonRPCServer.register(new PingMethodImpl());
         jsonRPCServer.start();
         JsonRPCClient jsonRPCClient = JsonRPCClient.defaultJsonRPCClient();
@@ -84,7 +86,7 @@ public class JsonRPCServerTest {
             String value = RandomStringUtils.randomAscii(128);
             Request request = Request.createRequest(Boolean.TRUE, "ping", Collections.singletonList(value));
             request.setHost("127.0.0.1");
-            request.setPort(port);
+            request.setPort(12306);
             Response<List<Object>> response = jsonRPCClient.invoke(request);
             System.out.println(JSONObject.toJSONString(response, SerializerFeature.DisableCircularReferenceDetect));
         }

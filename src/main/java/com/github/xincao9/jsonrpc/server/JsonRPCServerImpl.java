@@ -15,8 +15,8 @@
  */
 package com.github.xincao9.jsonrpc.server;
 
-import com.github.xincao9.jsonrpc.StringDecoder;
-import com.github.xincao9.jsonrpc.StringEncoder;
+import com.github.xincao9.jsonrpc.common.StringDecoder;
+import com.github.xincao9.jsonrpc.common.StringEncoder;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.buffer.PooledByteBufAllocator;
 import io.netty.channel.ChannelFuture;
@@ -50,22 +50,19 @@ public class JsonRPCServerImpl implements JsonRPCServer {
     private EventLoopGroup bossGroup;
     private EventLoopGroup workerGroup;
     private final Map<String, Method> methods = new ConcurrentHashMap();
-    private Integer boss = 0;
-    private Integer worker = Runtime.getRuntime().availableProcessors();
+    private Integer boss;
+    private Integer worker;
 
     /**
      * 
-     * @param port
-     * @param boss
-     * @param worker 
      */
-    public JsonRPCServerImpl(Integer port, Integer boss, Integer worker) {
-        this.port = port;
-        if (boss > 0) {
-            this.boss = boss;
+    public JsonRPCServerImpl() {
+        this.port = ServerConfig.port;
+        if (ServerConfig.ioThreadBoss > 0) {
+            this.boss = ServerConfig.ioThreadBoss;
         }
-        if (worker > 0) {
-            this.worker = worker;
+        if (ServerConfig.ioThreadWorker > 0) {
+            this.worker = ServerConfig.ioThreadWorker;
         }
     }
 

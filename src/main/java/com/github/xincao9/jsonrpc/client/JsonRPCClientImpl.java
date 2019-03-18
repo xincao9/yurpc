@@ -15,11 +15,11 @@
  */
 package com.github.xincao9.jsonrpc.client;
 
-import com.github.xincao9.jsonrpc.Request;
+import com.github.xincao9.jsonrpc.common.Request;
 import com.alibaba.fastjson.JSONObject;
-import com.github.xincao9.jsonrpc.Response;
-import com.github.xincao9.jsonrpc.StringDecoder;
-import com.github.xincao9.jsonrpc.StringEncoder;
+import com.github.xincao9.jsonrpc.common.Response;
+import com.github.xincao9.jsonrpc.common.StringDecoder;
+import com.github.xincao9.jsonrpc.common.StringEncoder;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.buffer.PooledByteBufAllocator;
 import io.netty.channel.Channel;

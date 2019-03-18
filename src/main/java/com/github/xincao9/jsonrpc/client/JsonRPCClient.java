@@ -15,8 +15,8 @@
  */
 package com.github.xincao9.jsonrpc.client;
 
-import com.github.xincao9.jsonrpc.Request;
-import com.github.xincao9.jsonrpc.Response;
+import com.github.xincao9.jsonrpc.common.Request;
+import com.github.xincao9.jsonrpc.common.Response;
 import java.util.Map;
 
 /**

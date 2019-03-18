@@ -15,7 +15,7 @@
  */
 package com.github.xincao9.jsonrpc.server;
 
-import com.github.xincao9.jsonrpc.Request;
+import com.github.xincao9.jsonrpc.common.Request;
 import io.netty.channel.Channel;
 
 /**
