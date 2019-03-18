@@ -15,12 +15,14 @@
  */
 package com.github.xincao9.jsonrpc;
 
+import com.alibaba.fastjson.JSONObject;
+import com.alibaba.fastjson.serializer.SerializerFeature;
 import com.github.xincao9.jsonrpc.common.Request;
 import com.github.xincao9.jsonrpc.client.JsonRPCClient;
 import com.github.xincao9.jsonrpc.server.SyncMethod;
 import com.github.xincao9.jsonrpc.server.JsonRPCServer;
-import java.util.Arrays;
-import java.util.List;
+import java.util.Collections;
+import java.util.Map;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.junit.After;
 import org.junit.AfterClass;
@@ -53,7 +55,7 @@ public class JsonRPCServerTest {
     public void tearDown() {
     }
 
-    public static class PingMethodImpl implements SyncMethod {
+    public static class SayMethodImpl implements SyncMethod {
 
         @Override
         public Object exec(Request request) {
@@ -66,27 +68,60 @@ public class JsonRPCServerTest {
 
         @Override
         public String getName() {
-            return "ping";
+            return "perform";
         }
     }
 
-    public static interface PingService {
+    public static class Say {
 
-        List<String> ping(List<String> params);
+        private Integer id;
+        private String body;
+
+        public Say(Integer id, String body) {
+            this.id = id;
+            this.body = body;
+        }
+
+        public Integer getId() {
+            return id;
+        }
+
+        public void setId(Integer id) {
+            this.id = id;
+        }
+
+        public String getBody() {
+            return body;
+        }
+
+        public void setBody(String body) {
+            this.body = body;
+        }
+
+        @Override
+        public String toString() {
+            return JSONObject.toJSONString(this, SerializerFeature.DisableCircularReferenceDetect);
+        }
+
+    }
+
+    public static interface SayService {
+
+        Map<Integer, Say> perform(Map<Integer, Say> saies);
     }
 
     @Test
     public void testPingMethod() throws Throwable {
         JsonRPCServer jsonRPCServer = JsonRPCServer.defaultJsonRPCServer();
-        jsonRPCServer.register(new PingMethodImpl());
+        jsonRPCServer.register(new SayMethodImpl());
         jsonRPCServer.start();
         JsonRPCClient jsonRPCClient = JsonRPCClient.defaultJsonRPCClient();
         jsonRPCClient.start();
-        PingService pingService = jsonRPCClient.proxy(PingService.class);
+        SayService sayService = jsonRPCClient.proxy(SayService.class);
         for (int no = 0; no < 100; no++) {
             String value = RandomStringUtils.randomAscii(128);
-            List<String> list = pingService.ping(Arrays.asList(new String[]{value}));
-            System.out.println(list);
+            Say say = new Say(no, value);
+            System.out.println(sayService.perform(Collections.singletonMap(no, say)));
         }
         jsonRPCClient.shutdown();
         jsonRPCServer.shutdown();

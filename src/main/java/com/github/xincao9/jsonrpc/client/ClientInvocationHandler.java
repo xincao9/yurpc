@@ -10,7 +10,6 @@ import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
 import java.lang.reflect.Type;
-import java.util.Collection;
 import java.util.Objects;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -39,16 +38,10 @@ public class ClientInvocationHandler implements InvocationHandler {
         }
         Response response = jsonRPCClient.invoke(request);
         if (Objects.equals(response.getCode(), ResponseCode.OK) && !"void".equalsIgnoreCase(retureType.getTypeName())) {
+            if (response.getData() == null) {
+                return null;
+            }
             Class clazz = Class.forName(retureType.getTypeName());
-            boolean isCollection = false;
-            for (Class c : clazz.getInterfaces()) {
-                if (c == Collection.class) {
-                    isCollection = true;
-                }
-            }
-            if (isCollection) {
-                return response.getData();
-            }
             return JSON.parseObject(JSONObject.toJSONString(response.getData(), SerializerFeature.DisableCircularReferenceDetect), clazz);
         }
         if (!Objects.equals(response.getCode(), ResponseCode.OK)) {
@@ -70,3 +63,13 @@ public class ClientInvocationHandler implements InvocationHandler {
     }
 
 }
+
+//            boolean isCollection = false;
+//            for (Class c : clazz.getInterfaces()) {
+//                if (c == Collection.class) {
+//                    isCollection = true;
+//                }
+//            }
+//            if (isCollection) {
+//                return response.getData();
+//            }

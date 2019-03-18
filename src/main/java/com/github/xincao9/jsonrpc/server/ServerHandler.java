@@ -51,32 +51,34 @@ public class ServerHandler extends SimpleChannelInboundHandler<String> {
             if (StringUtils.isBlank(name)) {
                 return;
             }
-            if (request.getRequestType()) {
-                Method method = jsonRPCServer.getMethod(request.getMethod());
-                if (method != null) {
-                    if (method instanceof SyncMethod) {
-                        SyncMethod syncMethod = (SyncMethod) method;
-                        Response response;
-                        try {
+            Method method = jsonRPCServer.getMethod(request.getMethod());
+            if (method != null) {
+                if (method instanceof SyncMethod) {
+                    SyncMethod syncMethod = (SyncMethod) method;
+                    Response response;
+                    try {
+                        if (request.getRequestType()) {
                             response = Response.createResponse(request.getId(), syncMethod.exec(request));
-                        } catch (Throwable e) {
-                            LOGGER.error(e.getMessage());
-                            response = Response.createResponse(request.getId(), ResponseCode.SERVER_ERROR, ResponseCode.SERVER_ERROR_MSG);
+                        } else {
+                            syncMethod.exec(request);
+                            response = Response.createResponse(request.getId(), null);
                         }
-                        ctx.channel().writeAndFlush(response.toString());
-                    } else {
-                        AsyncMethod asyncMethod = (AsyncMethod) method;
-                        try {
-                            asyncMethod.exec(request, ctx.channel());
-                        } catch (Throwable e) {
-                            LOGGER.error(e.getMessage());
-                        }
+                    } catch (Throwable e) {
+                        LOGGER.error(e.getMessage());
+                        response = Response.createResponse(request.getId(), ResponseCode.SERVER_ERROR, ResponseCode.SERVER_ERROR_MSG);
+                    }
+                    ctx.channel().writeAndFlush(response.toString());
+                } else {
+                    AsyncMethod asyncMethod = (AsyncMethod) method;
+                    try {
+                        asyncMethod.exec(request, ctx.channel());
+                    } catch (Throwable e) {
+                        LOGGER.error(e.getMessage());
                     }
                 }
-            } else {
-
             }
         } else {
+
         }
     }
 
