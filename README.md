@@ -5,82 +5,74 @@
 > 使用时，仅需要添加自己实现了slf4j-api的log框架，强烈推荐使用logback
 
 <pre>
-package com.github.xincao9.jsonrpc;
-
-import com.github.xincao9.jsonrpc.client.JsonRPCClient;
-import com.github.xincao9.jsonrpc.server.SyncMethod;
-import com.github.xincao9.jsonrpc.server.JsonRPCServer;
-import com.alibaba.fastjson.JSONObject;
-import com.alibaba.fastjson.serializer.SerializerFeature;
-import java.util.Collections;
-import java.util.List;
-import org.apache.commons.lang3.RandomStringUtils;
-import org.apache.commons.lang3.RandomUtils;
-import org.junit.After;
-import org.junit.AfterClass;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Test;
-
 /**
  *
  * @author xincao9@gmail.com
  */
 public class JsonRPCServerTest {
 
-    public JsonRPCServerTest() {
-    }
+    public static class Say {
 
-    @BeforeClass
-    public static void setUpClass() {
-    }
+        private Integer id;
+        private String body;
 
-    @AfterClass
-    public static void tearDownClass() {
-    }
+        public Say(Integer id, String body) {
+            this.id = id;
+            this.body = body;
+        }
 
-    @Before
-    public void setUp() {
-    }
+        public Integer getId() {
+            return id;
+        }
 
-    @After
-    public void tearDown() {
-    }
+        public void setId(Integer id) {
+            this.id = id;
+        }
 
-    public static class PingMethodImpl implements SyncMethod {
+        public String getBody() {
+            return body;
+        }
 
-        @Override
-        public Object exec(Request request) {
-            try {
-                Thread.sleep(1);
-            } catch (InterruptedException ex) {
-            }
-            return request.getParams();
+        public void setBody(String body) {
+            this.body = body;
         }
 
         @Override
-        public String getName() {
-            return "ping";
+        public String toString() {
+            return JSONObject.toJSONString(this, SerializerFeature.DisableCircularReferenceDetect);
         }
+
+    }
+
+    public static interface SayService {
+
+        Map<Integer, Say> perform(Map<Integer, Say> saies);
     }
 
     @Test
     public void testPingMethod() throws Throwable {
-        int port = RandomUtils.nextInt(1025, 65535);
-        JsonRPCServer jsonRPCServer = JsonRPCServer.defaultJsonRPCServer(port, 1, Runtime.getRuntime().availableProcessors());
-        jsonRPCServer.register(new PingMethodImpl());
+        JsonRPCServer jsonRPCServer = JsonRPCServer.defaultJsonRPCServer();
+        jsonRPCServer.register(new SayServiceImpl());
         jsonRPCServer.start();
         JsonRPCClient jsonRPCClient = JsonRPCClient.defaultJsonRPCClient();
         jsonRPCClient.start();
-        for (int no = 0; no < 5000; no++) {
+        SayService sayService = jsonRPCClient.proxy(SayService.class);
+        for (int no = 0; no < 100; no++) {
             String value = RandomStringUtils.randomAscii(128);
-            Request request = Request.createRequest(Boolean.TRUE, "ping", Collections.singletonList(value));
-            request.setHost("127.0.0.1");
-            request.setPort(port);
-            Response<List<Object>> response = jsonRPCClient.invoke(request);
-            System.out.println(JSONObject.toJSONString(response, SerializerFeature.DisableCircularReferenceDetect));
+            Say say = new Say(no, value);
+            System.out.println(sayService.perform(Collections.singletonMap(no, say)));
         }
         jsonRPCClient.shutdown();
         jsonRPCServer.shutdown();
     }
-}</pre>
+
+    public static class SayServiceImpl implements SayService {
+
+        @Override
+        public Map<Integer, Say> perform(Map<Integer, Say> saies) {
+            return saies;
+        }
+
+    }
+}
+</pre>
