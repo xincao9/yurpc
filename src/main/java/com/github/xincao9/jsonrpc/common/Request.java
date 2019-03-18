@@ -15,6 +15,8 @@
  */
 package com.github.xincao9.jsonrpc.common;
 
+import com.alibaba.fastjson.JSONObject;
+import com.alibaba.fastjson.serializer.SerializerFeature;
 import java.util.List;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
@@ -176,7 +178,7 @@ public class Request {
 
     @Override
     public String toString() {
-        return "Request{" + "requestType=" + requestType + ", eventType=" + eventType + ", id=" + id + ", params=" + params + ", method=" + method + ", createTime=" + createTime + ", host=" + host + ", port=" + port + ", countDownLatch=" + countDownLatch + ", response=" + response + ", sendOk=" + sendOk + '}';
+        return JSONObject.toJSONString(this, SerializerFeature.DisableCircularReferenceDetect);
     }
 
 }

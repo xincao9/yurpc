@@ -25,7 +25,6 @@ import com.alibaba.fastjson.serializer.SerializerFeature;
 import java.util.Collections;
 import java.util.List;
 import org.apache.commons.lang3.RandomStringUtils;
-import org.apache.commons.lang3.RandomUtils;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -76,7 +75,6 @@ public class JsonRPCServerTest {
 
     @Test
     public void testPingMethod() throws Throwable {
-        int port = RandomUtils.nextInt(1025, 65535);
         JsonRPCServer jsonRPCServer = JsonRPCServer.defaultJsonRPCServer();
         jsonRPCServer.register(new PingMethodImpl());
         jsonRPCServer.start();
@@ -86,7 +84,7 @@ public class JsonRPCServerTest {
             String value = RandomStringUtils.randomAscii(128);
             Request request = Request.createRequest(Boolean.TRUE, "ping", Collections.singletonList(value));
             request.setHost("127.0.0.1");
-            request.setPort(12306);
+            request.setPort(11111);
             Response<List<Object>> response = jsonRPCClient.invoke(request);
             System.out.println(JSONObject.toJSONString(response, SerializerFeature.DisableCircularReferenceDetect));
         }

@@ -16,10 +16,10 @@
 package com.github.xincao9.jsonrpc.client;
 
 import com.github.xincao9.jsonrpc.common.Request;
-import com.alibaba.fastjson.JSONObject;
 import com.github.xincao9.jsonrpc.common.Response;
 import com.github.xincao9.jsonrpc.common.StringDecoder;
 import com.github.xincao9.jsonrpc.common.StringEncoder;
+import com.github.xincao9.jsonrpc.constant.ResponseCode;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.buffer.PooledByteBufAllocator;
 import io.netty.channel.Channel;
@@ -125,10 +125,10 @@ public class JsonRPCClientImpl implements JsonRPCClient {
         Objects.requireNonNull(request);
         Channel channel = getChannel(request.getHost(), request.getPort());
         if (channel == null) {
-            return null;
+            return Response.createResponse(request.getId(), ResponseCode.CONNECTION_FAILURE, ResponseCode.CONNECTION_FAILURE_MSG);
         }
         this.requests.put(request.getId(), request);
-        channel.writeAndFlush(JSONObject.toJSONString(request)).addListener((ChannelFutureListener) (ChannelFuture f) -> {
+        channel.writeAndFlush(request.toString()).addListener((ChannelFutureListener) (ChannelFuture f) -> {
             if (f.isSuccess()) {
                 request.setSendOk(Boolean.TRUE);
                 return;
@@ -136,14 +136,15 @@ public class JsonRPCClientImpl implements JsonRPCClient {
             request.setSendOk(Boolean.FALSE);
             this.requests.remove(request.getId());
             request.putResponse(null);
-            LOGGER.warn("jsonrpc.invoke() request = {} failure exception = {}", request, f.cause());
+            LOGGER.error("jsonrpc.invoke() request = {} failure exception = {}", request, f.cause());
         });
         try {
             return request.waitResponse(ClientConfig.invokeTimeoutMS, TimeUnit.MILLISECONDS);
         } catch (InterruptedException e) {
+            LOGGER.error(e.getMessage());
         }
-        LOGGER.warn("jsonrpc.invoke() request = {} timeout", request);
-        return null;
+        LOGGER.error("jsonrpc.invoke() request = {} timeout (wait time > {} ms)", request, ClientConfig.invokeTimeoutMS);
+        return Response.createResponse(request.getId(), ResponseCode.INVOKE_TIMEOUT, ResponseCode.INVOKE_TIMEOUT_MSG);
     }
 
     /**
@@ -168,12 +169,12 @@ public class JsonRPCClientImpl implements JsonRPCClient {
         }
         Channel channel =  this.addressChannel.get(address);
         if (channel == null) {
-            LOGGER.warn("getChannel() host = {} port = {} channel is null", host, port);
+            LOGGER.error("getChannel() host = {} port = {} channel is null", host, port);
             return null;
         }
         if (!channel.isActive()) {
             this.addressChannel.remove(address);
-            LOGGER.warn("getChannel() host = {} port = {} channel is inactive", host, port);
+            LOGGER.error("getChannel() host = {} port = {} channel is inactive", host, port);
             return null;
         }
         return channel;

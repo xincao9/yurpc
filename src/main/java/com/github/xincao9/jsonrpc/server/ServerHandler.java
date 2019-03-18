@@ -18,6 +18,7 @@ package com.github.xincao9.jsonrpc.server;
 import com.alibaba.fastjson.JSONObject;
 import com.github.xincao9.jsonrpc.common.Request;
 import com.github.xincao9.jsonrpc.common.Response;
+import com.github.xincao9.jsonrpc.constant.ResponseCode;
 import io.netty.channel.ChannelHandler.Sharable;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
@@ -37,10 +38,10 @@ public class ServerHandler extends SimpleChannelInboundHandler<String> {
     private JsonRPCServer jsonRPCServer;
 
     /**
-     * 
+     *
      * @param ctx
      * @param str
-     * @throws Exception 
+     * @throws Exception
      */
     @Override
     protected void channelRead0(ChannelHandlerContext ctx, String str) throws Exception {
@@ -55,17 +56,14 @@ public class ServerHandler extends SimpleChannelInboundHandler<String> {
                 if (method != null) {
                     if (method instanceof SyncMethod) {
                         SyncMethod syncMethod = (SyncMethod) method;
-                        Object obj = null;
-                        int code;
+                        Response response;
                         try {
-                            obj = syncMethod.exec(request);
-                            code = 200;
+                            response = Response.createResponse(request.getId(), syncMethod.exec(request));
                         } catch (Throwable e) {
                             LOGGER.error(e.getMessage());
-                            code = 500;
+                            response = Response.createResponse(request.getId(), ResponseCode.SERVER_ERROR, ResponseCode.SERVER_ERROR_MSG);
                         }
-                        Response response = Response.createResponse(request.getId(), code, obj);
-                        ctx.channel().writeAndFlush(JSONObject.toJSONString(response));
+                        ctx.channel().writeAndFlush(response.toString());
                     } else {
                         AsyncMethod asyncMethod = (AsyncMethod) method;
                         try {
@@ -76,15 +74,15 @@ public class ServerHandler extends SimpleChannelInboundHandler<String> {
                     }
                 }
             } else {
-                
+
             }
         } else {
         }
     }
 
     /**
-     * 
-     * @param jsonRPCServer 
+     *
+     * @param jsonRPCServer
      */
     public void setJsonRPCServer(JsonRPCServer jsonRPCServer) {
         this.jsonRPCServer = jsonRPCServer;

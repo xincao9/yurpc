@@ -15,6 +15,10 @@
  */
 package com.github.xincao9.jsonrpc.common;
 
+import com.alibaba.fastjson.JSONObject;
+import com.alibaba.fastjson.serializer.SerializerFeature;
+import com.github.xincao9.jsonrpc.constant.ResponseCode;
+
 /**
  *
  * @author xincao9@gmail.com
@@ -23,14 +27,22 @@ package com.github.xincao9.jsonrpc.common;
 public class Response<T> {
 
     private Long id; // response id
-    private Integer code; // response code
+    private Integer code = ResponseCode.OK; // response code
     private T data;
+    private String msg = ResponseCode.OK_MSG;
 
-    public static <T> Response<T> createResponse(Long id, Integer code, T data) {
+    public static <T> Response<T> createResponse(Long id, T data) {
+        Response response = new Response();
+        response.setId(id);
+        response.setData(data);
+        return response;
+    }
+
+    public static <T> Response<T> createResponse(Long id, Integer code, String msg) {
         Response response = new Response();
         response.setId(id);
         response.setCode(code);
-        response.setData(data);
+        response.setMsg(msg);
         return response;
     }
 
@@ -58,9 +70,17 @@ public class Response<T> {
         this.data = data;
     }
 
+    public String getMsg() {
+        return msg;
+    }
+
+    public void setMsg(String msg) {
+        this.msg = msg;
+    }
+
     @Override
     public String toString() {
-        return "Response{" + "id=" + id + ", code=" + code + ", data=" + data + '}';
+        return JSONObject.toJSONString(this, SerializerFeature.DisableCircularReferenceDetect);
     }
 
 }
