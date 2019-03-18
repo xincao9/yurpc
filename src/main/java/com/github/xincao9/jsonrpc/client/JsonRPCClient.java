@@ -71,4 +71,12 @@ public interface JsonRPCClient {
      * @return
      */
     Map<Long, Request> getRequests();
+
+    /**
+     * 
+     * @param <T>
+     * @param clazz
+     * @return 
+     */
+    <T> T proxy(Class<T> clazz);
 }

@@ -6,6 +6,8 @@ package com.github.xincao9.jsonrpc.constant;
  */
 public class ClientConfigConsts {
 
+    public static final String SERVER_LIST = "jsonrpc.client.serverList";
+    public static final String DEFAULT_SERVER_LIST = "127.0.0.1:12306";
     public static final String DEFAULT_CONFIG_FILENAME = "/client.properties";
     public static final String CONNECTION_TIMEOUT_MS = "jsonrpc.client.connectionTimeoutMS";
     public static final String DEFAULT_CONNECTION_TIMEOUT_MS = "5000";

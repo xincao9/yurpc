@@ -56,6 +56,7 @@ public class JsonRPCClientImpl implements JsonRPCClient {
     private final Bootstrap bootstrap = new Bootstrap();
     private final Map<String, Channel> addressChannel = new HashMap();
     private EventLoopGroup workerGroup;
+    private ClientInvocationHandler clientInvocationHandler;
 
     /**
      *
@@ -89,6 +90,8 @@ public class JsonRPCClientImpl implements JsonRPCClient {
                                 clientHandler);
                     }
                 });
+        clientInvocationHandler = new ClientInvocationHandler();
+        clientInvocationHandler.setJsonRPCClient(this);
     }
 
     /**
@@ -187,6 +190,17 @@ public class JsonRPCClientImpl implements JsonRPCClient {
     @Override
     public Map<Long, Request> getRequests() {
         return this.requests;
+    }
+
+    /**
+     * 
+     * @param <T>
+     * @param clazz
+     * @return 
+     */
+    @Override
+    public <T> T proxy(Class<T> clazz) {
+        return this.clientInvocationHandler.proxy(clazz);
     }
 
 }

@@ -16,13 +16,10 @@
 package com.github.xincao9.jsonrpc;
 
 import com.github.xincao9.jsonrpc.common.Request;
-import com.github.xincao9.jsonrpc.common.Response;
 import com.github.xincao9.jsonrpc.client.JsonRPCClient;
 import com.github.xincao9.jsonrpc.server.SyncMethod;
 import com.github.xincao9.jsonrpc.server.JsonRPCServer;
-import com.alibaba.fastjson.JSONObject;
-import com.alibaba.fastjson.serializer.SerializerFeature;
-import java.util.Collections;
+import java.util.Arrays;
 import java.util.List;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.junit.After;
@@ -64,13 +61,18 @@ public class JsonRPCServerTest {
                 Thread.sleep(50);
             } catch (InterruptedException ex) {
             }
-            return request.getParams();
+            return request.getParams()[0];
         }
 
         @Override
         public String getName() {
             return "ping";
         }
+    }
+
+    public static interface PingService {
+
+        List<String> ping(List<String> params);
     }
 
     @Test
@@ -80,13 +82,11 @@ public class JsonRPCServerTest {
         jsonRPCServer.start();
         JsonRPCClient jsonRPCClient = JsonRPCClient.defaultJsonRPCClient();
         jsonRPCClient.start();
+        PingService pingService = jsonRPCClient.proxy(PingService.class);
         for (int no = 0; no < 100; no++) {
             String value = RandomStringUtils.randomAscii(128);
-            Request request = Request.createRequest(Boolean.TRUE, "ping", Collections.singletonList(value));
-            request.setHost("127.0.0.1");
-            request.setPort(11111);
-            Response<List<Object>> response = jsonRPCClient.invoke(request);
-            System.out.println(JSONObject.toJSONString(response, SerializerFeature.DisableCircularReferenceDetect));
+            List<String> list = pingService.ping(Arrays.asList(new String[]{value}));
+            System.out.println(list);
         }
         jsonRPCClient.shutdown();
         jsonRPCServer.shutdown();

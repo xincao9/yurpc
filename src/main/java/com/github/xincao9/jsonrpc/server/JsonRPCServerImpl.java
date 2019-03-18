@@ -52,6 +52,7 @@ public class JsonRPCServerImpl implements JsonRPCServer {
     private final Map<String, Method> methods = new ConcurrentHashMap();
     private final Integer boss;
     private final Integer worker;
+    private ServerInvocationHandler serverInvocationHandler;
 
     /**
      *
@@ -100,6 +101,7 @@ public class JsonRPCServerImpl implements JsonRPCServer {
         f.channel().closeFuture().addListener((Future<? super Void> future) -> {
             LOGGER.warn("turn off jsonrpc service port = {}, cause = {}", this.port, future.cause());
         });
+        this.serverInvocationHandler = new ServerInvocationHandler();
     }
 
     /**
@@ -125,7 +127,7 @@ public class JsonRPCServerImpl implements JsonRPCServer {
         Objects.requireNonNull(method);
         this.methods.put(method.getName(), method);
     }
-
+    
     /**
      *
      * @param name

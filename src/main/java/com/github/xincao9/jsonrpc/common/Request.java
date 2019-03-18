@@ -17,10 +17,11 @@ package com.github.xincao9.jsonrpc.common;
 
 import com.alibaba.fastjson.JSONObject;
 import com.alibaba.fastjson.serializer.SerializerFeature;
-import java.util.List;
+import com.github.xincao9.jsonrpc.client.ClientConfig;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicLong;
+import org.apache.commons.lang3.RandomUtils;
 
 /**
  *
@@ -31,7 +32,7 @@ public class Request {
     private Boolean requestType; // request with/without return value
     private Boolean eventType; // whether the request is an event message
     private Long id; // request id
-    private List<Object> params;
+    private Object[] params;
     private static final AtomicLong COUNTER = new AtomicLong(0);
     private String method;
     private Long createTime;
@@ -48,7 +49,7 @@ public class Request {
      * @param params
      * @return
      */
-    public static Request createRequest(Boolean requestType, String method, List<Object> params) {
+    public static Request createRequest(Boolean requestType, String method, Object... params) {
         Request request = new Request();
         request.setRequestType(requestType);
         request.setEventType(false);
@@ -56,6 +57,9 @@ public class Request {
         request.setParams(params);
         request.setMethod(method);
         request.setCreateTime(System.currentTimeMillis());
+        Pair<String, Integer> pair = ClientConfig.serverList.get(RandomUtils.nextInt(0, ClientConfig.serverList.size()));
+        request.setHost(pair.getO1());
+        request.setPort(pair.getO2());
         return request;
     }
 
@@ -71,6 +75,9 @@ public class Request {
         request.setId(COUNTER.getAndIncrement());
         request.setMethod(method);
         request.setCreateTime(System.currentTimeMillis());
+        Pair<String, Integer> pair = ClientConfig.serverList.get(RandomUtils.nextInt(0, ClientConfig.serverList.size()));
+        request.setHost(pair.getO1());
+        request.setPort(pair.getO2());
         return request;
     }
 
@@ -120,11 +127,11 @@ public class Request {
         this.id = id;
     }
 
-    public List<Object> getParams() {
+    public Object[] getParams() {
         return params;
     }
 
-    public void setParams(List<Object> params) {
+    public void setParams(Object[] params) {
         this.params = params;
     }
 
