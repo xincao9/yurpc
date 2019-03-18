@@ -29,7 +29,7 @@ public interface JsonRPCClient {
      *
      * @param <T>
      * @param request
-     * @return 
+     * @return
      * @throws Throwable
      */
     <T> Response<T> invoke(Request request) throws Throwable;
@@ -48,12 +48,23 @@ public interface JsonRPCClient {
 
     /**
      *
+     * @param filename
      * @return
      */
-    static JsonRPCClient defaultJsonRPCClient() {
+    static JsonRPCClient defaultJsonRPCClient(String filename) {
+        if (ClientConfig.init(filename) == false) {
+            throw new RuntimeException("jsonrpc client bootstrap failure");
+        }
         return new JsonRPCClientImpl();
     }
 
+    /**
+     *
+     * @return
+     */
+    static JsonRPCClient defaultJsonRPCClient() {
+        return defaultJsonRPCClient("");
+    }
 
     /**
      *

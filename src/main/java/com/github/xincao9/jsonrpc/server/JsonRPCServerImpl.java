@@ -50,25 +50,21 @@ public class JsonRPCServerImpl implements JsonRPCServer {
     private EventLoopGroup bossGroup;
     private EventLoopGroup workerGroup;
     private final Map<String, Method> methods = new ConcurrentHashMap();
-    private Integer boss;
-    private Integer worker;
+    private final Integer boss;
+    private final Integer worker;
 
     /**
-     * 
+     *
      */
     public JsonRPCServerImpl() {
         this.port = ServerConfig.port;
-        if (ServerConfig.ioThreadBoss > 0) {
-            this.boss = ServerConfig.ioThreadBoss;
-        }
-        if (ServerConfig.ioThreadWorker > 0) {
-            this.worker = ServerConfig.ioThreadWorker;
-        }
+        this.boss = ServerConfig.ioThreadBoss;
+        this.worker = ServerConfig.ioThreadWorker;
     }
 
     /**
-     * 
-     * @throws Throwable 
+     *
+     * @throws Throwable
      */
     @Override
     public void start() throws Throwable {
@@ -107,8 +103,8 @@ public class JsonRPCServerImpl implements JsonRPCServer {
     }
 
     /**
-     * 
-     * @throws Throwable 
+     *
+     * @throws Throwable
      */
     @Override
     public void shutdown() throws Throwable {
@@ -121,8 +117,8 @@ public class JsonRPCServerImpl implements JsonRPCServer {
     }
 
     /**
-     * 
-     * @param method 
+     *
+     * @param method
      */
     @Override
     public void register(Method method) {
@@ -131,9 +127,9 @@ public class JsonRPCServerImpl implements JsonRPCServer {
     }
 
     /**
-     * 
+     *
      * @param name
-     * @return 
+     * @return
      */
     @Override
     public Method getMethod(String name) {

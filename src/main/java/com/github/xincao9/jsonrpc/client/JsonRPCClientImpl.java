@@ -144,7 +144,7 @@ public class JsonRPCClientImpl implements JsonRPCClient {
             LOGGER.warn("jsonrpc.invoke() request = {} failure exception = {}", request, f.cause());
         });
         try {
-            return request.waitResponse(1, TimeUnit.SECONDS);
+            return request.waitResponse(ClientConfig.invokeTimeoutMS, TimeUnit.MILLISECONDS);
         } catch (InterruptedException e) {
         }
         LOGGER.warn("jsonrpc.invoke() request = {} timeout", request);
@@ -163,7 +163,7 @@ public class JsonRPCClientImpl implements JsonRPCClient {
             synchronized (this) {
                 if (!this.addressChannel.containsKey(address)) {
                     ChannelFuture channelFuture = this.bootstrap.connect(new InetSocketAddress(host, port));
-                    if (channelFuture.awaitUninterruptibly(3000)) {
+                    if (channelFuture.awaitUninterruptibly(ClientConfig.connectionTimeoutMS)) {
                         if (channelFuture.channel().isActive()) {
                             JsonRPCClientImpl.this.addressChannel.put(address, channelFuture.channel());
                         }
