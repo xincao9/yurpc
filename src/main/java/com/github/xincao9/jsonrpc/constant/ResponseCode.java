@@ -21,6 +21,4 @@ public class ResponseCode {
     public static final Integer NOT_FOUND_METHOD = 6;
     public static final String NOT_FOUND_METHOD_MSG = "NOT FOUND METHOD";
     
-    
-    
 }
