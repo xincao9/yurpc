@@ -19,6 +19,7 @@
     </parent>
     <modules>
         <module>jsonrpc-core</module>
+        <module>jsonrpc-spring-boot-starter</module>
     </modules>
     <developers>
         <developer>
