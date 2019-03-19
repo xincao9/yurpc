@@ -67,12 +67,17 @@ public class ServerHandler extends SimpleChannelInboundHandler<String> {
                 String[] paramTypes = request.getParamTypes();
                 Class<?> clazz = Class.forName(classname);
                 Method method;
+                Object[] params = null;
                 if (paramTypes == null || paramTypes.length <= 0) {
                     method = clazz.getMethod(methodname);
                 } else {
                     Class<?>[] clazzes = new Class<?>[paramTypes.length];
+                    params = new Object[paramTypes.length];
                     for (int i = 0; i < paramTypes.length; i++) {
                         clazzes[i] = Class.forName(paramTypes[i]);
+                        if (request.getParams() != null && request.getParams()[i] != null) {
+                            params[i] = JSONObject.parseObject(JSONObject.toJSONString(request.getParams()[i]), clazzes[i]);
+                        }
                     }
                     method = clazz.getMethod(methodname, clazzes);
                 }
@@ -82,7 +87,7 @@ public class ServerHandler extends SimpleChannelInboundHandler<String> {
                     return;
                 }
                 if (request.getRequestType()) {
-                    response = Response.createResponse(request.getId(), method.invoke(component, request.getParams()));
+                    response = Response.createResponse(request.getId(), method.invoke(component, params));
                 } else {
                     method.invoke(component, request.getParams());
                     response = Response.createResponse(request.getId(), null);
