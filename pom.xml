@@ -3,7 +3,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.github.xincao9</groupId>
     <artifactId>jsonrpc</artifactId>
-    <version>1.0-RELEASE</version>
+    <version>1.1</version>
     <packaging>jar</packaging>
     <name>jsonrpc</name>
     <description>High performance rpc frame</description>
