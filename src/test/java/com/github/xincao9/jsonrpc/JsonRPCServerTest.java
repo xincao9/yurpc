@@ -22,9 +22,7 @@ import com.github.xincao9.jsonrpc.server.JsonRPCServer;
 import java.util.Collections;
 import java.util.Map;
 import org.apache.commons.lang3.RandomStringUtils;
-import org.junit.After;
 import org.junit.AfterClass;
-import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -34,23 +32,18 @@ import org.junit.Test;
  */
 public class JsonRPCServerTest {
 
-    public JsonRPCServerTest() {
-    }
+    private static JsonRPCServer jsonRPCServer;
 
     @BeforeClass
-    public static void setUpClass() {
+    public static void setUpClass() throws Throwable {
+        jsonRPCServer = JsonRPCServer.defaultJsonRPCServer();
+        jsonRPCServer.register(new SayServiceImpl());
+        jsonRPCServer.start();
     }
 
     @AfterClass
-    public static void tearDownClass() {
-    }
-
-    @Before
-    public void setUp() {
-    }
-
-    @After
-    public void tearDown() {
+    public static void tearDownClass() throws Throwable {
+        jsonRPCServer.shutdown();
     }
 
     public static class Say {
@@ -93,9 +86,6 @@ public class JsonRPCServerTest {
 
     @Test
     public void testPingMethod() throws Throwable {
-        JsonRPCServer jsonRPCServer = JsonRPCServer.defaultJsonRPCServer();
-        jsonRPCServer.register(new SayServiceImpl());
-        jsonRPCServer.start();
         JsonRPCClient jsonRPCClient = JsonRPCClient.defaultJsonRPCClient();
         jsonRPCClient.start();
         SayService sayService = jsonRPCClient.proxy(SayService.class);
@@ -105,7 +95,6 @@ public class JsonRPCServerTest {
             System.out.println(sayService.perform(Collections.singletonMap(no, say)));
         }
         jsonRPCClient.shutdown();
-        jsonRPCServer.shutdown();
     }
 
     public static class SayServiceImpl implements SayService {
