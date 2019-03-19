@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 xingyunzhi.
+ * Copyright 2018 xincao9@gmail.com.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,7 +20,8 @@ import com.alibaba.fastjson.serializer.SerializerFeature;
 import com.github.xincao9.jsonrpc.constant.ResponseCode;
 
 /**
- *
+ * 响应体
+ * 
  * @author xincao9@gmail.com
  * @param <T>
  */

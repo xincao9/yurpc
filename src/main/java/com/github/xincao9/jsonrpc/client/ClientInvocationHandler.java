@@ -1,3 +1,18 @@
+/*
+ * Copyright 2018 xincao9@gmail.com.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package com.github.xincao9.jsonrpc.client;
 
 import com.alibaba.fastjson.JSON;
@@ -15,7 +30,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- *
+ * 客户端调用代理
+ * 
  * @author xincao9@gmail.com
  */
 public class ClientInvocationHandler implements InvocationHandler {
@@ -24,6 +40,15 @@ public class ClientInvocationHandler implements InvocationHandler {
 
     private JsonRPCClient jsonRPCClient;
 
+    /**
+     * 代理方法调用
+     * 
+     * @param proxy 代理对象
+     * @param method 调用的方法
+     * @param args 调用方法的参数
+     * @return 调用方法的结果
+     * @throws Throwable 异常
+     */
     @Override
     public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
         StringBuilder sb = new StringBuilder();
@@ -56,9 +81,16 @@ public class ClientInvocationHandler implements InvocationHandler {
         if (!Objects.equals(response.getCode(), ResponseCode.OK)) {
             LOGGER.error("request = {}, code = {}, msg = {}", request, response.getCode(), response.getMsg());
         }
-        return null;
+        throw new RuntimeException(response.getMsg());
     }
 
+    /**
+     * 获得接口代理对象
+     * 
+     * @param <T> 接口类型
+     * @param clazz 接口
+     * @return 接口的代理类
+     */
     public <T> T proxy(Class<T> clazz) {
         if (clazz.isInterface() == false) {
             LOGGER.error("{} is not interface", clazz.getCanonicalName());
@@ -67,6 +99,11 @@ public class ClientInvocationHandler implements InvocationHandler {
         return (T) Proxy.newProxyInstance(clazz.getClassLoader(), new Class[]{clazz}, this);
     }
 
+    /**
+     * 修改器
+     * 
+     * @param jsonRPCClient 客户端
+     */
     public void setJsonRPCClient(JsonRPCClient jsonRPCClient) {
         this.jsonRPCClient = jsonRPCClient;
     }

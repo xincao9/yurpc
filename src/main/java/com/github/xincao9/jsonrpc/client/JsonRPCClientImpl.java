@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 xingyunzhi.
+ * Copyright 2018 xincao9@gmail.com.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -46,7 +46,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- *
+ * 客户端
+ * 
  * @author xincao9@gmail.com
  */
 public class JsonRPCClientImpl implements JsonRPCClient {
@@ -59,14 +60,9 @@ public class JsonRPCClientImpl implements JsonRPCClient {
     private ClientInvocationHandler clientInvocationHandler;
 
     /**
-     *
-     */
-    public JsonRPCClientImpl() {
-    }
-
-    /**
-     *
-     * @throws Throwable
+     * 启动
+     * 
+     * @throws java.lang.Throwable 异常
      */
     @Override
     public void start() throws Throwable {
@@ -95,8 +91,9 @@ public class JsonRPCClientImpl implements JsonRPCClient {
     }
 
     /**
-     *
-     * @throws Throwable
+     * 关闭
+     * 
+     * @throws java.lang.Throwable 异常
      */
     @Override
     public void shutdown() throws Throwable {
@@ -119,9 +116,12 @@ public class JsonRPCClientImpl implements JsonRPCClient {
     }
 
     /**
-     *
-     * @param request
-     * @throws Throwable
+     * 调用方法
+     * 
+     * @param <T> 类型
+     * @param request 请求
+     * @return 调用结果
+     * @throws Throwable 异常
      */
     @Override
     public <T> Response<T> invoke(Request request) throws Throwable {
@@ -151,10 +151,11 @@ public class JsonRPCClientImpl implements JsonRPCClient {
     }
 
     /**
-     *
-     * @param host
-     * @param port
-     * @return
+     * 获取通道
+     * 
+     * @param host 主机
+     * @param port 端口
+     * @return 通道
      */
     private Channel getChannel(String host, int port) {
         String address = String.format("%s:%d", host, port);
@@ -184,8 +185,9 @@ public class JsonRPCClientImpl implements JsonRPCClient {
     }
 
     /**
-     *
-     * @return
+     * 获得请求对象容器
+     * 
+     * @return 请求对象容器
      */
     @Override
     public Map<Long, Request> getRequests() {
@@ -193,10 +195,11 @@ public class JsonRPCClientImpl implements JsonRPCClient {
     }
 
     /**
+     * 获得接口的代理
      * 
-     * @param <T>
-     * @param clazz
-     * @return 
+     * @param <T> 类型
+     * @param clazz 接口
+     * @return 代理对象
      */
     @Override
     public <T> T proxy(Class<T> clazz) {

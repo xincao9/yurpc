@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 xingyunzhi.
+ * Copyright 2018 xincao9@gmail.com.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -26,7 +26,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- *
+ * 消息解码
+ * 
  * @author xincao9@gmail.com
  */
 public class StringDecoder extends ByteToMessageDecoder {

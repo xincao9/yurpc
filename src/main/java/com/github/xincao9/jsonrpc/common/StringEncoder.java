@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 xingyunzhi.
+ * Copyright 2018 xincao9@gmail.com.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,7 +22,8 @@ import java.util.Objects;
 import org.apache.commons.lang3.StringUtils;
 
 /**
- *
+ * 消息编码
+ * 
  * @author xincao9@gmail.com
  */
 public class StringEncoder extends MessageToByteEncoder<Object> {

@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 xingyunzhi.
+ * Copyright 2018 xincao9@gmail.com.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -27,13 +27,19 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 /**
- *
+ * 服务组件测试
+ * 
  * @author xincao9@gmail.com
  */
 public class JsonRPCServerTest {
 
     private static JsonRPCServer jsonRPCServer;
 
+    /**
+     * 启动服务组件
+     * 
+     * @throws Throwable 
+     */
     @BeforeClass
     public static void setUpClass() throws Throwable {
         jsonRPCServer = JsonRPCServer.defaultJsonRPCServer();
@@ -41,6 +47,11 @@ public class JsonRPCServerTest {
         jsonRPCServer.start();
     }
 
+    /**
+     * 关闭服务组件
+     * 
+     * @throws Throwable 
+     */
     @AfterClass
     public static void tearDownClass() throws Throwable {
         jsonRPCServer.shutdown();
@@ -84,6 +95,11 @@ public class JsonRPCServerTest {
         Map<Integer, Say> perform(Map<Integer, Say> saies);
     }
 
+    /**
+     * 客户端发送请求给服务端
+     * 
+     * @throws Throwable 
+     */
     @Test
     public void testMethod() throws Throwable {
         JsonRPCClient jsonRPCClient = JsonRPCClient.defaultJsonRPCClient();

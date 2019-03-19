@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 xingyunzhi.
+ * Copyright 2018 xincao9@gmail.com.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -28,7 +28,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- *
+ * 服务输入流处理
+ * 
  * @author xincao9@gmail.com
  */
 @Sharable
@@ -39,10 +40,11 @@ public class ServerHandler extends SimpleChannelInboundHandler<String> {
     private JsonRPCServer jsonRPCServer;
 
     /**
-     *
-     * @param ctx
-     * @param str
-     * @throws Exception
+     * 处理请求
+     * 
+     * @param ctx 上下文
+     * @param str 消息体
+     * @throws Exception 异常
      */
     @Override
     protected void channelRead0(ChannelHandlerContext ctx, String str) throws Exception {
@@ -102,8 +104,9 @@ public class ServerHandler extends SimpleChannelInboundHandler<String> {
     }
 
     /**
-     *
-     * @param jsonRPCServer
+     * 修改器
+     * 
+     * @param jsonRPCServer 服务组件
      */
     public void setJsonRPCServer(JsonRPCServer jsonRPCServer) {
         this.jsonRPCServer = jsonRPCServer;

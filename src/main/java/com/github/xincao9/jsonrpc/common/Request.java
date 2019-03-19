@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 xingyunzhi.
+ * Copyright 2018 xincao9@gmail.com.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,7 +24,8 @@ import java.util.concurrent.atomic.AtomicLong;
 import org.apache.commons.lang3.RandomUtils;
 
 /**
- *
+ * 请求体
+ * 
  * @author xincao9@gmail.com
  */
 public class Request {

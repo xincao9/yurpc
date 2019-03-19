@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 xingyunzhi.
+ * Copyright 2018 xincao9@gmail.com.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,36 +20,41 @@ import com.github.xincao9.jsonrpc.common.Response;
 import java.util.Map;
 
 /**
- *
+ * 客户端
+ * 
  * @author xincao9@gmail.com
  */
 public interface JsonRPCClient {
 
     /**
-     *
-     * @param <T>
-     * @param request
-     * @return
-     * @throws Throwable
+     * 调用方法
+     * 
+     * @param <T> 类型
+     * @param request 请求
+     * @return 调用结果
+     * @throws Throwable 异常
      */
     <T> Response<T> invoke(Request request) throws Throwable;
 
     /**
-     *
-     * @throws java.lang.Throwable
+     * 启动
+     * 
+     * @throws java.lang.Throwable 异常
      */
     void start() throws Throwable;
 
     /**
-     *
-     * @throws java.lang.Throwable
+     * 关闭
+     * 
+     * @throws java.lang.Throwable 异常
      */
     void shutdown() throws Throwable;
 
     /**
-     *
-     * @param filename
-     * @return
+     * 获得客户端
+     * 
+     * @param filename 配置文件
+     * @return 客户端
      */
     static JsonRPCClient defaultJsonRPCClient(String filename) {
         if (ClientConfig.init(filename) == false) {
@@ -59,24 +64,27 @@ public interface JsonRPCClient {
     }
 
     /**
-     *
-     * @return
+     * 获得客户端
+     * 
+     * @return 客户端
      */
     static JsonRPCClient defaultJsonRPCClient() {
         return defaultJsonRPCClient("");
     }
 
     /**
-     *
-     * @return
+     * 获得请求对象容器
+     * 
+     * @return 请求对象容器
      */
     Map<Long, Request> getRequests();
 
     /**
+     * 获得接口的代理
      * 
-     * @param <T>
-     * @param clazz
-     * @return 
+     * @param <T> 类型
+     * @param clazz 接口
+     * @return 代理对象
      */
     <T> T proxy(Class<T> clazz);
 }

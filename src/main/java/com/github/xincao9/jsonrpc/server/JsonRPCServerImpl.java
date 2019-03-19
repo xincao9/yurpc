@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 xingyunzhi.
+ * Copyright 2018 xincao9@gmail.com.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -39,6 +39,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
+ * 服务组件
  *
  * @author xincao9@gmail.com
  */
@@ -53,6 +54,7 @@ public class JsonRPCServerImpl implements JsonRPCServer {
     private final Integer worker;
 
     /**
+     * 构造器
      *
      */
     public JsonRPCServerImpl() {
@@ -62,6 +64,7 @@ public class JsonRPCServerImpl implements JsonRPCServer {
     }
 
     /**
+     * 启动
      *
      * @throws Throwable
      */
@@ -102,6 +105,7 @@ public class JsonRPCServerImpl implements JsonRPCServer {
     }
 
     /**
+     * 关闭
      *
      * @throws Throwable
      */
@@ -118,12 +122,13 @@ public class JsonRPCServerImpl implements JsonRPCServer {
     private final Map<String, Object> componentes = new HashMap();
 
     /**
-     * 
-     * @param <T>
-     * @param obj 
+     * 服务注册
+     *
+     * @param <T> 组建类型
+     * @param obj 服务组件
      */
     @Override
-    public <T> void register (T obj) {
+    public <T> void register(T obj) {
         Objects.requireNonNull(obj);
         Class<?>[] clazzes = obj.getClass().getInterfaces();
         if (clazzes == null || clazzes.length <= 0) {
@@ -136,12 +141,13 @@ public class JsonRPCServerImpl implements JsonRPCServer {
     }
 
     /**
-     * 
-     * @param name
-     * @return 
+     * 获取组建
+     *
+     * @param name 组建类型名
+     * @return 服务组件
      */
     @Override
-    public Object getBean (String name) {
+    public Object getBean(String name) {
         return componentes.get(name);
     }
 }

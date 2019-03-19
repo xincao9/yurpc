@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 xingyunzhi.
+ * Copyright 2018 xincao9@gmail.com.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,7 +24,8 @@ import io.netty.channel.SimpleChannelInboundHandler;
 import java.util.Map;
 
 /**
- *
+ * 客户端输入流处理器
+ * 
  * @author xincao9@gmail.com
  */
 @Sharable
@@ -32,6 +33,13 @@ public class ClientHandler extends SimpleChannelInboundHandler<String> {
 
     private JsonRPCClient jsonRPCClient;
 
+    /**
+     * 读取输入流处理
+     * 
+     * @param ctx channel上下文
+     * @param msg 消息
+     * @throws Exception 异常
+     */
     @Override
     protected void channelRead0(ChannelHandlerContext ctx, String msg) throws Exception {
         Response response = JSONObject.parseObject(msg, Response.class);
@@ -44,6 +52,11 @@ public class ClientHandler extends SimpleChannelInboundHandler<String> {
         }
     }
 
+    /**
+     * 修改器
+     * 
+     * @param jsonRPCClient 客户端
+     */
     public void setJsonRPCClient(JsonRPCClient jsonRPCClient) {
         this.jsonRPCClient = jsonRPCClient;
     }
