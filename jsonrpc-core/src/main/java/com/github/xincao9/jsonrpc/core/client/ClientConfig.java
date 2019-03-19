@@ -16,7 +16,7 @@
 package com.github.xincao9.jsonrpc.core.client;
 
 import com.github.xincao9.jsonrpc.core.common.Pair;
-import com.github.xincao9.jsonrpc.core.constant.ClientConfigConsts;
+import com.github.xincao9.jsonrpc.core.constant.ClientConsts;
 import com.github.xincao9.jsonrpc.core.util.PropertiesUtils;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -27,7 +27,7 @@ import org.slf4j.LoggerFactory;
 
 /**
  * 客户端配置
- * 
+ *
  * @author xincao9@gmail.com
  */
 public class ClientConfig {
@@ -40,24 +40,34 @@ public class ClientConfig {
 
     /**
      * 初始化客户端配置
-     * 
+     *
      * @param filename 配置文件名
      * @return 初始化结果
      */
-    public static Boolean init (String filename) {
+    public static Boolean init(String filename) {
         try {
-            Properties pros = PropertiesUtils.read(filename, ClientConfigConsts.DEFAULT_CONFIG_FILENAME);
-            String serverListStr = pros.getProperty(ClientConfigConsts.SERVER_LIST, ClientConfigConsts.DEFAULT_SERVER_LIST);
-            String[] servers = serverListStr.split(",");
-            for (String server : servers) {
-                serverList.add(new Pair(server.split(":")[0], Integer.valueOf(server.split(":")[1])));
-            }
-            connectionTimeoutMS = Integer.valueOf(pros.getProperty(ClientConfigConsts.CONNECTION_TIMEOUT_MS, ClientConfigConsts.DEFAULT_CONNECTION_TIMEOUT_MS));
-            invokeTimeoutMS = Integer.valueOf(pros.getProperty(ClientConfigConsts.INVOKE_TIMEOUT_MS, ClientConfigConsts.DEFAULT_INVOKE_TIMEOUT_MS));
+            Properties pros = PropertiesUtils.read(filename, ClientConsts.DEFAULT_CONFIG_FILENAME);
+            init(pros);
             return true;
         } catch (IOException ioe) {
             LOGGER.error(ioe.getMessage());
         }
         return false;
     }
+
+    /**
+     * 初始化客户端配置
+     *
+     * @param pros 属性文件
+     */
+    public static void init(Properties pros) {
+        String serverListStr = pros.getProperty(ClientConsts.SERVER_LIST, ClientConsts.DEFAULT_SERVER_LIST);
+        String[] servers = serverListStr.split(",");
+        for (String server : servers) {
+            serverList.add(new Pair(server.split(":")[0], Integer.valueOf(server.split(":")[1])));
+        }
+        connectionTimeoutMS = Integer.valueOf(pros.getProperty(ClientConsts.CONNECTION_TIMEOUT_MS, ClientConsts.DEFAULT_CONNECTION_TIMEOUT_MS));
+        invokeTimeoutMS = Integer.valueOf(pros.getProperty(ClientConsts.INVOKE_TIMEOUT_MS, ClientConsts.DEFAULT_INVOKE_TIMEOUT_MS));
+    }
+
 }

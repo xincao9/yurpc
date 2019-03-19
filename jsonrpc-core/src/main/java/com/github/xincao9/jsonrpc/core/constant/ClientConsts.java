@@ -20,7 +20,7 @@ package com.github.xincao9.jsonrpc.core.constant;
  * 
  * @author xincao9@gmail.com
  */
-public class ClientConfigConsts {
+public class ClientConsts {
 
     public static final String SERVER_LIST = "jsonrpc.client.serverList";
     public static final String DEFAULT_SERVER_LIST = "127.0.0.1:12306";

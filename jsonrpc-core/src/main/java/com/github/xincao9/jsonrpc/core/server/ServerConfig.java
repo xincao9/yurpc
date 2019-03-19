@@ -15,7 +15,7 @@
  */
 package com.github.xincao9.jsonrpc.core.server;
 
-import com.github.xincao9.jsonrpc.core.constant.ServerConfigConsts;
+import com.github.xincao9.jsonrpc.core.constant.ServerConsts;
 import com.github.xincao9.jsonrpc.core.util.PropertiesUtils;
 import java.io.IOException;
 import java.util.Properties;
@@ -24,7 +24,7 @@ import org.slf4j.LoggerFactory;
 
 /**
  * 服务配置类
- * 
+ *
  * @author xincao9@gmail.com
  */
 public class ServerConfig {
@@ -36,31 +36,39 @@ public class ServerConfig {
     public static Integer ioThreadWorker;
 
     /**
-     * 初始化
-     * 
+     * 初始化服务组件配置
+     *
      * @param filename 配置文件名
-     * @return 初始化状态
+     * @return 初始化结果
      */
     public static Boolean init(String filename) {
         try {
-            Properties pros = PropertiesUtils.read(filename, ServerConfigConsts.DEFAULT_CONFIG_FILENAME);
-            port = Integer.valueOf(String.valueOf(pros.getProperty(ServerConfigConsts.PORT, ServerConfigConsts.DEFAULT_PORT)));
-            ioThreadBoss = Integer.valueOf(String.valueOf(pros.getProperty(ServerConfigConsts.IO_THREAD_BOSS, ServerConfigConsts.DEFAULT_IO_THREAD_BOSS)));
-            ioThreadWorker = Integer.valueOf(String.valueOf(pros.getProperty(ServerConfigConsts.IO_THREAD_WORKER, ServerConfigConsts.DEFAULT_IO_THREAD_WORKER)));
-            if (port <= 0 || port > 65535) {
-                port = Integer.valueOf(ServerConfigConsts.DEFAULT_PORT);
-            }
-            if (ioThreadBoss <= 0 || ioThreadBoss > 4) {
-                ioThreadBoss = Integer.valueOf(ServerConfigConsts.DEFAULT_IO_THREAD_BOSS);
-            }
-            if (ioThreadWorker <= 0) {
-                ioThreadWorker = Integer.valueOf(ServerConfigConsts.DEFAULT_IO_THREAD_WORKER);
-            }
+            Properties pros = PropertiesUtils.read(filename, ServerConsts.DEFAULT_CONFIG_FILENAME);
+            init(pros);
             return true;
-        } catch (IOException ioe) {
-            LOGGER.error(ioe.getMessage());
+        } catch (IOException ex) {
+            LOGGER.error(ex.getMessage());
         }
         return false;
+    }
 
+    /**
+     * 初始化服务组件配置
+     *
+     * @param pros 属性文件
+     */
+    public static void init(Properties pros) {
+        port = Integer.valueOf(String.valueOf(pros.getProperty(ServerConsts.PORT, ServerConsts.DEFAULT_PORT)));
+        ioThreadBoss = Integer.valueOf(String.valueOf(pros.getProperty(ServerConsts.IO_THREAD_BOSS, ServerConsts.DEFAULT_IO_THREAD_BOSS)));
+        ioThreadWorker = Integer.valueOf(String.valueOf(pros.getProperty(ServerConsts.IO_THREAD_WORKER, ServerConsts.DEFAULT_IO_THREAD_WORKER)));
+        if (port <= 0 || port > 65535) {
+            port = Integer.valueOf(ServerConsts.DEFAULT_PORT);
+        }
+        if (ioThreadBoss <= 0 || ioThreadBoss > 4) {
+            ioThreadBoss = Integer.valueOf(ServerConsts.DEFAULT_IO_THREAD_BOSS);
+        }
+        if (ioThreadWorker <= 0) {
+            ioThreadWorker = Integer.valueOf(ServerConsts.DEFAULT_IO_THREAD_WORKER);
+        }
     }
 }

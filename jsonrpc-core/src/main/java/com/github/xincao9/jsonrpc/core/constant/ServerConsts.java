@@ -20,7 +20,7 @@ package com.github.xincao9.jsonrpc.core.constant;
  * 
  * @author xincao9@gmail.com
  */
-public class ServerConfigConsts {
+public class ServerConsts {
 
     public static final String DEFAULT_CONFIG_FILENAME = "/config.properties";
     public static final String PORT = "jsonrpc.server.port";
