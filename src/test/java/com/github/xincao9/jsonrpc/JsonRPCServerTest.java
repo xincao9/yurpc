@@ -85,7 +85,7 @@ public class JsonRPCServerTest {
     }
 
     @Test
-    public void testPingMethod() throws Throwable {
+    public void testMethod() throws Throwable {
         JsonRPCClient jsonRPCClient = JsonRPCClient.defaultJsonRPCClient();
         jsonRPCClient.start();
         SayService sayService = jsonRPCClient.proxy(SayService.class);
