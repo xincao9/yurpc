@@ -19,6 +19,11 @@
         <commons-codec.version>1.11</commons-codec.version>
         <junit.version>4.12</junit.version>
     </properties>
+    <parent>
+        <groupId>org.sonatype.oss</groupId>
+        <artifactId>oss-parent</artifactId>
+        <version>9</version>
+    </parent>
     <dependencyManagement>
         <dependencies>
             <dependency>
@@ -128,4 +133,17 @@
             <url>https://github.com/xincao9</url>
         </developer>
     </developers>
+    <licenses>
+        <license>
+            <name>The Apache Software License, Version 2.0</name>
+            <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+            <distribution>repo</distribution>
+        </license>
+    </licenses>
+    <scm>
+        <tag>master</tag>
+        <url>git@github.com:xincao9/jsonrpc.git</url>
+        <connection>scm:git:git@github.com:xincao9/jsonrpc.git</connection>
+        <developerConnection>scm:git:git@github.com:xincao9/jsonrpc.git</developerConnection>
+    </scm>
 </project>
