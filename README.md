@@ -98,3 +98,5 @@ public class JsonRPCServerTest {
     }
 }
 </pre>
+
+https://issues.sonatype.org/browse/OSSRH-47112
