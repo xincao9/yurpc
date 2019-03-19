@@ -8,6 +8,19 @@
 ### example
 
 <pre>
+classpath下放置配置文件 config.properties
+
+jsonrpc.client.serverList=localhost:12306
+jsonrpc.client.connectionTimeoutMS=5000
+jsonrpc.client.invokeTimeoutMS=1000
+
+jsonrpc.server.port=12306
+jsonrpc.server.ioThreadBoss=1
+jsonrpc.server.ioThreadWorker=4
+
+</pre>
+
+<pre>
 public class JsonRPCServerTest {
 
     private static JsonRPCServer jsonRPCServer;

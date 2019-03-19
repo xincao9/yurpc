@@ -7,7 +7,7 @@ package com.github.xincao9.jsonrpc.constant;
 public class ServerConfigConsts {
 
     // 服务端常量
-    public static final String DEFAULT_CONFIG_FILENAME = "/server.properties";
+    public static final String DEFAULT_CONFIG_FILENAME = "/config.properties";
     public static final String PORT = "jsonrpc.server.port";
     public static final String DEFAULT_PORT = "12306";
     public static final String IO_THREAD_BOSS = "jsonrpc.server.ioThreadBoss";
