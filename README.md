@@ -1,15 +1,28 @@
-# jsonrpc
+## jsonrpc
 
-### simple rpc scheme
+### High performance rpc frame
 
-> 使用时，仅需要添加自己实现了slf4j-api的log框架，强烈推荐使用logback
+
+> **When using, you only need to add your own log framework that implements slf4j-api. It is strongly recommended to use logback.**
+
+### example
 
 <pre>
-/**
- *
- * @author xincao9@gmail.com
- */
 public class JsonRPCServerTest {
+
+    private static JsonRPCServer jsonRPCServer;
+
+    @BeforeClass
+    public static void setUpClass() throws Throwable {
+        jsonRPCServer = JsonRPCServer.defaultJsonRPCServer();
+        jsonRPCServer.register(new SayServiceImpl());
+        jsonRPCServer.start();
+    }
+
+    @AfterClass
+    public static void tearDownClass() throws Throwable {
+        jsonRPCServer.shutdown();
+    }
 
     public static class Say {
 
@@ -51,9 +64,6 @@ public class JsonRPCServerTest {
 
     @Test
     public void testPingMethod() throws Throwable {
-        JsonRPCServer jsonRPCServer = JsonRPCServer.defaultJsonRPCServer();
-        jsonRPCServer.register(new SayServiceImpl());
-        jsonRPCServer.start();
         JsonRPCClient jsonRPCClient = JsonRPCClient.defaultJsonRPCClient();
         jsonRPCClient.start();
         SayService sayService = jsonRPCClient.proxy(SayService.class);
@@ -63,7 +73,6 @@ public class JsonRPCServerTest {
             System.out.println(sayService.perform(Collections.singletonMap(no, say)));
         }
         jsonRPCClient.shutdown();
-        jsonRPCServer.shutdown();
     }
 
     public static class SayServiceImpl implements SayService {
