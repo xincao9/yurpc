@@ -6,7 +6,7 @@
     <version>1.0-RELEASE</version>
     <packaging>jar</packaging>
     <name>jsonrpc</name>
-    <description>SIMPLE JSON RPC</description>
+    <description>High performance rpc frame</description>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.source>1.8</maven.compiler.source>
