@@ -3,9 +3,10 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.github.xincao9</groupId>
     <artifactId>jsonrpc</artifactId>
+    <name>jsonrpc</name>
     <version>1.2</version>
     <packaging>pom</packaging>
-    <description>High performance rpc frame</description>
+    <description>high-performance RPC framework.</description>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.source>1.8</maven.compiler.source>
@@ -16,6 +17,7 @@
         <module>jsonrpc-spring-boot-starter</module>
         <module>jsonrpc-sample</module>
     </modules>
+    <url>https://github.com/xincao9/jsonrpc</url>
     <developers>
         <developer>
             <email>xincao9@gmail.com</email>
@@ -85,6 +87,32 @@
                                 <phase>verify</phase>
                                 <goals>
                                     <goal>sign</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-source-plugin</artifactId>
+                        <version>3.0.1</version>
+                        <executions>
+                            <execution>
+                                <phase>package</phase>
+                                <goals>
+                                    <goal>jar-no-fork</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-javadoc-plugin</artifactId>
+                        <version>3.1.0</version>
+                        <executions>
+                            <execution>
+                                <phase>package</phase>
+                                <goals>
+                                    <goal>jar</goal>
                                 </goals>
                             </execution>
                         </executions>
