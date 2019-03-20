@@ -28,6 +28,14 @@
             <organizationUrl>https://github.com/xincao9/</organizationUrl>
         </developer>
     </developers>
+    <organization>
+        <name>Personal</name>
+        <url>https://github.com/xincao9</url>
+    </organization>
+    <issueManagement>
+        <system>Github Issues</system>
+        <url>https://github.com/xincao9/jsonrpc/issues</url>
+    </issueManagement>
     <licenses>
         <license>
             <name>The Apache Software License, Version 2.0</name>
