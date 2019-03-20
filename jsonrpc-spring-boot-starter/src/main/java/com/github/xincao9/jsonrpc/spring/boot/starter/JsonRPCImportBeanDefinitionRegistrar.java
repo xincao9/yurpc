@@ -35,6 +35,9 @@ public class JsonRPCImportBeanDefinitionRegistrar implements ImportBeanDefinitio
         if (attributes != null && attributes.containsKey("server")) {
             beanDefinitionBuilder.addPropertyValue("server", (Boolean) attributes.get("server"));
         }
+        if (attributes != null && attributes.containsKey("client")) {
+            beanDefinitionBuilder.addPropertyValue("client", (Boolean) attributes.get("client"));
+        }
         bdr.registerBeanDefinition(JsonRPCAutoConfiguration.class.getName(), beanDefinitionBuilder.getBeanDefinition());
     }
 

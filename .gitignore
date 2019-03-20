@@ -2,3 +2,4 @@
 /target/
 /jsonrpc-core/nbproject/
 /jsonrpc-core/target/
+/jsonrpc-spring-boot-starter/target/

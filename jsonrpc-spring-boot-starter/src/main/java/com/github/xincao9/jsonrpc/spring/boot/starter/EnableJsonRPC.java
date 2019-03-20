@@ -24,7 +24,7 @@ import org.springframework.context.annotation.Import;
 
 /**
  * 启动注解
- * 
+ *
  * @author xincao9@gmail.com
  */
 @Target({ElementType.TYPE})
@@ -33,5 +33,15 @@ import org.springframework.context.annotation.Import;
 @Import({JsonRPCImportBeanDefinitionRegistrar.class})
 public @interface EnableJsonRPC {
 
+    /**
+     * 
+     * @return 
+     */
     boolean server() default false;
+
+    /**
+     * 
+     * @return 
+     */
+    boolean client() default false;
 }

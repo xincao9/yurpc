@@ -24,7 +24,9 @@ import com.github.xincao9.jsonrpc.core.server.JsonRPCServer;
 import com.github.xincao9.jsonrpc.core.server.JsonRPCServerImpl;
 import com.github.xincao9.jsonrpc.core.server.ServerConfig;
 import java.util.Properties;
-import org.springframework.beans.factory.InitializingBean;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.DisposableBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.context.annotation.Bean;
@@ -33,51 +35,76 @@ import org.springframework.core.env.Environment;
 
 /**
  * 自动配置类
- * 
+ *
  * @author xincao9@gmail.com
  */
 @Configuration
-public class JsonRPCAutoConfiguration implements InitializingBean {
+public class JsonRPCAutoConfiguration implements DisposableBean {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(JsonRPCAutoConfiguration.class);
 
     @Autowired
     private Environment environment;
-    private boolean server;
-
-    @Override
-    public void afterPropertiesSet() throws Exception {
-    }
+    private Boolean server;
+    private Boolean client;
+    private JsonRPCClient jsonRPCClient;
+    private JsonRPCServer jsonRPCServer;
 
     @Bean
     @ConditionalOnMissingBean
     public JsonRPCClient jsonRPCClient() throws Throwable {
-        Properties pros = new Properties();
-        pros.setProperty(ClientConsts.DEFAULT_SERVER_LIST, environment.getProperty(ClientConsts.DEFAULT_SERVER_LIST));
-        pros.setProperty(ClientConsts.CONNECTION_TIMEOUT_MS, environment.getProperty(ClientConsts.CONNECTION_TIMEOUT_MS));
-        pros.setProperty(ClientConsts.INVOKE_TIMEOUT_MS, environment.getProperty(ClientConsts.INVOKE_TIMEOUT_MS));
-        ClientConfig.init(pros);
-        JsonRPCClient jsonRPCClient = new JsonRPCClientImpl();
-        jsonRPCClient.start();
-        return jsonRPCClient;
+        if (client) {
+            Properties pros = new Properties();
+            pros.setProperty(ClientConsts.DEFAULT_SERVER_LIST, environment.getProperty(ClientConsts.DEFAULT_SERVER_LIST));
+            pros.setProperty(ClientConsts.CONNECTION_TIMEOUT_MS, environment.getProperty(ClientConsts.CONNECTION_TIMEOUT_MS));
+            pros.setProperty(ClientConsts.INVOKE_TIMEOUT_MS, environment.getProperty(ClientConsts.INVOKE_TIMEOUT_MS));
+            ClientConfig.init(pros);
+            jsonRPCClient = new JsonRPCClientImpl();
+            jsonRPCClient.start();
+            return jsonRPCClient;
+        }
+        return null;
     }
 
     @Bean
     @ConditionalOnMissingBean
-    public JsonRPCServer jsonRPCServer () throws Throwable {
+    public JsonRPCServer jsonRPCServer() throws Throwable {
         if (server) {
             Properties pros = new Properties();
             pros.setProperty(ServerConsts.PORT, environment.getProperty(ServerConsts.PORT));
             pros.setProperty(ServerConsts.IO_THREAD_BOSS, environment.getProperty(ServerConsts.IO_THREAD_BOSS));
             pros.setProperty(ServerConsts.IO_THREAD_WORKER, environment.getProperty(ServerConsts.IO_THREAD_WORKER));
             ServerConfig.init(pros);
-            JsonRPCServer jsonRPCServer = new JsonRPCServerImpl();
+            jsonRPCServer = new JsonRPCServerImpl();
             jsonRPCServer.start();
             return jsonRPCServer;
         }
         return null;
     }
 
-    public void setServer(boolean server) {
+    @Override
+    public void destroy() throws Exception {
+        if (jsonRPCClient != null) {
+            try {
+                jsonRPCClient.shutdown();
+            } catch (Throwable e) {
+                LOGGER.error(e.getMessage());
+            }
+        }
+        if (jsonRPCServer != null) {
+            try {
+                jsonRPCServer.shutdown();
+            } catch (Throwable e) {
+                LOGGER.error(e.getMessage());
+            }
+        }
+    }
+
+    public void setServer(Boolean server) {
         this.server = server;
     }
 
+    public void setClient(Boolean client) {
+        this.client = client;
+    }
 }
