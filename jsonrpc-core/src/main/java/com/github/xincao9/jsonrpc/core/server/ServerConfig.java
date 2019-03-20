@@ -56,7 +56,7 @@ public class ServerConfig {
         if (port <= 0 || port > 65535) {
             port = Integer.valueOf(ServerConsts.DEFAULT_PORT);
         }
-        if (ioThreadBoss <= 0 || ioThreadBoss > 4) {
+        if (ioThreadBoss <= 0 || ioThreadBoss > 1024) {
             ioThreadBoss = Integer.valueOf(ServerConsts.DEFAULT_IO_THREAD_BOSS);
         }
         if (ioThreadWorker <= 0) {
