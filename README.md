@@ -13,7 +13,7 @@ jsonrpc is a high-performance, Java based open source RPC framework.
 <dependency>
     <groupId>com.github.xincao9</groupId>
     <artifactId>jsonrpc-spring-boot-starter</artifactId>
-    <version>1.1</version>
+    <version>1.2</version>
 </dependency>
 ```
 
