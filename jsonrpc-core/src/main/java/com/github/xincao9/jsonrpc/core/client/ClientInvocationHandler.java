@@ -70,7 +70,10 @@ public class ClientInvocationHandler implements InvocationHandler {
             request = Request.createRequest(Boolean.TRUE, sb.toString(), args);
         }
         request.setParamTypes(paramTypes);
+        long startTime = System.currentTimeMillis();
         Response response = jsonRPCClient.invoke(request);
+        LOGGER.debug("requestId = {}, invoke costTime = {}", request.getId(), System.currentTimeMillis() - startTime);
+        LOGGER.debug("requestId = {}, c to s costTime = {} ms, s to c costTime {} ms", request.getId(), response.getCreateTime() - request.getCreateTime(), System.currentTimeMillis() - response.getCreateTime());
         if (Objects.equals(response.getCode(), ResponseCode.OK) && !"void".equalsIgnoreCase(retureType.getTypeName())) {
             if (response.getData() == null) {
                 return null;

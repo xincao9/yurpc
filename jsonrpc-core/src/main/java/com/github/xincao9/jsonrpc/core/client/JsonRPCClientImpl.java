@@ -21,7 +21,6 @@ import com.github.xincao9.jsonrpc.core.common.StringDecoder;
 import com.github.xincao9.jsonrpc.core.common.StringEncoder;
 import com.github.xincao9.jsonrpc.core.constant.ResponseCode;
 import io.netty.bootstrap.Bootstrap;
-import io.netty.buffer.PooledByteBufAllocator;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelFutureListener;
@@ -41,6 +40,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -66,16 +66,15 @@ public class JsonRPCClientImpl implements JsonRPCClient {
      */
     @Override
     public void start() throws Throwable {
-        this.workerGroup = Epoll.isAvailable() ? new EpollEventLoopGroup(Runtime.getRuntime().availableProcessors()) : new NioEventLoopGroup(Runtime.getRuntime().availableProcessors());
+        this.workerGroup = Epoll.isAvailable() ? new EpollEventLoopGroup(Runtime.getRuntime().availableProcessors(), Executors.newCachedThreadPool()) : new NioEventLoopGroup(Runtime.getRuntime().availableProcessors(), Executors.newCachedThreadPool());
         ClientHandler clientHandler = new ClientHandler();
         clientHandler.setJsonRPCClient(this);
         this.bootstrap.group(this.workerGroup).channel(Epoll.isAvailable() ? EpollSocketChannel.class : NioSocketChannel.class)
                 .option(ChannelOption.TCP_NODELAY, true)
-                .option(ChannelOption.SO_KEEPALIVE, true)
+                .option(ChannelOption.SO_KEEPALIVE, false)
                 .option(ChannelOption.CONNECT_TIMEOUT_MILLIS, ClientConfig.connectionTimeoutMS)
                 .option(ChannelOption.SO_SNDBUF, 65535)
                 .option(ChannelOption.SO_RCVBUF, 65535)
-                .option(ChannelOption.ALLOCATOR, PooledByteBufAllocator.DEFAULT)
                 .handler(new ChannelInitializer<SocketChannel>() {
                     @Override
                     public void initChannel(SocketChannel ch) throws Exception {
@@ -146,6 +145,8 @@ public class JsonRPCClientImpl implements JsonRPCClient {
         } catch (InterruptedException e) {
             LOGGER.error(e.getMessage());
         }
+        this.requests.remove(request.getId());
+        request.putResponse(null);
         LOGGER.error("jsonrpc.invoke() request = {} timeout (wait time > {} ms)", request, ClientConfig.invokeTimeoutMS);
         return Response.createResponse(request.getId(), ResponseCode.INVOKE_TIMEOUT, ResponseCode.INVOKE_TIMEOUT_MSG);
     }

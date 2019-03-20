@@ -18,7 +18,6 @@ package com.github.xincao9.jsonrpc.core.server;
 import com.github.xincao9.jsonrpc.core.common.StringDecoder;
 import com.github.xincao9.jsonrpc.core.common.StringEncoder;
 import io.netty.bootstrap.ServerBootstrap;
-import io.netty.buffer.PooledByteBufAllocator;
 import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.ChannelOption;
@@ -93,9 +92,8 @@ public class JsonRPCServerImpl implements JsonRPCServer {
                         );
                     }
                 })
-                .childOption(ChannelOption.SO_KEEPALIVE, true)
-                .childOption(ChannelOption.TCP_NODELAY, true)
-                .childOption(ChannelOption.ALLOCATOR, PooledByteBufAllocator.DEFAULT);
+                .childOption(ChannelOption.SO_KEEPALIVE, false)
+                .childOption(ChannelOption.TCP_NODELAY, true);
         ChannelFuture f = bootstrap.bind("0.0.0.0", port).addListener((Future<? super Void> future) -> {
             LOGGER.warn("start the jsonrpc service port = {}, cause = {}", this.port, future.cause());
         });

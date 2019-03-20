@@ -31,6 +31,7 @@ public class Response<T> {
     private Integer code = ResponseCode.OK; // response code
     private T data;
     private String msg = ResponseCode.OK_MSG;
+    private final Long createTime = System.currentTimeMillis();
 
     public static <T> Response<T> createResponse(Long id, T data) {
         Response response = new Response();
@@ -77,6 +78,10 @@ public class Response<T> {
 
     public void setMsg(String msg) {
         this.msg = msg;
+    }
+
+    public Long getCreateTime() {
+        return createTime;
     }
 
     @Override
