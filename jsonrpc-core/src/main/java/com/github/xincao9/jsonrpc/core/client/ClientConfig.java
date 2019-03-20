@@ -18,7 +18,6 @@ package com.github.xincao9.jsonrpc.core.client;
 import com.github.xincao9.jsonrpc.core.common.Pair;
 import com.github.xincao9.jsonrpc.core.constant.ClientConsts;
 import com.github.xincao9.jsonrpc.core.util.PropertiesUtils;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
@@ -42,17 +41,10 @@ public class ClientConfig {
      * 初始化客户端配置
      *
      * @param filename 配置文件名
-     * @return 初始化结果
      */
-    public static Boolean init(String filename) {
-        try {
-            Properties pros = PropertiesUtils.read(filename, ClientConsts.DEFAULT_CONFIG_FILENAME);
-            init(pros);
-            return true;
-        } catch (IOException ioe) {
-            LOGGER.error(ioe.getMessage());
-        }
-        return false;
+    public static void init(String filename) {
+        Properties pros = PropertiesUtils.read(filename, ClientConsts.DEFAULT_CONFIG_FILENAME);
+        init(pros);
     }
 
     /**

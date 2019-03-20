@@ -15,8 +15,6 @@
  */
 package com.github.xincao9.jsonrpc.core.util;
 
-import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.util.Properties;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -37,10 +35,8 @@ public class PropertiesUtils {
      * @param filename
      * @param defaultFilename
      * @return
-     * @throws FileNotFoundException
-     * @throws IOException
      */
-    public static Properties read(String filename, String defaultFilename) throws IOException {
+    public static Properties read(String filename, String defaultFilename) {
         if (StringUtils.isBlank(filename)) {
             LOGGER.warn("filename is empty");
         }
@@ -49,8 +45,8 @@ public class PropertiesUtils {
             Properties pros = new Properties();
             pros.load(PropertiesUtils.class.getResourceAsStream(filename));
             return pros;
-        } catch (FileNotFoundException fnfe) {
-            LOGGER.warn("filename = {} not found", filename);
+        } catch (Throwable e) {
+            LOGGER.warn(e.getMessage());
         }
         return new Properties();
     }

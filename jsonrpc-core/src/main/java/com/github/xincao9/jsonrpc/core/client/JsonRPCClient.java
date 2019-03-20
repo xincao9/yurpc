@@ -57,9 +57,7 @@ public interface JsonRPCClient {
      * @return 客户端
      */
     static JsonRPCClient defaultJsonRPCClient(String filename) {
-        if (ClientConfig.init(filename) == false) {
-            throw new RuntimeException("jsonrpc client bootstrap failure");
-        }
+        ClientConfig.init(filename);
         return new JsonRPCClientImpl();
     }
 

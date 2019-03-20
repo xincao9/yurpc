@@ -43,9 +43,7 @@ public interface JsonRPCServer {
      * @return 服务端
      */
     static JsonRPCServer defaultJsonRPCServer(String filename) throws RuntimeException {
-        if (ServerConfig.init(filename) == false) {
-            throw new RuntimeException("jsonrpc server bootstrap failure");
-        }
+        ServerConfig.init(filename);
         return new JsonRPCServerImpl();
     }
 

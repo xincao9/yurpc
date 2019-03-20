@@ -17,7 +17,6 @@ package com.github.xincao9.jsonrpc.core.server;
 
 import com.github.xincao9.jsonrpc.core.constant.ServerConsts;
 import com.github.xincao9.jsonrpc.core.util.PropertiesUtils;
-import java.io.IOException;
 import java.util.Properties;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -39,17 +38,10 @@ public class ServerConfig {
      * 初始化服务组件配置
      *
      * @param filename 配置文件名
-     * @return 初始化结果
      */
-    public static Boolean init(String filename) {
-        try {
-            Properties pros = PropertiesUtils.read(filename, ServerConsts.DEFAULT_CONFIG_FILENAME);
-            init(pros);
-            return true;
-        } catch (IOException ex) {
-            LOGGER.error(ex.getMessage());
-        }
-        return false;
+    public static void init(String filename) {
+        Properties pros = PropertiesUtils.read(filename, ServerConsts.DEFAULT_CONFIG_FILENAME);
+        init(pros);
     }
 
     /**
