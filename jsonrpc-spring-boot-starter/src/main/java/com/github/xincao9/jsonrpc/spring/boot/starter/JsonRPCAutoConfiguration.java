@@ -55,9 +55,15 @@ public class JsonRPCAutoConfiguration implements DisposableBean {
     public JsonRPCClient jsonRPCClient() throws Throwable {
         if (client) {
             Properties pros = new Properties();
-            pros.setProperty(ClientConsts.DEFAULT_SERVER_LIST, environment.getProperty(ClientConsts.DEFAULT_SERVER_LIST));
-            pros.setProperty(ClientConsts.CONNECTION_TIMEOUT_MS, environment.getProperty(ClientConsts.CONNECTION_TIMEOUT_MS));
-            pros.setProperty(ClientConsts.INVOKE_TIMEOUT_MS, environment.getProperty(ClientConsts.INVOKE_TIMEOUT_MS));
+            if (environment.containsProperty(ClientConsts.SERVER_LIST)) {
+                pros.setProperty(ClientConsts.SERVER_LIST, environment.getProperty(ClientConsts.SERVER_LIST));
+            }
+            if (environment.containsProperty(ClientConsts.CONNECTION_TIMEOUT_MS)) {
+                pros.setProperty(ClientConsts.CONNECTION_TIMEOUT_MS, environment.getProperty(ClientConsts.CONNECTION_TIMEOUT_MS));
+            }
+            if (environment.containsProperty(ClientConsts.INVOKE_TIMEOUT_MS)) {
+                pros.setProperty(ClientConsts.INVOKE_TIMEOUT_MS, environment.getProperty(ClientConsts.INVOKE_TIMEOUT_MS));
+            }
             ClientConfig.init(pros);
             jsonRPCClient = new JsonRPCClientImpl();
             jsonRPCClient.start();
@@ -71,9 +77,15 @@ public class JsonRPCAutoConfiguration implements DisposableBean {
     public JsonRPCServer jsonRPCServer() throws Throwable {
         if (server) {
             Properties pros = new Properties();
-            pros.setProperty(ServerConsts.PORT, environment.getProperty(ServerConsts.PORT));
-            pros.setProperty(ServerConsts.IO_THREAD_BOSS, environment.getProperty(ServerConsts.IO_THREAD_BOSS));
-            pros.setProperty(ServerConsts.IO_THREAD_WORKER, environment.getProperty(ServerConsts.IO_THREAD_WORKER));
+            if (environment.containsProperty(ServerConsts.PORT)) {
+                pros.setProperty(ServerConsts.PORT, environment.getProperty(ServerConsts.PORT));
+            }
+            if (environment.containsProperty(ServerConsts.IO_THREAD_BOSS)) {
+                pros.setProperty(ServerConsts.IO_THREAD_BOSS, environment.getProperty(ServerConsts.IO_THREAD_BOSS));
+            }
+            if (environment.containsProperty(ServerConsts.IO_THREAD_WORKER)) {
+                pros.setProperty(ServerConsts.IO_THREAD_WORKER, environment.getProperty(ServerConsts.IO_THREAD_WORKER));
+            }
             ServerConfig.init(pros);
             jsonRPCServer = new JsonRPCServerImpl();
             jsonRPCServer.start();

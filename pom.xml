@@ -20,6 +20,7 @@
     <modules>
         <module>jsonrpc-core</module>
         <module>jsonrpc-spring-boot-starter</module>
+        <module>jsonrpc-sample</module>
     </modules>
     <developers>
         <developer>
