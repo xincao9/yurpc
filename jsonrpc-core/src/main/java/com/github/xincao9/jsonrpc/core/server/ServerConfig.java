@@ -52,7 +52,7 @@ public class ServerConfig {
     public static void init(Properties pros) {
         port = Integer.valueOf(String.valueOf(pros.getProperty(ServerConsts.PORT, ServerConsts.DEFAULT_PORT)));
         ioThreadBoss = Integer.valueOf(String.valueOf(pros.getProperty(ServerConsts.IO_THREAD_BOSS, ServerConsts.DEFAULT_IO_THREAD_BOSS)));
-        ioThreadWorker = Integer.valueOf(String.valueOf(pros.getProperty(ServerConsts.IO_THREAD_WORKER, ServerConsts.DEFAULT_IO_THREAD_WORKER)));
+        ioThreadWorker = Integer.valueOf(String.valueOf(pros.getProperty(ServerConsts.IO_THREAD_WORKER, String.valueOf(ServerConsts.DEFAULT_IO_THREAD_WORKER))));
         if (port <= 0 || port > 65535) {
             port = Integer.valueOf(ServerConsts.DEFAULT_PORT);
         }
@@ -60,7 +60,7 @@ public class ServerConfig {
             ioThreadBoss = Integer.valueOf(ServerConsts.DEFAULT_IO_THREAD_BOSS);
         }
         if (ioThreadWorker <= 0) {
-            ioThreadWorker = Integer.valueOf(ServerConsts.DEFAULT_IO_THREAD_WORKER);
+            ioThreadWorker = ServerConsts.DEFAULT_IO_THREAD_WORKER;
         }
     }
 }

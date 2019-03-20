@@ -28,6 +28,6 @@ public class ServerConsts {
     public static final String IO_THREAD_BOSS = "jsonrpc.server.ioThreadBoss";
     public static final String DEFAULT_IO_THREAD_BOSS = "1";
     public static final String IO_THREAD_WORKER = "jsonrpc.server.ioThreadWorker";
-    public static final String DEFAULT_IO_THREAD_WORKER = "4";
+    public static final Integer DEFAULT_IO_THREAD_WORKER = Runtime.getRuntime().availableProcessors();
 
 }
