@@ -11,12 +11,6 @@
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
     </properties>
-    <parent>
-        <groupId>org.sonatype.oss</groupId>
-        <artifactId>oss-parent</artifactId>
-        <version>9</version>
-        <relativePath/> <!-- lookup parent from repository -->
-    </parent>
     <modules>
         <module>jsonrpc-core</module>
         <module>jsonrpc-spring-boot-starter</module>
@@ -30,6 +24,8 @@
                 <role>onwer</role>
             </roles>
             <url>https://github.com/xincao9</url>
+            <organization>xincao9</organization>
+            <organizationUrl>https://github.com/xincao9/</organizationUrl>
         </developer>
     </developers>
     <licenses>
@@ -45,4 +41,48 @@
         <connection>scm:git:git@github.com:xincao9/jsonrpc.git</connection>
         <developerConnection>scm:git:git@github.com:xincao9/jsonrpc.git</developerConnection>
     </scm>
+    <distributionManagement>
+        <repository>
+            <id>sonatype-oss</id>
+            <url>https://oss.sonatype.org/service/local/staging/deploy/maven2</url>
+        </repository>
+        <snapshotRepository>
+            <id>sonatype-oss</id>
+            <url>https://oss.sonatype.org/content/repositories/snapshots</url>
+        </snapshotRepository>
+    </distributionManagement>
+    <profiles>
+        <profile>
+            <id>release</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.sonatype.plugins</groupId>
+                        <artifactId>nexus-staging-maven-plugin</artifactId>
+                        <version>1.6.8</version>
+                        <extensions>true</extensions>
+                        <configuration>
+                            <serverId>sonatype-oss</serverId>
+                            <nexusUrl>https://oss.sonatype.org/</nexusUrl>
+                            <autoReleaseAfterClose>true</autoReleaseAfterClose>
+                        </configuration>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-gpg-plugin</artifactId>
+                        <version>1.6</version>
+                        <executions>
+                            <execution>
+                                <id>sign-artifacts</id>
+                                <phase>verify</phase>
+                                <goals>
+                                    <goal>sign</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
 </project>

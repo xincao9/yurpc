@@ -10,11 +10,11 @@
     <packaging>jar</packaging>
     <dependencyManagement>
         <dependencies>
-        <dependency>
-            <groupId>com.github.xincao9</groupId>
-            <artifactId>jsonrpc-core</artifactId>
-            <version>1.2</version>
-        </dependency>
+            <dependency>
+                <groupId>com.github.xincao9</groupId>
+                <artifactId>jsonrpc-core</artifactId>
+                <version>1.2</version>
+            </dependency>
             <dependency>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-autoconfigure</artifactId>
