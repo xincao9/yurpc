@@ -147,6 +147,21 @@ jsonrpc.server.ioThreadBoss=1
 jsonrpc.server.ioThreadWorker=4
 ```
 
+**_benchmark_**
+
+```
+1.Get the pressure measurement component
+wget https://search.maven.org/remotecontent?filepath=com/github/xincao9/jsonrpc-benchmark/1.2/jsonrpc-benchmark-1.2.jar
+2.Start service provider
+java -Drole=provider -jar jsonrpc-benchmark-1.2.jar
+3.Start service consumer
+java -Drole=consumer -jar jsonrpc-benchmark-1.2.jar
+4.Service providers that simulate IO-intensive applications perform stress tests (blocking time is pseudo-random at 0 to 50 ms)
+wrk -c 128 -t 10 -d 30s 'http://localhost:8080/sleep'
+5.Service providers that simulate computationally intensive applications perform stress tests (handling pseudo-random, Fibonacci numbers between 0 and 16)
+wrk -c 128 -t 10 -d 30s 'http://localhost:8080/fibonacci_sequence'
+```
+
 **_tips_**
 
 * Welcome to see detailed examples [examples](https://github.com/xincao9/jsonrpc/tree/master/jsonrpc-sample)
