@@ -27,7 +27,8 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 
 /**
- *
+ * 启动类
+ * 
  * @author xincao9@gmail.com
  */
 @SpringBootApplication
@@ -37,6 +38,12 @@ public class Application {
     private static String role;
     private static JsonRPCClient jsonRPCClient;
 
+    /**
+     * 入口方法
+     * 
+     * @param args 参数
+     * @throws Throwable 异常
+     */
     public static void main(String... args) throws Throwable {
         role = System.getProperty(ConfigConsts.ROLE, ConfigConsts.PROVIDER);
         if (ConfigConsts.PROVIDER.equalsIgnoreCase(role)) {
@@ -55,11 +62,21 @@ public class Application {
         }
     }
 
+    /**
+     * 斐波那契服务
+     * 
+     * @return 斐波那契服务
+     */
     @Bean
     public FibonacciSequenceService fibonacciSequenceService () {
         return jsonRPCClient.proxy(FibonacciSequenceService.class);
     }
     
+    /**
+     * 延时服务
+     * 
+     * @return 延时服务
+     */
     @Bean
     public SleepService sleepService () {
         return jsonRPCClient.proxy(SleepService.class);

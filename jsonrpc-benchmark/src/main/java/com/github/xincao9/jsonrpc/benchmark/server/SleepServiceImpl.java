@@ -25,6 +25,11 @@ import java.util.concurrent.TimeUnit;
  */
 public class SleepServiceImpl implements SleepService {
 
+    /**
+     * 执行
+     * 
+     * @param ms 秒数
+     */
     @Override
     public void perform(Integer ms) {
         try {

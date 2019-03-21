@@ -22,5 +22,11 @@ package com.github.xincao9.jsonrpc.benchmark;
  */
 public interface FibonacciSequenceService {
 
+    /**
+     * 执行
+     * 
+     * @param n 项数
+     * @return 结果
+     */
     Integer perform (Integer n);
 }

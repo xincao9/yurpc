@@ -22,5 +22,11 @@ package com.github.xincao9.jsonrpc.benchmark;
  */
 public interface SleepService {
 
+
+    /**
+     * 执行
+     * 
+     * @param seconds 秒数
+     */
     void perform (Integer seconds);
 }

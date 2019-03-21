@@ -24,6 +24,12 @@ import com.github.xincao9.jsonrpc.benchmark.FibonacciSequenceService;
  */
 public class FibonacciSequenceServiceImpl implements FibonacciSequenceService {
 
+    /**
+     * 执行
+     * 
+     * @param n 项数
+     * @return 结果
+     */
     @Override
     public Integer perform(Integer n) {
         if (n == 0 || n == 1) {

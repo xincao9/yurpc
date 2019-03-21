@@ -26,19 +26,25 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
- *
+ * 测试接口
+ * 
  * @author xincao9@gmail.com
  */
 @RestController
-public class MethodController {
+public class TestController {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(MethodController.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(TestController.class);
 
     @Autowired(required = false)
     private FibonacciSequenceService fibonacciSequenceService;
     @Autowired(required = false)
     private SleepService sleepService;
 
+    /**
+     * 计算密集型模拟接口
+     * 
+     * @return 随机项的结果
+     */
     @GetMapping("/fibonacci_sequence")
     public ResponseEntity<Integer> fibonacciSequence() {
         if (fibonacciSequenceService == null) {
@@ -53,6 +59,11 @@ public class MethodController {
         return ResponseEntity.status(500).build();
     }
 
+    /**
+     * 阻塞IO模拟接口
+     * 
+     * @return 阻塞时间（ms）
+     */
     @GetMapping("/sleep")
     public ResponseEntity<Integer> sleep() {
         if (sleepService == null) {

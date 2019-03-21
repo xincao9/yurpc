@@ -16,12 +16,13 @@
 package com.github.xincao9.jsonrpc.benchmark.constant;
 
 /**
- *
+ * 系统常量
+ * 
  * @author xincao9@gmail.com
  */
 public class ConfigConsts {
 
-    public static final String ROLE = "role";
-    public static final String PROVIDER = "provider";
-    public static final String CONSUMER = "consumer";
+    public static final String ROLE = "role"; // 角色
+    public static final String PROVIDER = "provider"; // 提供者
+    public static final String CONSUMER = "consumer"; // 消费者
 }
