@@ -16,6 +16,7 @@
         <module>jsonrpc-core</module>
         <module>jsonrpc-spring-boot-starter</module>
         <module>jsonrpc-sample</module>
+        <module>jsonrpc-benchmark</module>
     </modules>
     <url>https://github.com/xincao9/jsonrpc</url>
     <developers>

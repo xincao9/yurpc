@@ -22,6 +22,8 @@ import io.netty.channel.ChannelHandler.Sharable;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
 import java.util.Map;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * 客户端输入流处理器
@@ -31,6 +33,7 @@ import java.util.Map;
 @Sharable
 public class ClientHandler extends SimpleChannelInboundHandler<String> {
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(ClientHandler.class);
     private JsonRPCClient jsonRPCClient;
 
     /**
@@ -43,6 +46,7 @@ public class ClientHandler extends SimpleChannelInboundHandler<String> {
     @Override
     protected void channelRead0(ChannelHandlerContext ctx, String msg) throws Exception {
         Response response = JSONObject.parseObject(msg, Response.class);
+        LOGGER.debug("msg = {}", msg);
         long responseId = response.getId();
         Map<Long, Request> requests = jsonRPCClient.getRequests();
         if (requests.containsKey(responseId)) {

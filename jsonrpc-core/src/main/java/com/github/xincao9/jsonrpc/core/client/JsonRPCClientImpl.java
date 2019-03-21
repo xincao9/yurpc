@@ -40,14 +40,13 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
  * 客户端
- * 
+ *
  * @author xincao9@gmail.com
  */
 public class JsonRPCClientImpl implements JsonRPCClient {
@@ -61,12 +60,12 @@ public class JsonRPCClientImpl implements JsonRPCClient {
 
     /**
      * 启动
-     * 
+     *
      * @throws java.lang.Throwable 异常
      */
     @Override
     public void start() throws Throwable {
-        this.workerGroup = Epoll.isAvailable() ? new EpollEventLoopGroup(Runtime.getRuntime().availableProcessors(), Executors.newCachedThreadPool()) : new NioEventLoopGroup(Runtime.getRuntime().availableProcessors(), Executors.newCachedThreadPool());
+        this.workerGroup = Epoll.isAvailable() ? new EpollEventLoopGroup(Runtime.getRuntime().availableProcessors()) : new NioEventLoopGroup(Runtime.getRuntime().availableProcessors());
         ClientHandler clientHandler = new ClientHandler();
         clientHandler.setJsonRPCClient(this);
         this.bootstrap.group(this.workerGroup).channel(Epoll.isAvailable() ? EpollSocketChannel.class : NioSocketChannel.class)
@@ -91,7 +90,7 @@ public class JsonRPCClientImpl implements JsonRPCClient {
 
     /**
      * 关闭
-     * 
+     *
      * @throws java.lang.Throwable 异常
      */
     @Override
@@ -116,7 +115,7 @@ public class JsonRPCClientImpl implements JsonRPCClient {
 
     /**
      * 调用方法
-     * 
+     *
      * @param <T> 类型
      * @param request 请求
      * @return 调用结果
@@ -153,7 +152,7 @@ public class JsonRPCClientImpl implements JsonRPCClient {
 
     /**
      * 获取通道
-     * 
+     *
      * @param host 主机
      * @param port 端口
      * @return 通道
@@ -172,7 +171,7 @@ public class JsonRPCClientImpl implements JsonRPCClient {
                 }
             }
         }
-        Channel channel =  this.addressChannel.get(address);
+        Channel channel = this.addressChannel.get(address);
         if (channel == null) {
             LOGGER.error("getChannel() host = {} port = {} channel is null", host, port);
             return null;
@@ -187,7 +186,7 @@ public class JsonRPCClientImpl implements JsonRPCClient {
 
     /**
      * 获得请求对象容器
-     * 
+     *
      * @return 请求对象容器
      */
     @Override
@@ -197,7 +196,7 @@ public class JsonRPCClientImpl implements JsonRPCClient {
 
     /**
      * 获得接口的代理
-     * 
+     *
      * @param <T> 类型
      * @param clazz 接口
      * @return 代理对象

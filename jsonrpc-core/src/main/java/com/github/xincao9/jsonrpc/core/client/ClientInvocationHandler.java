@@ -72,6 +72,9 @@ public class ClientInvocationHandler implements InvocationHandler {
         request.setParamTypes(paramTypes);
         long startTime = System.currentTimeMillis();
         Response response = jsonRPCClient.invoke(request);
+        if (response == null) {
+            return null;
+        }
         LOGGER.debug("requestId = {}, invoke costTime = {}", request.getId(), System.currentTimeMillis() - startTime);
         LOGGER.debug("requestId = {}, c to s costTime = {} ms, s to c costTime {} ms", request.getId(), response.getCreateTime() - request.getCreateTime(), System.currentTimeMillis() - response.getCreateTime());
         if (Objects.equals(response.getCode(), ResponseCode.OK) && !"void".equalsIgnoreCase(retureType.getTypeName())) {
@@ -83,8 +86,9 @@ public class ClientInvocationHandler implements InvocationHandler {
         }
         if (!Objects.equals(response.getCode(), ResponseCode.OK)) {
             LOGGER.error("request = {}, code = {}, msg = {}", request, response.getCode(), response.getMsg());
+            throw new RuntimeException(response.getMsg());
         }
-        throw new RuntimeException(response.getMsg());
+        return null;
     }
 
     /**

@@ -29,7 +29,7 @@ import org.slf4j.LoggerFactory;
 
 /**
  * 服务输入流处理
- * 
+ *
  * @author xincao9@gmail.com
  */
 @Sharable
@@ -41,7 +41,7 @@ public class ServerHandler extends SimpleChannelInboundHandler<String> {
 
     /**
      * 处理请求
-     * 
+     *
      * @param ctx 上下文
      * @param str 消息体
      * @throws Exception 异常
@@ -105,7 +105,7 @@ public class ServerHandler extends SimpleChannelInboundHandler<String> {
 
     /**
      * 修改器
-     * 
+     *
      * @param jsonRPCServer 服务组件
      */
     public void setJsonRPCServer(JsonRPCServer jsonRPCServer) {

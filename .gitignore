@@ -4,3 +4,4 @@
 /jsonrpc-core/target/
 /jsonrpc-spring-boot-starter/target/
 /jsonrpc-sample/target/
+/jsonrpc-benchmark/target/
