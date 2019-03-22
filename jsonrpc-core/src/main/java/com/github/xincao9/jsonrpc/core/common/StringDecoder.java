@@ -35,7 +35,8 @@ public class StringDecoder extends ByteToMessageDecoder {
     private static final Logger LOGGER = LoggerFactory.getLogger(StringDecoder.class);
 
     /**
-     *
+     * 解码
+     * 
      * @param chc
      * @param byteBuf
      * @param list

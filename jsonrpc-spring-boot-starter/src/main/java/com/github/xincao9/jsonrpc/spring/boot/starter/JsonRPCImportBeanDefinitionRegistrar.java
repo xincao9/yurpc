@@ -28,6 +28,12 @@ import org.springframework.core.type.AnnotationMetadata;
  */
 public class JsonRPCImportBeanDefinitionRegistrar implements ImportBeanDefinitionRegistrar {
 
+    /**
+     * 注册组件
+     * 
+     * @param am 注解元信息
+     * @param bdr 组件注册器
+     */
     @Override
     public void registerBeanDefinitions(AnnotationMetadata am, BeanDefinitionRegistry bdr) {
         Map<String, Object> attributes = am.getAnnotationAttributes(EnableJsonRPC.class.getName());

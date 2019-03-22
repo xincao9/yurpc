@@ -45,7 +45,8 @@ public class Request {
     private Boolean sendOk;
 
     /**
-     *
+     * 创建请求体
+     * 
      * @param requestType
      * @param method
      * @param params
@@ -66,7 +67,8 @@ public class Request {
     }
 
     /**
-     *
+     * 创建事件
+     * 
      * @param method
      * @return
      */
@@ -84,7 +86,8 @@ public class Request {
     }
 
     /**
-     *
+     * 等待响应
+     * 
      * @param <T>
      * @param timeout
      * @param timeUnit
@@ -97,7 +100,8 @@ public class Request {
     }
 
     /**
-     *
+     * 设置返回值
+     * 
      * @param response
      */
     public void putResponse(Response response) {

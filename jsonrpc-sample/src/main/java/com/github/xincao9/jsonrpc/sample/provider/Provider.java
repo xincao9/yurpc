@@ -21,13 +21,19 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- *
+ * 服务提供者
+ * 
  * @author xincao9@gmail.com
  */
 public class Provider {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(Provider.class);
 
+    /**
+     * 入口方法
+     * 
+     * @param args 参数
+     */
     public static void main(String... args) throws Throwable {
         JsonRPCServer jsonRPCServer = JsonRPCServer.defaultJsonRPCServer();
         jsonRPCServer.register(new SayServiceImpl());

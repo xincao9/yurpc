@@ -16,10 +16,17 @@
 package com.github.xincao9.jsonrpc.sample;
 
 /**
- *
+ * 招呼服务
+ * 
  * @author xincao9@gmail.com
  */
 public interface SayService {
 
+    /**
+     * 执行
+     * 
+     * @param say 招呼
+     * @return 招呼
+     */
     Say perform(Say say);
 }

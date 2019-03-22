@@ -25,7 +25,8 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 
 /**
- *
+ * 服务提供者
+ * 
  * @author xincao9@gmail.com
  */
 @SpringBootApplication
@@ -35,6 +36,11 @@ public class ApplicationProvider {
     @Autowired
     private JsonRPCServer jsonRPCServer;
 
+    /**
+     * 招呼服务注册
+     * 
+     * @return 招呼服务
+     */
     @Bean
     public SayService sayService () {
         SayService sayService = new SayServiceImpl();
@@ -42,6 +48,11 @@ public class ApplicationProvider {
         return sayService;
     }
 
+    /**
+     * 入口方法
+     * 
+     * @param args 参数
+     */
     public static void main(String... args) {
         SpringApplication.run(ApplicationProvider.class, args);
     }

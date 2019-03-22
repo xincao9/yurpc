@@ -27,7 +27,8 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 
 /**
- *
+ * 服务消费者
+ * 
  * @author xincao9@gmail.com
  */
 @SpringBootApplication
@@ -39,15 +40,30 @@ public class ApplicationConsumer {
     @Autowired
     private SayService sayService;
 
+    /**
+     * 招呼服务客户端
+     * 
+     * @return 招呼服务
+     */
     @Bean
     public SayService sayService() {
         return jsonRPCClient.proxy(SayService.class);
     }
 
+    /**
+     * 入口方法
+     * 
+     * @param args 参数
+     */
     public static void main(String... args) {
         SpringApplication.run(ApplicationConsumer.class, args);
     }
 
+    /**
+     * 启动时钩子
+     * 
+     * @return 
+     */
     @Bean
     public CommandLineRunner commandLineRunner() {
         return (String... args) -> {

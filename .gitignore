@@ -5,3 +5,4 @@
 /jsonrpc-spring-boot-starter/target/
 /jsonrpc-sample/target/
 /jsonrpc-benchmark/target/
+/jsonrpc-benchmark/nbactions.xml

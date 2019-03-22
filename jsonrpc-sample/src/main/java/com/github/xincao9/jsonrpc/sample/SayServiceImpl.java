@@ -16,11 +16,18 @@
 package com.github.xincao9.jsonrpc.sample;
 
 /**
- *
+ * 招呼服务实现
+ * 
  * @author xincao9@gmail.com
  */
 public class SayServiceImpl implements SayService {
 
+    /**
+     * 执行
+     * 
+     * @param say 招呼
+     * @return 招呼
+     */
     @Override
     public Say perform(Say say) {
         return say;

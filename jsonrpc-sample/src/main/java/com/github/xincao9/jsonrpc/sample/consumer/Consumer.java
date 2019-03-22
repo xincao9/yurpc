@@ -23,13 +23,20 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- *
+ * 服务消费者
+ * 
  * @author xincao9@gmail.com
  */
 public class Consumer {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(Consumer.class);
 
+    /**
+     * 入口方法
+     * 
+     * @param args 参数
+     * @throws Throwable 异常
+     */
     public static void main (String... args) throws Throwable {
         JsonRPCClient jsonRPCClient = JsonRPCClient.defaultJsonRPCClient();
         jsonRPCClient.start();

@@ -34,12 +34,14 @@ import org.springframework.context.annotation.Import;
 public @interface EnableJsonRPC {
 
     /**
+     * 服务角色
      * 
      * @return 
      */
     boolean server() default false;
 
     /**
+     * 客户端角色
      * 
      * @return 
      */

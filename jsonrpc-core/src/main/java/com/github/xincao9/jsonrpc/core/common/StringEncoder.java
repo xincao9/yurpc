@@ -29,6 +29,7 @@ import org.apache.commons.lang3.StringUtils;
 public class StringEncoder extends MessageToByteEncoder<Object> {
 
     /**
+     * 编码
      * 
      * @param chc
      * @param object

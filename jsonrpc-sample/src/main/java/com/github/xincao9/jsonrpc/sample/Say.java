@@ -19,7 +19,8 @@ import com.alibaba.fastjson.JSONObject;
 import com.alibaba.fastjson.serializer.SerializerFeature;
 
 /**
- *
+ * 招呼
+ * 
  * @author xincao9@gmail.com
  */
 public class Say {

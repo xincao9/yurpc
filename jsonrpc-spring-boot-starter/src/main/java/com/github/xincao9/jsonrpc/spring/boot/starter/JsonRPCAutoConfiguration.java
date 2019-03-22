@@ -50,6 +50,12 @@ public class JsonRPCAutoConfiguration implements DisposableBean {
     private JsonRPCClient jsonRPCClient;
     private JsonRPCServer jsonRPCServer;
 
+    /**
+     * 启动客户端且注册到容器
+     * 
+     * @return 客户端
+     * @throws Throwable 异常
+     */
     @Bean
     @ConditionalOnMissingBean
     public JsonRPCClient jsonRPCClient() throws Throwable {
@@ -72,6 +78,12 @@ public class JsonRPCAutoConfiguration implements DisposableBean {
         return null;
     }
 
+    /**
+     * 启动服务端且注册到容器
+     * 
+     * @return 服务端
+     * @throws Throwable 异常
+     */
     @Bean
     @ConditionalOnMissingBean
     public JsonRPCServer jsonRPCServer() throws Throwable {
@@ -94,6 +106,11 @@ public class JsonRPCAutoConfiguration implements DisposableBean {
         return null;
     }
 
+    /**
+     * 释放资源
+     * 
+     * @throws Exception 异常
+     */
     @Override
     public void destroy() throws Exception {
         if (jsonRPCClient != null) {
@@ -112,10 +129,20 @@ public class JsonRPCAutoConfiguration implements DisposableBean {
         }
     }
 
+    /**
+     * 服务端角色
+     * 
+     * @param server 状态
+     */
     public void setServer(Boolean server) {
         this.server = server;
     }
 
+    /**
+     * 客户端角色
+     * 
+     * @param client 状态
+     */
     public void setClient(Boolean client) {
         this.client = client;
     }
