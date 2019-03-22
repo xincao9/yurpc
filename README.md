@@ -13,7 +13,7 @@ jsonrpc is a high-performance, Java based open source RPC framework.
 <dependency>
     <groupId>com.github.xincao9</groupId>
     <artifactId>jsonrpc-spring-boot-starter</artifactId>
-    <version>1.2</version>
+    <version>1.2.1</version>
 </dependency>
 ```
 
@@ -151,7 +151,7 @@ jsonrpc.server.ioThreadWorker=4
 
 ```
 1.Get the pressure measurement component
-wget https://search.maven.org/remotecontent?filepath=com/github/xincao9/jsonrpc-benchmark/1.2/jsonrpc-benchmark-1.2.jar
+wget https://oss.sonatype.org/service/local/repositories/releases/content/com/github/xincao9/jsonrpc-benchmark/1.2.1/jsonrpc-benchmark-1.2.1.jar
 2.Start service provider
 java -Drole=provider -jar jsonrpc-benchmark-1.2.jar
 3.Start service consumer
