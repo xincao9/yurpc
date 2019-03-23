@@ -153,9 +153,9 @@ jsonrpc.server.ioThreadWorker=4
 1.Get the pressure measurement component
 wget https://oss.sonatype.org/service/local/repositories/releases/content/com/github/xincao9/jsonrpc-benchmark/1.2.1/jsonrpc-benchmark-1.2.1.jar
 2.Start service provider
-java -Drole=provider -jar jsonrpc-benchmark-1.2.jar
+java -Drole=provider -jar jsonrpc-benchmark-1.2.1.jar
 3.Start service consumer
-java -Drole=consumer -jar jsonrpc-benchmark-1.2.jar
+java -Drole=consumer -jar jsonrpc-benchmark-1.2.1.jar
 4.Service providers that simulate IO-intensive applications perform stress tests (blocking time is pseudo-random at 0 to 50 ms)
 wrk -c 128 -t 10 -d 30s 'http://localhost:8080/sleep'
 5.Service providers that simulate computationally intensive applications perform stress tests (handling pseudo-random, Fibonacci numbers between 0 and 16)
