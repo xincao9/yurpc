@@ -81,4 +81,14 @@ public class Application {
     public SleepService sleepService () {
         return jsonRPCClient.proxy(SleepService.class);
     }
+
+    /**
+     * 素数服务
+     * 
+     * @return 素数服务
+     */
+    @Bean
+    public PrimeNumberService primeNumberService () {
+        return jsonRPCClient.proxy(PrimeNumberService.class);
+    }
 }

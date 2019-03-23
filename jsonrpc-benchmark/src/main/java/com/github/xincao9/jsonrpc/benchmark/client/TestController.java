@@ -16,6 +16,7 @@
 package com.github.xincao9.jsonrpc.benchmark.client;
 
 import com.github.xincao9.jsonrpc.benchmark.FibonacciSequenceService;
+import com.github.xincao9.jsonrpc.benchmark.PrimeNumberService;
 import com.github.xincao9.jsonrpc.benchmark.SleepService;
 import org.apache.commons.lang3.RandomUtils;
 import org.slf4j.Logger;
@@ -39,9 +40,10 @@ public class TestController {
     private FibonacciSequenceService fibonacciSequenceService;
     @Autowired(required = false)
     private SleepService sleepService;
-
+    @Autowired(required = false)
+    private PrimeNumberService primeNumberService;
     /**
-     * 计算密集型模拟接口
+     * 斐波那契
      * 
      * @return 随机项的结果
      */
@@ -54,13 +56,13 @@ public class TestController {
             int n = RandomUtils.nextInt(0, 16);
             return ResponseEntity.ok().body(fibonacciSequenceService.perform(n));
         } catch (Throwable e) {
-            LOGGER.info(e.getMessage());
+            LOGGER.error(e.getMessage());
         }
         return ResponseEntity.status(500).build();
     }
 
     /**
-     * 阻塞IO模拟接口
+     * 阻塞
      * 
      * @return 阻塞时间（ms）
      */
@@ -79,4 +81,24 @@ public class TestController {
         return ResponseEntity.status(500).build();
     }
 
+    /**
+     * 素数计算
+     * 
+     * @return 
+     */
+    @GetMapping("/prime_number")
+    public ResponseEntity<Boolean> primeNumber () {
+        if (primeNumberService == null) {
+            return ResponseEntity.status(400).build();
+        }
+        try {
+            int start = RandomUtils.nextInt(0, 100);
+            int end = RandomUtils.nextInt(199, 300);
+            int n = RandomUtils.nextInt(start, end);
+            return ResponseEntity.ok().body(primeNumberService.perform(n));
+        } catch (Throwable e) {
+            LOGGER.error(e.getMessage());
+        }
+        return ResponseEntity.status(500).build();
+    }
 }
