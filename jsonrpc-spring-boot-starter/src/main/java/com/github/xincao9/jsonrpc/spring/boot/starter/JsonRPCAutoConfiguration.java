@@ -26,11 +26,11 @@ import com.github.xincao9.jsonrpc.core.server.ServerConfig;
 import java.util.Properties;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.DisposableBean;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
+import org.springframework.beans.factory.config.BeanFactoryPostProcessor;
+import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
+import org.springframework.context.EnvironmentAware;
 import org.springframework.core.env.Environment;
 
 /**
@@ -38,77 +38,33 @@ import org.springframework.core.env.Environment;
  *
  * @author xincao9@gmail.com
  */
-@Configuration
-public class JsonRPCAutoConfiguration implements DisposableBean {
+public class JsonRPCAutoConfiguration implements EnvironmentAware, DisposableBean, BeanFactoryPostProcessor {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(JsonRPCAutoConfiguration.class);
 
-    @Autowired
     private Environment environment;
     private Boolean server;
     private Boolean client;
     private JsonRPCClient jsonRPCClient;
     private JsonRPCServer jsonRPCServer;
 
-    /**
-     * 启动客户端且注册到容器
-     * 
-     * @return 客户端
-     * @throws Throwable 异常
-     */
-    @Bean
-    @ConditionalOnMissingBean
-    public JsonRPCClient jsonRPCClient() throws Throwable {
-        if (client) {
-            Properties pros = new Properties();
-            if (environment.containsProperty(ClientConsts.SERVER_LIST)) {
-                pros.setProperty(ClientConsts.SERVER_LIST, environment.getProperty(ClientConsts.SERVER_LIST));
-            }
-            if (environment.containsProperty(ClientConsts.CONNECTION_TIMEOUT_MS)) {
-                pros.setProperty(ClientConsts.CONNECTION_TIMEOUT_MS, environment.getProperty(ClientConsts.CONNECTION_TIMEOUT_MS));
-            }
-            if (environment.containsProperty(ClientConsts.INVOKE_TIMEOUT_MS)) {
-                pros.setProperty(ClientConsts.INVOKE_TIMEOUT_MS, environment.getProperty(ClientConsts.INVOKE_TIMEOUT_MS));
-            }
-            ClientConfig.init(pros);
-            jsonRPCClient = new JsonRPCClientImpl();
-            jsonRPCClient.start();
-            return jsonRPCClient;
-        }
-        return null;
+    @Override
+    public void setEnvironment(Environment environment) {
+        this.environment = environment;
     }
 
     /**
-     * 启动服务端且注册到容器
-     * 
-     * @return 服务端
-     * @throws Throwable 异常
+     * 自动扫描，注册服务组件
+     *
+     * @return 注册服务组件
      */
-    @Bean
-    @ConditionalOnMissingBean
-    public JsonRPCServer jsonRPCServer() throws Throwable {
-        if (server) {
-            Properties pros = new Properties();
-            if (environment.containsProperty(ServerConsts.PORT)) {
-                pros.setProperty(ServerConsts.PORT, environment.getProperty(ServerConsts.PORT));
-            }
-            if (environment.containsProperty(ServerConsts.IO_THREAD_BOSS)) {
-                pros.setProperty(ServerConsts.IO_THREAD_BOSS, environment.getProperty(ServerConsts.IO_THREAD_BOSS));
-            }
-            if (environment.containsProperty(ServerConsts.IO_THREAD_WORKER)) {
-                pros.setProperty(ServerConsts.IO_THREAD_WORKER, environment.getProperty(ServerConsts.IO_THREAD_WORKER));
-            }
-            ServerConfig.init(pros);
-            jsonRPCServer = new JsonRPCServerImpl();
-            jsonRPCServer.start();
-            return jsonRPCServer;
-        }
-        return null;
+    public JsonRPCBeanPostProcessor jsonRPCBeanPostProcessor() {
+        return new JsonRPCBeanPostProcessor(jsonRPCServer);
     }
 
     /**
      * 释放资源
-     * 
+     *
      * @throws Exception 异常
      */
     @Override
@@ -131,7 +87,7 @@ public class JsonRPCAutoConfiguration implements DisposableBean {
 
     /**
      * 服务端角色
-     * 
+     *
      * @param server 状态
      */
     public void setServer(Boolean server) {
@@ -140,10 +96,55 @@ public class JsonRPCAutoConfiguration implements DisposableBean {
 
     /**
      * 客户端角色
-     * 
+     *
      * @param client 状态
      */
     public void setClient(Boolean client) {
         this.client = client;
+    }
+
+    @Override
+    public void postProcessBeanFactory(ConfigurableListableBeanFactory beanFactory) throws BeansException {
+        if (server) {
+            try {
+                Properties pros = new Properties();
+                if (environment.containsProperty(ServerConsts.PORT)) {
+                    pros.setProperty(ServerConsts.PORT, environment.getProperty(ServerConsts.PORT));
+                }
+                if (environment.containsProperty(ServerConsts.IO_THREAD_BOSS)) {
+                    pros.setProperty(ServerConsts.IO_THREAD_BOSS, environment.getProperty(ServerConsts.IO_THREAD_BOSS));
+                }
+                if (environment.containsProperty(ServerConsts.IO_THREAD_WORKER)) {
+                    pros.setProperty(ServerConsts.IO_THREAD_WORKER, environment.getProperty(ServerConsts.IO_THREAD_WORKER));
+                }
+                ServerConfig.init(pros);
+                jsonRPCServer = beanFactory.createBean(JsonRPCServerImpl.class);
+                jsonRPCServer.start();
+            } catch (Throwable ex) {
+                throw new BeansException(ex.getMessage()) {
+                };
+            }
+            beanFactory.addBeanPostProcessor(jsonRPCBeanPostProcessor());
+        }
+        if (client) {
+            try {
+                Properties pros = new Properties();
+                if (environment.containsProperty(ClientConsts.SERVER_LIST)) {
+                    pros.setProperty(ClientConsts.SERVER_LIST, environment.getProperty(ClientConsts.SERVER_LIST));
+                }
+                if (environment.containsProperty(ClientConsts.CONNECTION_TIMEOUT_MS)) {
+                    pros.setProperty(ClientConsts.CONNECTION_TIMEOUT_MS, environment.getProperty(ClientConsts.CONNECTION_TIMEOUT_MS));
+                }
+                if (environment.containsProperty(ClientConsts.INVOKE_TIMEOUT_MS)) {
+                    pros.setProperty(ClientConsts.INVOKE_TIMEOUT_MS, environment.getProperty(ClientConsts.INVOKE_TIMEOUT_MS));
+                }
+                ClientConfig.init(pros);
+                jsonRPCClient = beanFactory.createBean(JsonRPCClientImpl.class);
+                jsonRPCClient.start();
+            } catch (Throwable ex) {
+                throw new BeansException(ex.getMessage()) {
+                };
+            }
+        }
     }
 }

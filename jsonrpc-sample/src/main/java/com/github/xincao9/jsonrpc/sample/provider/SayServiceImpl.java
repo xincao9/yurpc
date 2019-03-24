@@ -13,13 +13,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.github.xincao9.jsonrpc.sample;
+package com.github.xincao9.jsonrpc.sample.provider;
+
+import com.github.xincao9.jsonrpc.sample.Say;
+import com.github.xincao9.jsonrpc.sample.SayService;
+import com.github.xincao9.jsonrpc.spring.boot.starter.JsonRPCService;
 
 /**
  * 招呼服务实现
  * 
  * @author xincao9@gmail.com
  */
+@JsonRPCService
 public class SayServiceImpl implements SayService {
 
     /**

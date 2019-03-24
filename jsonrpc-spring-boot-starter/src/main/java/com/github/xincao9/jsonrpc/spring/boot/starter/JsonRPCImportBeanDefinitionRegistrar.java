@@ -37,14 +37,14 @@ public class JsonRPCImportBeanDefinitionRegistrar implements ImportBeanDefinitio
     @Override
     public void registerBeanDefinitions(AnnotationMetadata am, BeanDefinitionRegistry bdr) {
         Map<String, Object> attributes = am.getAnnotationAttributes(EnableJsonRPC.class.getName());
-        BeanDefinitionBuilder beanDefinitionBuilder = BeanDefinitionBuilder.rootBeanDefinition(JsonRPCAutoConfiguration.class);
+        BeanDefinitionBuilder bdb = BeanDefinitionBuilder.rootBeanDefinition(JsonRPCAutoConfiguration.class);
         if (attributes != null && attributes.containsKey("server")) {
-            beanDefinitionBuilder.addPropertyValue("server", (Boolean) attributes.get("server"));
+            bdb.addPropertyValue("server", (Boolean) attributes.get("server"));
         }
         if (attributes != null && attributes.containsKey("client")) {
-            beanDefinitionBuilder.addPropertyValue("client", (Boolean) attributes.get("client"));
+            bdb.addPropertyValue("client", (Boolean) attributes.get("client"));
         }
-        bdr.registerBeanDefinition(JsonRPCAutoConfiguration.class.getName(), beanDefinitionBuilder.getBeanDefinition());
+        bdr.registerBeanDefinition(JsonRPCAutoConfiguration.class.getName(), bdb.getBeanDefinition());
     }
 
 }

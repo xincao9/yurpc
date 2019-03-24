@@ -16,7 +16,6 @@
 package com.github.xincao9.jsonrpc.sample.provider;
 
 import com.github.xincao9.jsonrpc.core.server.JsonRPCServer;
-import com.github.xincao9.jsonrpc.sample.SayServiceImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
