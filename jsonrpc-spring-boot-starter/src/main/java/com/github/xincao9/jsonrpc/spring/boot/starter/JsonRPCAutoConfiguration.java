@@ -48,6 +48,11 @@ public class JsonRPCAutoConfiguration implements EnvironmentAware, DisposableBea
     private JsonRPCClient jsonRPCClient;
     private JsonRPCServer jsonRPCServer;
 
+    /**
+     * 修改器
+     * 
+     * @param environment 环境
+     */
     @Override
     public void setEnvironment(Environment environment) {
         this.environment = environment;
@@ -103,6 +108,12 @@ public class JsonRPCAutoConfiguration implements EnvironmentAware, DisposableBea
         this.client = client;
     }
 
+    /**
+     * 后置处理组件工厂
+     * 
+     * @param beanFactory 容器上下文
+     * @throws BeansException 组件异常
+     */
     @Override
     public void postProcessBeanFactory(ConfigurableListableBeanFactory beanFactory) throws BeansException {
         if (server) {
