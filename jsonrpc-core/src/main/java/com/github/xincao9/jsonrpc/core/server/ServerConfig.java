@@ -18,8 +18,6 @@ package com.github.xincao9.jsonrpc.core.server;
 import com.github.xincao9.jsonrpc.core.constant.ServerConsts;
 import com.github.xincao9.jsonrpc.core.util.PropertiesUtils;
 import java.util.Properties;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * 服务配置类
@@ -28,11 +26,9 @@ import org.slf4j.LoggerFactory;
  */
 public class ServerConfig {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(ServerConfig.class);
-
     public static Integer port;
-    public static Integer ioThreadBoss;
-    public static Integer ioThreadWorker;
+    public static Integer ioThreadBoss = ServerConsts.DEFAULT_IO_THREAD_BOSS;
+    public static Integer ioThreadWorker = ServerConsts.DEFAULT_IO_THREAD_WORKER;
 
     /**
      * 初始化服务组件配置
@@ -51,16 +47,8 @@ public class ServerConfig {
      */
     public static void init(Properties pros) {
         port = Integer.valueOf(pros.getProperty(ServerConsts.PORT, ServerConsts.DEFAULT_PORT));
-        ioThreadBoss = Integer.valueOf(pros.getProperty(ServerConsts.IO_THREAD_BOSS, ServerConsts.DEFAULT_IO_THREAD_BOSS));
-        ioThreadWorker = Integer.valueOf(pros.getProperty(ServerConsts.IO_THREAD_WORKER, String.valueOf(ServerConsts.DEFAULT_IO_THREAD_WORKER)));
         if (port <= 0 || port > 65535) {
             port = Integer.valueOf(ServerConsts.DEFAULT_PORT);
-        }
-        if (ioThreadBoss <= 0 || ioThreadBoss > 1024) {
-            ioThreadBoss = Integer.valueOf(ServerConsts.DEFAULT_IO_THREAD_BOSS);
-        }
-        if (ioThreadWorker <= 0) {
-            ioThreadWorker = ServerConsts.DEFAULT_IO_THREAD_WORKER;
         }
     }
 }

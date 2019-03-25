@@ -21,8 +21,6 @@ import com.github.xincao9.jsonrpc.core.util.PropertiesUtils;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * 客户端配置
@@ -30,8 +28,6 @@ import org.slf4j.LoggerFactory;
  * @author xincao9@gmail.com
  */
 public class ClientConfig {
-
-    private static final Logger LOGGER = LoggerFactory.getLogger(ClientConfig.class);
 
     public static List<Pair<String, Integer>> serverList = new ArrayList(1);
     public static Integer connectionTimeoutMS;

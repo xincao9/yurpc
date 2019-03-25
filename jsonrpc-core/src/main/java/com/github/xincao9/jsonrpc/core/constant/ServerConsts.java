@@ -25,9 +25,7 @@ public class ServerConsts {
     public static final String DEFAULT_CONFIG_FILENAME = "/config.properties";
     public static final String PORT = "jsonrpc.server.port";
     public static final String DEFAULT_PORT = "12306";
-    public static final String IO_THREAD_BOSS = "jsonrpc.server.ioThreadBoss";
-    public static final String DEFAULT_IO_THREAD_BOSS = "1";
-    public static final String IO_THREAD_WORKER = "jsonrpc.server.ioThreadWorker";
+    public static final Integer DEFAULT_IO_THREAD_BOSS = 1;
     public static final Integer DEFAULT_IO_THREAD_WORKER = Runtime.getRuntime().availableProcessors();
 
 }
