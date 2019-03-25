@@ -92,9 +92,7 @@ public class TestController {
             return ResponseEntity.status(400).build();
         }
         try {
-            int start = RandomUtils.nextInt(0, 100);
-            int end = RandomUtils.nextInt(199, 300);
-            int n = RandomUtils.nextInt(start, end);
+            int n = RandomUtils.nextInt(1, 300);
             return ResponseEntity.ok().body(primeNumberService.perform(n));
         } catch (Throwable e) {
             LOGGER.error(e.getMessage());
