@@ -43,20 +43,22 @@ public class ServerHandler extends SimpleChannelInboundHandler<String> {
 
     private JsonRPCServer jsonRPCServer;
     private final ExecutorService processor = Executors.newCachedThreadPool();
+    private final Map<String, Class> nameClass = new ConcurrentHashMap();
 
-    private void submit(Boolean requestType, Method method, Long id, Object component, Object[] params, ChannelHandlerContext ctx) {
+    private void submit(Boolean requestType, Method method, Long rid, Object component, Object[] params, ChannelHandlerContext ctx) {
         processor.submit(() -> {
             try {
                 Response response;
                 if (requestType) {
-                    response = Response.createResponse(id, method.invoke(component, params));
+                    response = Response.createResponse(rid, method.invoke(component, params));
                 } else {
                     method.invoke(component, params);
-                    response = Response.createResponse(id, null);
+                    response = Response.createResponse(rid, null);
                 }
                 ctx.channel().writeAndFlush(response.toString());
             } catch (Throwable e) {
                 LOGGER.error(e.getMessage());
+                exception(ctx, rid, ResponseCode.SERVER_ERROR, ResponseCode.SERVER_ERROR_MSG);
             }
         });
     }
@@ -72,20 +74,18 @@ public class ServerHandler extends SimpleChannelInboundHandler<String> {
     protected void channelRead0(ChannelHandlerContext ctx, String str) throws Exception {
         Request request = JSONObject.parseObject(str, Request.class);
         if (request.getEventType() == false) {
-            Response response;
+            long rid = request.getId();
             try {
                 String name = request.getMethod();
                 if (StringUtils.isBlank(name)) {
-                    response = Response.createResponse(request.getId(), ResponseCode.PARAMETER_ERROR, ResponseCode.PARAMETER_ERROR_MSG);
-                    ctx.channel().writeAndFlush(response.toString());
+                    exception(ctx, rid, ResponseCode.PARAMETER_ERROR, ResponseCode.PARAMETER_ERROR_MSG);
                     return;
                 }
                 String classname = StringUtils.substringBeforeLast(name, ".");
                 String methodname = StringUtils.substringAfterLast(name, ".");
                 Object component = jsonRPCServer.getBean(classname);
                 if (component == null) {
-                    response = Response.createResponse(request.getId(), ResponseCode.NOT_FOUND_COMPONENT, ResponseCode.NOT_FOUND_COMPONENT_MSG);
-                    ctx.channel().writeAndFlush(response.toString());
+                    exception(ctx, rid, ResponseCode.NOT_FOUND_COMPONENT, ResponseCode.NOT_FOUND_COMPONENT_MSG);
                     return;
                 }
                 String[] paramTypes = request.getParamTypes();
@@ -106,27 +106,40 @@ public class ServerHandler extends SimpleChannelInboundHandler<String> {
                     method = clazz.getMethod(methodname, clazzes);
                 }
                 if (method == null) {
-                    response = Response.createResponse(request.getId(), ResponseCode.NOT_FOUND_METHOD, ResponseCode.NOT_FOUND_METHOD_MSG);
-                    ctx.channel().writeAndFlush(response.toString());
+                    exception(ctx, rid, ResponseCode.NOT_FOUND_METHOD, ResponseCode.NOT_FOUND_METHOD_MSG);
                     return;
                 }
-                submit(request.getRequestType(), method, request.getId(), component, params, ctx);
+                submit(request.getRequestType(), method, rid, component, params, ctx);
             } catch (Throwable e) {
                 LOGGER.error(e.getMessage());
-                response = Response.createResponse(request.getId(), ResponseCode.SERVER_ERROR, ResponseCode.SERVER_ERROR_MSG);
-                ctx.channel().writeAndFlush(response.toString());
+                exception(ctx, rid, ResponseCode.SERVER_ERROR, ResponseCode.SERVER_ERROR_MSG);
             }
         } else {
         }
     }
 
-    private final Map<String, Class> nameClass = new ConcurrentHashMap();
-
+    /**
+     * 
+     * @param classname
+     * @return
+     * @throws ClassNotFoundException 
+     */
     private Class getClass (String classname) throws ClassNotFoundException {
         if (!nameClass.containsKey(classname)) {
             nameClass.put(classname, Class.forName(classname));
         }
         return nameClass.get(classname);
+    }
+
+    /**
+     * 
+     * @param ctx
+     * @param id
+     * @param responseCode
+     * @param msg 
+     */
+    private void exception (ChannelHandlerContext ctx, Long id, Integer responseCode, String msg) {
+        ctx.channel().writeAndFlush(Response.createResponse(id, responseCode, msg).toString());
     }
 
     /**
