@@ -6,3 +6,4 @@
 /jsonrpc-sample/target/
 /jsonrpc-benchmark/target/
 /jsonrpc-benchmark/nbactions.xml
+/jsonrpc-sample/.DS_Store
