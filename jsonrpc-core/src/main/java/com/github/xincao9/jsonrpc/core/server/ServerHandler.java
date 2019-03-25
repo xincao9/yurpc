@@ -23,6 +23,8 @@ import io.netty.channel.ChannelHandler.Sharable;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
 import java.lang.reflect.Method;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import org.apache.commons.lang3.StringUtils;
@@ -87,7 +89,7 @@ public class ServerHandler extends SimpleChannelInboundHandler<String> {
                     return;
                 }
                 String[] paramTypes = request.getParamTypes();
-                Class<?> clazz = Class.forName(classname);
+                Class<?> clazz = getClass(classname);
                 Method method;
                 Object[] params = null;
                 if (paramTypes == null || paramTypes.length <= 0) {
@@ -96,7 +98,7 @@ public class ServerHandler extends SimpleChannelInboundHandler<String> {
                     Class<?>[] clazzes = new Class<?>[paramTypes.length];
                     params = new Object[paramTypes.length];
                     for (int i = 0; i < paramTypes.length; i++) {
-                        clazzes[i] = Class.forName(paramTypes[i]);
+                        clazzes[i] = getClass(paramTypes[i]);
                         if (request.getParams() != null && request.getParams()[i] != null) {
                             params[i] = JSONObject.parseObject(JSONObject.toJSONString(request.getParams()[i]), clazzes[i]);
                         }
@@ -116,6 +118,15 @@ public class ServerHandler extends SimpleChannelInboundHandler<String> {
             }
         } else {
         }
+    }
+
+    private final Map<String, Class> nameClass = new ConcurrentHashMap();
+
+    private Class getClass (String classname) throws ClassNotFoundException {
+        if (!nameClass.containsKey(classname)) {
+            nameClass.put(classname, Class.forName(classname));
+        }
+        return nameClass.get(classname);
     }
 
     /**
