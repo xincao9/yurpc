@@ -147,6 +147,8 @@ wrk -c 128 -t 10 -d 30s 'http://localhost:8080/sleep'
 wrk -c 128 -t 10 -d 30s 'http://localhost:8080/fibonacci_sequence'
 6.Service providers that simulate computationally intensive applications perform stress tests (processing prime numbers between 1 and 300)
 wrk -c 128 -t 10 -d 30s 'http://localhost:8080/prime_number'
+7.NIC throughput
+wrk -c 16 -t 2 -d 30s 'http://localhost:8080/stream'
 ```
 
 **_tips_**

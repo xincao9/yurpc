@@ -116,7 +116,7 @@ public class TestController {
             return ResponseEntity.status(400).build();
         }
         try {
-            return ResponseEntity.ok().body(streamService.perform(RandomStringUtils.random(16)));
+            return ResponseEntity.ok().body(streamService.perform(RandomStringUtils.randomAscii(128)));
         } catch (Throwable e) {
             LOGGER.error(e.getMessage());
         }
