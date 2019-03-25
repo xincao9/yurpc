@@ -17,7 +17,9 @@ package com.github.xincao9.jsonrpc.benchmark;
 
 import com.github.xincao9.jsonrpc.benchmark.constant.ConfigConsts;
 import com.github.xincao9.jsonrpc.benchmark.server.FibonacciSequenceServiceImpl;
+import com.github.xincao9.jsonrpc.benchmark.server.PrimeNumberServiceImpl;
 import com.github.xincao9.jsonrpc.benchmark.server.SleepServiceImpl;
+import com.github.xincao9.jsonrpc.benchmark.server.StreamServiceImpl;
 import com.github.xincao9.jsonrpc.core.client.JsonRPCClient;
 import com.github.xincao9.jsonrpc.core.server.JsonRPCServer;
 import org.slf4j.Logger;
@@ -45,12 +47,14 @@ public class Application {
      * @throws Throwable 异常
      */
     public static void main(String... args) throws Throwable {
-        role = System.getProperty(ConfigConsts.ROLE, ConfigConsts.PROVIDER);
+        role = System.getProperty(ConfigConsts.ROLE);
         if (ConfigConsts.PROVIDER.equalsIgnoreCase(role)) {
             LOGGER.info("bootstrap service provider");
             JsonRPCServer jsonRPCServer = JsonRPCServer.defaultJsonRPCServer();
             jsonRPCServer.register(new FibonacciSequenceServiceImpl());
             jsonRPCServer.register(new SleepServiceImpl());
+            jsonRPCServer.register(new PrimeNumberServiceImpl());
+            jsonRPCServer.register(new StreamServiceImpl());
             jsonRPCServer.start();
         } else if (ConfigConsts.CONSUMER.equalsIgnoreCase(role)) {
             LOGGER.info("bootstrap service consumer");
@@ -90,5 +94,10 @@ public class Application {
     @Bean
     public PrimeNumberService primeNumberService () {
         return jsonRPCClient.proxy(PrimeNumberService.class);
+    }
+
+    @Bean
+    public StreamService streamService () {
+        return jsonRPCClient.proxy(StreamService.class);
     }
 }

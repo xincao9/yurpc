@@ -23,6 +23,8 @@ import io.netty.channel.ChannelHandler.Sharable;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
 import java.lang.reflect.Method;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -38,6 +40,24 @@ public class ServerHandler extends SimpleChannelInboundHandler<String> {
     private static final Logger LOGGER = LoggerFactory.getLogger(ServerHandler.class);
 
     private JsonRPCServer jsonRPCServer;
+    private final ExecutorService processor = Executors.newCachedThreadPool();
+
+    private void submit(Boolean requestType, Method method, Long id, Object component, Object[] params, ChannelHandlerContext ctx) {
+        processor.submit(() -> {
+            try {
+                Response response;
+                if (requestType) {
+                    response = Response.createResponse(id, method.invoke(component, params));
+                } else {
+                    method.invoke(component, params);
+                    response = Response.createResponse(id, null);
+                }
+                ctx.channel().writeAndFlush(response.toString());
+            } catch (Throwable e) {
+                LOGGER.error(e.getMessage());
+            }
+        });
+    }
 
     /**
      * 处理请求
@@ -88,17 +108,12 @@ public class ServerHandler extends SimpleChannelInboundHandler<String> {
                     ctx.channel().writeAndFlush(response.toString());
                     return;
                 }
-                if (request.getRequestType()) {
-                    response = Response.createResponse(request.getId(), method.invoke(component, params));
-                } else {
-                    method.invoke(component, request.getParams());
-                    response = Response.createResponse(request.getId(), null);
-                }
+                submit(request.getRequestType(), method, request.getId(), component, params, ctx);
             } catch (Throwable e) {
                 LOGGER.error(e.getMessage());
                 response = Response.createResponse(request.getId(), ResponseCode.SERVER_ERROR, ResponseCode.SERVER_ERROR_MSG);
+                ctx.channel().writeAndFlush(response.toString());
             }
-            ctx.channel().writeAndFlush(response.toString());
         } else {
         }
     }

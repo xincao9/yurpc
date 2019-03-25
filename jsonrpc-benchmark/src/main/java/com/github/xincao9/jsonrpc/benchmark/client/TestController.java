@@ -18,6 +18,8 @@ package com.github.xincao9.jsonrpc.benchmark.client;
 import com.github.xincao9.jsonrpc.benchmark.FibonacciSequenceService;
 import com.github.xincao9.jsonrpc.benchmark.PrimeNumberService;
 import com.github.xincao9.jsonrpc.benchmark.SleepService;
+import com.github.xincao9.jsonrpc.benchmark.StreamService;
+import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.RandomUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -42,6 +44,9 @@ public class TestController {
     private SleepService sleepService;
     @Autowired(required = false)
     private PrimeNumberService primeNumberService;
+    @Autowired(required = false)
+    private StreamService streamService;
+    
     /**
      * 斐波那契
      * 
@@ -94,6 +99,24 @@ public class TestController {
         try {
             int n = RandomUtils.nextInt(1, 300);
             return ResponseEntity.ok().body(primeNumberService.perform(n));
+        } catch (Throwable e) {
+            LOGGER.error(e.getMessage());
+        }
+        return ResponseEntity.status(500).build();
+    }
+
+    /**
+     * 流
+     * 
+     * @return 
+     */
+    @GetMapping("/stream")
+    public ResponseEntity<String> stream () {
+        if (streamService == null) {
+            return ResponseEntity.status(400).build();
+        }
+        try {
+            return ResponseEntity.ok().body(streamService.perform(RandomStringUtils.random(16)));
         } catch (Throwable e) {
             LOGGER.error(e.getMessage());
         }

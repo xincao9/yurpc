@@ -50,9 +50,9 @@ public class ServerConfig {
      * @param pros 属性文件
      */
     public static void init(Properties pros) {
-        port = Integer.valueOf(String.valueOf(pros.getProperty(ServerConsts.PORT, ServerConsts.DEFAULT_PORT)));
-        ioThreadBoss = Integer.valueOf(String.valueOf(pros.getProperty(ServerConsts.IO_THREAD_BOSS, ServerConsts.DEFAULT_IO_THREAD_BOSS)));
-        ioThreadWorker = Integer.valueOf(String.valueOf(pros.getProperty(ServerConsts.IO_THREAD_WORKER, String.valueOf(ServerConsts.DEFAULT_IO_THREAD_WORKER))));
+        port = Integer.valueOf(pros.getProperty(ServerConsts.PORT, ServerConsts.DEFAULT_PORT));
+        ioThreadBoss = Integer.valueOf(pros.getProperty(ServerConsts.IO_THREAD_BOSS, ServerConsts.DEFAULT_IO_THREAD_BOSS));
+        ioThreadWorker = Integer.valueOf(pros.getProperty(ServerConsts.IO_THREAD_WORKER, String.valueOf(ServerConsts.DEFAULT_IO_THREAD_WORKER)));
         if (port <= 0 || port > 65535) {
             port = Integer.valueOf(ServerConsts.DEFAULT_PORT);
         }

@@ -141,7 +141,7 @@ public class JsonRPCClientImpl implements JsonRPCClient {
         });
         try {
             return request.waitResponse(ClientConfig.invokeTimeoutMS, TimeUnit.MILLISECONDS);
-        } catch (InterruptedException e) {
+        } catch (Throwable e) {
             LOGGER.error(e.getMessage());
         }
         this.requests.remove(request.getId());
