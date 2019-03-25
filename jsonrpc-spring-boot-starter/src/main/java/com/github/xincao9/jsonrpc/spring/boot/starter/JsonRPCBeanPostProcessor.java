@@ -16,7 +16,9 @@
 
 package com.github.xincao9.jsonrpc.spring.boot.starter;
 
+import com.github.xincao9.jsonrpc.core.client.JsonRPCClient;
 import com.github.xincao9.jsonrpc.core.server.JsonRPCServer;
+import java.lang.reflect.Field;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeansException;
@@ -32,8 +34,10 @@ public class JsonRPCBeanPostProcessor implements BeanPostProcessor {
     private static final Logger LOGGER = LoggerFactory.getLogger(JsonRPCBeanPostProcessor.class);
 
     private final JsonRPCServer jsonRPCServer;
+    private final JsonRPCClient jsonRPCClient;
 
-    public JsonRPCBeanPostProcessor(JsonRPCServer jsonRPCServer) {
+    public JsonRPCBeanPostProcessor(JsonRPCClient jsonRPCClient, JsonRPCServer jsonRPCServer) {
+        this.jsonRPCClient = jsonRPCClient;
         this.jsonRPCServer = jsonRPCServer;
     }
 
@@ -47,7 +51,7 @@ public class JsonRPCBeanPostProcessor implements BeanPostProcessor {
      */
     @Override
     public Object postProcessBeforeInitialization(Object bean, String beanName) throws BeansException {
-        if (this.jsonRPCServer != null && bean.getClass().isAnnotationPresent(JsonRPCService.class)) {
+        if (this.jsonRPCServer != null && bean != null && bean.getClass().isAnnotationPresent(JsonRPCService.class)) {
             this.jsonRPCServer.register(bean);
             LOGGER.info("register jsonrpc service = {}", beanName);
         }
@@ -64,6 +68,26 @@ public class JsonRPCBeanPostProcessor implements BeanPostProcessor {
      */
     @Override
     public Object postProcessAfterInitialization(Object bean, String beanName) throws BeansException {
+        if (this.jsonRPCClient != null && bean != null) {
+            Class clazz = bean.getClass();
+            Field[] fields = clazz.getDeclaredFields();
+            if (fields != null && fields.length > 0) {
+                for (Field field : fields) {
+                    if (field.isAnnotationPresent(JsonRPCAutowired.class)) {
+                        Object obj = this.jsonRPCClient.proxy(field.getType());
+                        try {
+                            field.setAccessible(true);
+                            field.set(bean, obj);
+                        } catch (IllegalArgumentException | IllegalAccessException ex) {
+                            LOGGER.error(ex.getMessage());
+                            throw new BeansException(ex.getMessage()) {
+                            };
+                        }
+                        LOGGER.info("service reference beanName = {}, field = {}", beanName, field.getName());
+                    }
+                }
+            }
+        }
         return BeanPostProcessor.super.postProcessAfterInitialization(bean, beanName);
     }
 

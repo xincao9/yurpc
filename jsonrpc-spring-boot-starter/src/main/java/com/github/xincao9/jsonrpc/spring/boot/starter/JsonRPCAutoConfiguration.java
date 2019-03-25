@@ -64,7 +64,7 @@ public class JsonRPCAutoConfiguration implements EnvironmentAware, DisposableBea
      * @return 注册服务组件
      */
     public JsonRPCBeanPostProcessor jsonRPCBeanPostProcessor() {
-        return new JsonRPCBeanPostProcessor(jsonRPCServer);
+        return new JsonRPCBeanPostProcessor(jsonRPCClient, jsonRPCServer);
     }
 
     /**
@@ -135,7 +135,6 @@ public class JsonRPCAutoConfiguration implements EnvironmentAware, DisposableBea
                 throw new BeansException(ex.getMessage()) {
                 };
             }
-            beanFactory.addBeanPostProcessor(jsonRPCBeanPostProcessor());
         }
         if (client) {
             try {
@@ -156,6 +155,9 @@ public class JsonRPCAutoConfiguration implements EnvironmentAware, DisposableBea
                 throw new BeansException(ex.getMessage()) {
                 };
             }
+        }
+        if (server || client) {
+             beanFactory.addBeanPostProcessor(jsonRPCBeanPostProcessor());
         }
     }
 }

@@ -15,20 +15,21 @@
  */
 package com.github.xincao9.jsonrpc.sample.consumer;
 
-import com.github.xincao9.jsonrpc.core.client.JsonRPCClient;
 import com.github.xincao9.jsonrpc.sample.Say;
 import com.github.xincao9.jsonrpc.sample.SayService;
 import com.github.xincao9.jsonrpc.spring.boot.starter.EnableJsonRPC;
+import com.github.xincao9.jsonrpc.spring.boot.starter.JsonRPCAutowired;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
+import org.springframework.stereotype.Service;
 
 /**
  * 服务消费者
- * 
+ *
  * @author xincao9@gmail.com
  */
 @SpringBootApplication
@@ -36,23 +37,18 @@ import org.springframework.context.annotation.Bean;
 public class ApplicationConsumer {
 
     @Autowired
-    private JsonRPCClient jsonRPCClient;
-    @Autowired
-    private SayService sayService;
+    private Services services;
 
-    /**
-     * 招呼服务客户端
-     * 
-     * @return 招呼服务
-     */
-    @Bean
-    public SayService sayService() {
-        return jsonRPCClient.proxy(SayService.class);
+    @Service
+    public static class Services {
+
+        @JsonRPCAutowired
+        private SayService sayService;
     }
 
     /**
      * 入口方法
-     * 
+     *
      * @param args 参数
      */
     public static void main(String... args) {
@@ -61,8 +57,8 @@ public class ApplicationConsumer {
 
     /**
      * 启动时钩子
-     * 
-     * @return 
+     *
+     * @return
      */
     @Bean
     public CommandLineRunner commandLineRunner() {
@@ -70,7 +66,7 @@ public class ApplicationConsumer {
             for (int no = 0; no < 100; no++) {
                 String value = RandomStringUtils.randomAscii(128);
                 Say say = new Say(no, value);
-                System.out.println(sayService.perform(say));
+                System.out.println(services.sayService.perform(say));
             }
         };
     }
