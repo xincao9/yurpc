@@ -25,7 +25,9 @@ import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
 import java.lang.reflect.Type;
+import java.util.Map;
 import java.util.Objects;
+import java.util.concurrent.ConcurrentHashMap;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -39,6 +41,7 @@ public class ClientInvocationHandler implements InvocationHandler {
     private static final Logger LOGGER = LoggerFactory.getLogger(ClientInvocationHandler.class);
 
     private JsonRPCClient jsonRPCClient;
+    private final Map<Class, Object> proxys = new ConcurrentHashMap();
 
     /**
      * 代理方法调用
@@ -103,7 +106,12 @@ public class ClientInvocationHandler implements InvocationHandler {
             LOGGER.error("{} is not interface", clazz.getCanonicalName());
             return null;
         }
-        return (T) Proxy.newProxyInstance(clazz.getClassLoader(), new Class[]{clazz}, this);
+        if (proxys.containsKey(clazz)) {
+            return (T) proxys.get(clazz);
+        }
+        Object proxy = Proxy.newProxyInstance(clazz.getClassLoader(), new Class[]{clazz}, this);
+        proxys.put(clazz, proxy);
+        return (T) proxy;
     }
 
     /**

@@ -66,6 +66,7 @@ public interface SayService {
 **_service_**
 
 ```
+@JsonRPCService
 public class SayServiceImpl implements SayService {
 
     @Override
@@ -83,16 +84,6 @@ public class SayServiceImpl implements SayService {
 @EnableJsonRPC(server = true)
 public class ApplicationProvider {
 
-    @Autowired
-    private JsonRPCServer jsonRPCServer;
-
-    @Bean
-    public SayService sayService () {
-        SayService sayService = new SayServiceImpl();
-        jsonRPCServer.register(sayService);
-        return sayService;
-    }
-
     public static void main(String... args) {
         SpringApplication.run(ApplicationProvider.class, args);
     }
@@ -106,15 +97,9 @@ public class ApplicationProvider {
 @EnableJsonRPC(client = true)
 public class ApplicationConsumer {
 
-    @Autowired
-    private JsonRPCClient jsonRPCClient;
-    @Autowired
+    @JsonRPCAutowired
     private SayService sayService;
 
-    @Bean
-    public SayService sayService() {
-        return jsonRPCClient.proxy(SayService.class);
-    }
 
     public static void main(String... args) {
         SpringApplication.run(ApplicationConsumer.class, args);

@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package com.github.xincao9.jsonrpc.spring.boot.starter;
 
 import com.github.xincao9.jsonrpc.core.client.JsonRPCClient;
@@ -23,10 +22,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.config.BeanPostProcessor;
+import org.springframework.util.ClassUtils;
 
 /**
  * 自动扫描，注册服务组件
- * 
+ *
  * @author xincao9@gmail.com
  */
 public class JsonRPCBeanPostProcessor implements BeanPostProcessor {
@@ -43,7 +43,7 @@ public class JsonRPCBeanPostProcessor implements BeanPostProcessor {
 
     /**
      * 初始化前执行
-     * 
+     *
      * @param bean 实例
      * @param beanName 名字
      * @return
@@ -55,21 +55,9 @@ public class JsonRPCBeanPostProcessor implements BeanPostProcessor {
             this.jsonRPCServer.register(bean);
             LOGGER.info("register jsonrpc service = {}", beanName);
         }
-        return BeanPostProcessor.super.postProcessBeforeInitialization(bean, beanName);
-    }
-
-    /**
-     * 初始化后执行
-     * 
-     * @param bean 实例
-     * @param beanName 名字
-     * @return
-     * @throws BeansException 异常
-     */
-    @Override
-    public Object postProcessAfterInitialization(Object bean, String beanName) throws BeansException {
         if (this.jsonRPCClient != null && bean != null) {
-            Class clazz = bean.getClass();
+//            Class clazz = AopUtils.getTargetClass(bean); // AOP代理的目标类 https://github.com/spring-projects/spring-framework/issues/20132
+            Class clazz = ClassUtils.getUserClass(bean); // the original class for CGLIB-generated classes, consider ClassUtils.getUserClass
             Field[] fields = clazz.getDeclaredFields();
             if (fields != null && fields.length > 0) {
                 for (Field field : fields) {
@@ -88,6 +76,19 @@ public class JsonRPCBeanPostProcessor implements BeanPostProcessor {
                 }
             }
         }
+        return BeanPostProcessor.super.postProcessBeforeInitialization(bean, beanName);
+    }
+
+    /**
+     * 初始化后执行
+     *
+     * @param bean 实例
+     * @param beanName 名字
+     * @return
+     * @throws BeansException 异常
+     */
+    @Override
+    public Object postProcessAfterInitialization(Object bean, String beanName) throws BeansException {
         return BeanPostProcessor.super.postProcessAfterInitialization(bean, beanName);
     }
 

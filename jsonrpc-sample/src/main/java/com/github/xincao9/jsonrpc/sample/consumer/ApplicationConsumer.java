@@ -20,12 +20,10 @@ import com.github.xincao9.jsonrpc.sample.SayService;
 import com.github.xincao9.jsonrpc.spring.boot.starter.EnableJsonRPC;
 import com.github.xincao9.jsonrpc.spring.boot.starter.JsonRPCAutowired;
 import org.apache.commons.lang3.RandomStringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
-import org.springframework.stereotype.Service;
 
 /**
  * 服务消费者
@@ -36,15 +34,8 @@ import org.springframework.stereotype.Service;
 @EnableJsonRPC(client = true)
 public class ApplicationConsumer {
 
-    @Autowired
-    private Services services;
-
-    @Service
-    public static class Services {
-
-        @JsonRPCAutowired
-        private SayService sayService;
-    }
+    @JsonRPCAutowired
+    private SayService sayService;
 
     /**
      * 入口方法
@@ -66,7 +57,7 @@ public class ApplicationConsumer {
             for (int no = 0; no < 100; no++) {
                 String value = RandomStringUtils.randomAscii(128);
                 Say say = new Say(no, value);
-                System.out.println(services.sayService.perform(say));
+                System.out.println(sayService.perform(say));
             }
         };
     }
