@@ -17,8 +17,8 @@ package com.github.xincao9.jsonrpc;
 
 import com.alibaba.fastjson.JSONObject;
 import com.alibaba.fastjson.serializer.SerializerFeature;
-import com.github.xincao9.jsonrpc.core.client.JsonRPCClient;
-import com.github.xincao9.jsonrpc.core.server.JsonRPCServer;
+import com.github.xincao9.jsonrpc.core.JsonRPCClient;
+import com.github.xincao9.jsonrpc.core.JsonRPCServer;
 import java.util.Collections;
 import java.util.Map;
 import org.apache.commons.lang3.RandomStringUtils;

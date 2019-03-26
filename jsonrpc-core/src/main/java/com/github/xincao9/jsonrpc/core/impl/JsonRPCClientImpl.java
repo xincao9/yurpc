@@ -13,12 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.github.xincao9.jsonrpc.core.client;
+package com.github.xincao9.jsonrpc.core.impl;
 
-import com.github.xincao9.jsonrpc.core.common.Request;
-import com.github.xincao9.jsonrpc.core.common.Response;
-import com.github.xincao9.jsonrpc.core.common.StringDecoder;
-import com.github.xincao9.jsonrpc.core.common.StringEncoder;
+import com.github.xincao9.jsonrpc.core.impl.ClientHandler;
+import com.github.xincao9.jsonrpc.core.JsonRPCClient;
+import com.github.xincao9.jsonrpc.core.config.ClientConfig;
+import com.github.xincao9.jsonrpc.core.protocol.Request;
+import com.github.xincao9.jsonrpc.core.protocol.Response;
+import com.github.xincao9.jsonrpc.core.codec.StringDecoder;
+import com.github.xincao9.jsonrpc.core.codec.StringEncoder;
 import com.github.xincao9.jsonrpc.core.constant.ResponseCode;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.Channel;

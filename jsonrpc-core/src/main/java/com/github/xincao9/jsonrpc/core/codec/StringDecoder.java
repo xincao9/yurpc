@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.github.xincao9.jsonrpc.core.common;
+package com.github.xincao9.jsonrpc.core.codec;
 
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
@@ -21,8 +21,6 @@ import io.netty.handler.codec.ByteToMessageDecoder;
 import java.nio.ByteBuffer;
 import java.util.Arrays;
 import java.util.List;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * 消息解码
@@ -30,8 +28,6 @@ import org.slf4j.LoggerFactory;
  * @author xincao9@gmail.com
  */
 public class StringDecoder extends ByteToMessageDecoder {
-
-    private static final Logger LOGGER = LoggerFactory.getLogger(StringDecoder.class);
 
     /**
      * 解码

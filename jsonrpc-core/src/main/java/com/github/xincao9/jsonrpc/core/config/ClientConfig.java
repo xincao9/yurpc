@@ -13,9 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.github.xincao9.jsonrpc.core.client;
+package com.github.xincao9.jsonrpc.core.config;
 
-import com.github.xincao9.jsonrpc.core.common.Pair;
+import com.github.xincao9.jsonrpc.core.protocol.Pair;
 import com.github.xincao9.jsonrpc.core.constant.ClientConsts;
 import com.github.xincao9.jsonrpc.core.util.PropertiesUtils;
 import java.util.ArrayList;

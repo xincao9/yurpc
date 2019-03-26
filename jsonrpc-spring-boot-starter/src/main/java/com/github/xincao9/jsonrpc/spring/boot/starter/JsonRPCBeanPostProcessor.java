@@ -15,8 +15,8 @@
  */
 package com.github.xincao9.jsonrpc.spring.boot.starter;
 
-import com.github.xincao9.jsonrpc.core.client.JsonRPCClient;
-import com.github.xincao9.jsonrpc.core.server.JsonRPCServer;
+import com.github.xincao9.jsonrpc.core.JsonRPCClient;
+import com.github.xincao9.jsonrpc.core.JsonRPCServer;
 import java.lang.reflect.Field;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

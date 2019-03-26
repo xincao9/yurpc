@@ -13,13 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.github.xincao9.jsonrpc.core.client;
+package com.github.xincao9.jsonrpc.core.impl;
 
+import com.github.xincao9.jsonrpc.core.JsonRPCClient;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.alibaba.fastjson.serializer.SerializerFeature;
-import com.github.xincao9.jsonrpc.core.common.Request;
-import com.github.xincao9.jsonrpc.core.common.Response;
+import com.github.xincao9.jsonrpc.core.protocol.Request;
+import com.github.xincao9.jsonrpc.core.protocol.Response;
 import com.github.xincao9.jsonrpc.core.constant.ResponseCode;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;

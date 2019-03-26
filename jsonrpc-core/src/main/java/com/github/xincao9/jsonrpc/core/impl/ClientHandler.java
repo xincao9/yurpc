@@ -13,11 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.github.xincao9.jsonrpc.core.client;
+package com.github.xincao9.jsonrpc.core.impl;
 
-import com.github.xincao9.jsonrpc.core.common.Request;
+import com.github.xincao9.jsonrpc.core.JsonRPCClient;
+import com.github.xincao9.jsonrpc.core.protocol.Request;
 import com.alibaba.fastjson.JSONObject;
-import com.github.xincao9.jsonrpc.core.common.Response;
+import com.github.xincao9.jsonrpc.core.protocol.Response;
 import io.netty.channel.ChannelHandler.Sharable;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;

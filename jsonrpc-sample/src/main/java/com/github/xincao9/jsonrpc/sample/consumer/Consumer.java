@@ -15,7 +15,7 @@
  */
 package com.github.xincao9.jsonrpc.sample.consumer;
 
-import com.github.xincao9.jsonrpc.core.client.JsonRPCClient;
+import com.github.xincao9.jsonrpc.core.JsonRPCClient;
 import com.github.xincao9.jsonrpc.sample.Say;
 import com.github.xincao9.jsonrpc.sample.SayService;
 import org.apache.commons.lang3.RandomStringUtils;

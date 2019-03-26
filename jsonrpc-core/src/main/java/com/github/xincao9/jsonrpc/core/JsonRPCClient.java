@@ -13,10 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.github.xincao9.jsonrpc.core.client;
+package com.github.xincao9.jsonrpc.core;
 
-import com.github.xincao9.jsonrpc.core.common.Request;
-import com.github.xincao9.jsonrpc.core.common.Response;
+import com.github.xincao9.jsonrpc.core.config.ClientConfig;
+import com.github.xincao9.jsonrpc.core.impl.JsonRPCClientImpl;
+import com.github.xincao9.jsonrpc.core.protocol.Request;
+import com.github.xincao9.jsonrpc.core.protocol.Response;
 import java.util.Map;
 
 /**

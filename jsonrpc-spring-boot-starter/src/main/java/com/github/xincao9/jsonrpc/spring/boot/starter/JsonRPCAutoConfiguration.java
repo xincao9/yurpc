@@ -15,14 +15,14 @@
  */
 package com.github.xincao9.jsonrpc.spring.boot.starter;
 
-import com.github.xincao9.jsonrpc.core.client.ClientConfig;
-import com.github.xincao9.jsonrpc.core.client.JsonRPCClient;
-import com.github.xincao9.jsonrpc.core.client.JsonRPCClientImpl;
+import com.github.xincao9.jsonrpc.core.config.ClientConfig;
+import com.github.xincao9.jsonrpc.core.JsonRPCClient;
+import com.github.xincao9.jsonrpc.core.impl.JsonRPCClientImpl;
 import com.github.xincao9.jsonrpc.core.constant.ClientConsts;
 import com.github.xincao9.jsonrpc.core.constant.ServerConsts;
-import com.github.xincao9.jsonrpc.core.server.JsonRPCServer;
-import com.github.xincao9.jsonrpc.core.server.JsonRPCServerImpl;
-import com.github.xincao9.jsonrpc.core.server.ServerConfig;
+import com.github.xincao9.jsonrpc.core.JsonRPCServer;
+import com.github.xincao9.jsonrpc.core.impl.JsonRPCServerImpl;
+import com.github.xincao9.jsonrpc.core.config.ServerConfig;
 import java.util.Properties;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

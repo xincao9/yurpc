@@ -13,7 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.github.xincao9.jsonrpc.core.server;
+package com.github.xincao9.jsonrpc.core;
+
+import com.github.xincao9.jsonrpc.core.impl.JsonRPCServerImpl;
+import com.github.xincao9.jsonrpc.core.config.ServerConfig;
 
 /**
  * 服务组件
