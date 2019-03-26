@@ -15,7 +15,6 @@
  */
 package com.github.xincao9.jsonrpc.core.impl;
 
-import com.github.xincao9.jsonrpc.core.impl.ClientHandler;
 import com.github.xincao9.jsonrpc.core.JsonRPCClient;
 import com.github.xincao9.jsonrpc.core.config.ClientConfig;
 import com.github.xincao9.jsonrpc.core.protocol.Request;
