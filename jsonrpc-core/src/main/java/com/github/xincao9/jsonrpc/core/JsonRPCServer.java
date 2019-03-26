@@ -46,7 +46,7 @@ public interface JsonRPCServer {
      * @param discovery 服务发现组件
      * @return 服务端
      */
-    static JsonRPCServer defaultJsonRPCServer(String filename, Discovery discovery) throws RuntimeException {
+    static JsonRPCServer defaultJsonRPCServer(String filename, DiscoveryService discovery) throws RuntimeException {
         ServerConfig.init(filename);
         return new JsonRPCServerImpl(discovery);
     }
@@ -66,7 +66,7 @@ public interface JsonRPCServer {
      * @param discovery 服务发现组件
      * @return 服务端
      */
-    static JsonRPCServer defaultJsonRPCServer(Discovery discovery) {
+    static JsonRPCServer defaultJsonRPCServer(DiscoveryService discovery) {
         return defaultJsonRPCServer("", discovery);
     }
 

@@ -22,6 +22,7 @@ import com.github.xincao9.jsonrpc.core.protocol.Response;
 import com.github.xincao9.jsonrpc.core.codec.StringDecoder;
 import com.github.xincao9.jsonrpc.core.codec.StringEncoder;
 import com.github.xincao9.jsonrpc.core.constant.ResponseCode;
+import com.github.xincao9.jsonrpc.core.protocol.Endpoint;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelFuture;
@@ -36,15 +37,20 @@ import io.netty.channel.epoll.EpollSocketChannel;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioSocketChannel;
+import io.netty.handler.timeout.IdleStateHandler;
 import io.netty.util.concurrent.Future;
 import java.net.InetSocketAddress;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.TimeUnit;
+import org.apache.commons.lang3.RandomUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import com.github.xincao9.jsonrpc.core.DiscoveryService;
 
 /**
  * 客户端
@@ -59,6 +65,24 @@ public class JsonRPCClientImpl implements JsonRPCClient {
     private final Map<String, Channel> addressChannel = new HashMap();
     private EventLoopGroup workerGroup;
     private ClientInvocationHandler clientInvocationHandler;
+    private DiscoveryService discoveryService;
+
+    /**
+     * 构造器
+     * 
+     */
+    public JsonRPCClientImpl () {
+        this(null);
+    }
+
+    /**
+     * 构造器
+     * 
+     * @param discoveryService 服务组件
+     */
+    public JsonRPCClientImpl (DiscoveryService discoveryService) {
+        this.discoveryService = discoveryService;
+    }
 
     /**
      * 启动
@@ -83,7 +107,10 @@ public class JsonRPCClientImpl implements JsonRPCClient {
                         pipeline.addLast(
                                 new StringEncoder(),
                                 new StringDecoder(),
-                                clientHandler);
+                                clientHandler,
+                                new IdleStateHandler(0, 0, 60, TimeUnit.SECONDS),
+                                new HeartbeatHandler()
+                        );
                     }
                 });
         clientInvocationHandler = new ClientInvocationHandler();
@@ -126,6 +153,14 @@ public class JsonRPCClientImpl implements JsonRPCClient {
     @Override
     public <T> Response<T> invoke(Request request) throws Throwable {
         Objects.requireNonNull(request);
+        if (discoveryService != null) {
+            List<Endpoint> nodes = discoveryService.query(StringUtils.substringBeforeLast(request.getMethod(), "."));
+            if (nodes != null && !nodes.isEmpty()) {
+                Endpoint node = nodes.get(RandomUtils.nextInt(0, nodes.size()));
+                request.setHost(node.getHost());
+                request.setPort(node.getPort());
+            }
+        }
         Channel channel = getChannel(request.getHost(), request.getPort());
         if (channel == null) {
             return Response.createResponse(request.getId(), ResponseCode.CONNECTION_FAILURE, ResponseCode.CONNECTION_FAILURE_MSG);

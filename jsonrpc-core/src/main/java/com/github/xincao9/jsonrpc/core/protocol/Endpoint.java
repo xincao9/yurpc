@@ -15,15 +15,47 @@
  */
 package com.github.xincao9.jsonrpc.core.protocol;
 
+import com.github.xincao9.jsonrpc.core.config.ServerConfig;
+import com.github.xincao9.jsonrpc.core.util.HostUtils;
+import java.util.Date;
+import java.util.UUID;
+
 /**
- *
+ * 端点
+ * 
  * @author xincao9@gmail.com
  */
-public class Node {
+public class Endpoint {
 
+    private String instanceId;
     private String host;
     private Integer port;
     private String name;
+    private Date createTime;
+
+    /**
+     * 创建端点
+     * 
+     * @param name 服务名字
+     * @return 端点
+     */
+    public static Endpoint create (String name) {
+        Endpoint node = new Endpoint();
+        node.setInstanceId(UUID.randomUUID().toString());
+        node.setHost(HostUtils.getLocalAddress());
+        node.setPort(ServerConfig.port);
+        node.setName(name);
+        node.setCreateTime(new Date());
+        return node;
+    }
+
+    public String getInstanceId() {
+        return instanceId;
+    }
+
+    public void setInstanceId(String instanceId) {
+        this.instanceId = instanceId;
+    }
 
     public String getHost() {
         return host;
@@ -49,4 +81,11 @@ public class Node {
         this.name = name;
     }
 
+    public Date getCreateTime() {
+        return createTime;
+    }
+
+    public void setCreateTime(Date createTime) {
+        this.createTime = createTime;
+    }
 }

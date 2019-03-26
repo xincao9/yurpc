@@ -56,11 +56,12 @@ public interface JsonRPCClient {
      * 获得客户端
      * 
      * @param filename 配置文件
+     * @param discoveryService 服务组件
      * @return 客户端
      */
-    static JsonRPCClient defaultJsonRPCClient(String filename) {
+    static JsonRPCClient defaultJsonRPCClient(String filename, DiscoveryService discoveryService) {
         ClientConfig.init(filename);
-        return new JsonRPCClientImpl();
+        return new JsonRPCClientImpl(discoveryService);
     }
 
     /**
@@ -69,7 +70,17 @@ public interface JsonRPCClient {
      * @return 客户端
      */
     static JsonRPCClient defaultJsonRPCClient() {
-        return defaultJsonRPCClient("");
+        return defaultJsonRPCClient("", null);
+    }
+    
+    /**
+     * 获得客户端
+     * 
+     * @param discoveryService 服务组件
+     * @return 客户端
+     */
+    static JsonRPCClient defaultJsonRPCClient(DiscoveryService discoveryService) {
+        return defaultJsonRPCClient("", discoveryService);
     }
 
     /**

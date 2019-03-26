@@ -28,7 +28,7 @@ import io.netty.util.CharsetUtil;
  * 
  * @author xincao9@gmail.com
  */
-public class ServerHeartbeatHandler extends ChannelInboundHandlerAdapter {
+public class HeartbeatHandler extends ChannelInboundHandlerAdapter {
 
     private static final ByteBuf HEARTBEAT_SEQUENCE = Unpooled.unreleasableBuffer(Unpooled.copiedBuffer("HEARTBEAT", CharsetUtil.UTF_8));
 

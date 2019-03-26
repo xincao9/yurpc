@@ -38,9 +38,8 @@ import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import com.github.xincao9.jsonrpc.core.Discovery;
-import com.github.xincao9.jsonrpc.core.protocol.Node;
-import com.github.xincao9.jsonrpc.core.util.HostUtils;
+import com.github.xincao9.jsonrpc.core.protocol.Endpoint;
+import com.github.xincao9.jsonrpc.core.DiscoveryService;
 
 /**
  * 服务组件
@@ -56,7 +55,7 @@ public class JsonRPCServerImpl implements JsonRPCServer {
     private EventLoopGroup workerGroup;
     private final Integer boss;
     private final Integer worker;
-    private final Discovery discovery;
+    private final DiscoveryService discoveryService;
 
     public JsonRPCServerImpl() {
         this(null);
@@ -65,13 +64,13 @@ public class JsonRPCServerImpl implements JsonRPCServer {
     /**
      * 构造器
      *
-     * @param register
+     * @param discoveryService 服务组件
      */
-    public JsonRPCServerImpl(Discovery register) {
+    public JsonRPCServerImpl(DiscoveryService discoveryService) {
         this.port = ServerConfig.port;
         this.boss = ServerConfig.ioThreadBoss;
         this.worker = ServerConfig.ioThreadWorker;
-        this.discovery = register;
+        this.discoveryService = discoveryService;
     }
 
     /**
@@ -100,7 +99,7 @@ public class JsonRPCServerImpl implements JsonRPCServer {
                                 new StringDecoder(),
                                 serverHandler,
                                 new IdleStateHandler(0, 0, 60, TimeUnit.SECONDS),
-                                new ServerHeartbeatHandler()
+                                new HeartbeatHandler()
                         );
                     }
                 })
@@ -147,12 +146,8 @@ public class JsonRPCServerImpl implements JsonRPCServer {
         }
         for (Class clazz : clazzes) {
             componentes.put(clazz.getTypeName(), obj);
-            if (discovery != null) {
-                Node node = new Node();
-                node.setHost(HostUtils.getLocalAddress());
-                node.setPort(port);
-                node.setName(clazz.getTypeName());
-                discovery.register(node);
+            if (discoveryService != null) {
+                discoveryService.register(Endpoint.create(clazz.getTypeName()));
             }
         }
     }

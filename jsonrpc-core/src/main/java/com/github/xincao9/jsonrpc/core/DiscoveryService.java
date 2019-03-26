@@ -15,25 +15,42 @@
  */
 package com.github.xincao9.jsonrpc.core;
 
-import com.github.xincao9.jsonrpc.core.protocol.Node;
+import com.github.xincao9.jsonrpc.core.protocol.Endpoint;
 import java.util.List;
 
 /**
- *
+ * 服务注册与发现组件
+ * 
  * @author xincao9@gmail.com
  */
-public interface Discovery {
+public interface DiscoveryService {
 
     /**
+     * 注册
      * 
-     * @param node 
+     * @param node 服务信息
      */
-    void register (Node node);
+    void register (Endpoint node);
 
     /**
+     * 获取注册表
      * 
-     * @param name
-     * @return 
+     * @param name 服务名字（接口名）
+     * @return 节点列表
      */
-    List<Node> query (String name);
+    List<Endpoint> query (String name);
+
+    /**
+     * 续约
+     * 
+     * @param instanceId 当前实例的id
+     */
+    void renew (String instanceId);
+
+    /**
+     * 取消
+     * 
+     * @param instanceId 当前实例的id
+     */
+    void cancel (String instanceId);
 }
