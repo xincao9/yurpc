@@ -15,7 +15,6 @@
  */
 package com.github.xincao9.jsonrpc.core.impl;
 
-import com.github.xincao9.jsonrpc.core.impl.ServerHandler;
 import com.github.xincao9.jsonrpc.core.JsonRPCServer;
 import com.github.xincao9.jsonrpc.core.codec.StringDecoder;
 import com.github.xincao9.jsonrpc.core.codec.StringEncoder;
@@ -39,6 +38,9 @@ import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import com.github.xincao9.jsonrpc.core.Discovery;
+import com.github.xincao9.jsonrpc.core.protocol.Node;
+import com.github.xincao9.jsonrpc.core.util.HostUtils;
 
 /**
  * 服务组件
@@ -54,15 +56,22 @@ public class JsonRPCServerImpl implements JsonRPCServer {
     private EventLoopGroup workerGroup;
     private final Integer boss;
     private final Integer worker;
+    private final Discovery discovery;
+
+    public JsonRPCServerImpl() {
+        this(null);
+    }
 
     /**
      * 构造器
      *
+     * @param register
      */
-    public JsonRPCServerImpl() {
+    public JsonRPCServerImpl(Discovery register) {
         this.port = ServerConfig.port;
         this.boss = ServerConfig.ioThreadBoss;
         this.worker = ServerConfig.ioThreadWorker;
+        this.discovery = register;
     }
 
     /**
@@ -138,6 +147,13 @@ public class JsonRPCServerImpl implements JsonRPCServer {
         }
         for (Class clazz : clazzes) {
             componentes.put(clazz.getTypeName(), obj);
+            if (discovery != null) {
+                Node node = new Node();
+                node.setHost(HostUtils.getLocalAddress());
+                node.setPort(port);
+                node.setName(clazz.getTypeName());
+                discovery.register(node);
+            }
         }
     }
 
