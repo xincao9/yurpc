@@ -128,8 +128,6 @@ jsonrpc.client.invokeTimeoutMS=1000
 
 ## provider
 jsonrpc.server.port=12306
-jsonrpc.server.ioThreadBoss=1
-jsonrpc.server.ioThreadWorker=4
 ```
 
 **_benchmark_**
