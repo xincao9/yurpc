@@ -122,12 +122,6 @@ public class JsonRPCAutoConfiguration implements EnvironmentAware, DisposableBea
                 if (environment.containsProperty(ServerConsts.PORT)) {
                     pros.setProperty(ServerConsts.PORT, environment.getProperty(ServerConsts.PORT));
                 }
-                if (environment.containsProperty(ServerConsts.IO_THREAD_BOSS)) {
-                    pros.setProperty(ServerConsts.IO_THREAD_BOSS, environment.getProperty(ServerConsts.IO_THREAD_BOSS));
-                }
-                if (environment.containsProperty(ServerConsts.IO_THREAD_WORKER)) {
-                    pros.setProperty(ServerConsts.IO_THREAD_WORKER, environment.getProperty(ServerConsts.IO_THREAD_WORKER));
-                }
                 ServerConfig.init(pros);
                 jsonRPCServer = beanFactory.createBean(JsonRPCServerImpl.class);
                 jsonRPCServer.start();
