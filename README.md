@@ -4,8 +4,7 @@
 
 ### high-performance RPC framework. 
 
-jsonrpc is a high-performance, Java based open source RPC framework. 
-
+#### jsonrpc is a high-performance, Java based open source RPC framework.
 
 ![architecture](https://github.com/xincao9/jsonrpc/blob/master/architecture.png)
 
@@ -48,6 +47,7 @@ public class Say {
     }
 
     public void setBody(String body) {
+    
         this.body = body;
     }
 
