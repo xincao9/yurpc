@@ -39,6 +39,7 @@ public class ZKDiscoveryServiceImpl implements DiscoveryService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ZKDiscoveryServiceImpl.class);
     private final CuratorFramework client;
+    private static final String JSONRPC_ROOT = "/jsonrpc";
     private static final String JSONRPC_SERVICE_PATTERN = "/jsonrpc/%s";
     private static final String JSONRPC_INSTANCE_PATTERN = "/jsonrpc/%s/%s";
 
@@ -61,7 +62,13 @@ public class ZKDiscoveryServiceImpl implements DiscoveryService {
     @Override
     public void register(Endpoint node) {
         try {
-            client.create().withMode(CreateMode.EPHEMERAL_SEQUENTIAL).forPath(String.format(JSONRPC_INSTANCE_PATTERN, node.getName(), node.getInstanceId()), JSONObject.toJSONBytes(node, SerializerFeature.DisableCircularReferenceDetect));
+            if (client.checkExists().forPath(JSONRPC_ROOT) == null) {
+                client.create().withMode(CreateMode.PERSISTENT).forPath(JSONRPC_ROOT);
+            }
+            if (client.checkExists().forPath(String.format(JSONRPC_SERVICE_PATTERN, node.getName())) == null) {
+                client.create().withMode(CreateMode.PERSISTENT).forPath(String.format(JSONRPC_SERVICE_PATTERN, node.getName()));
+            }
+            client.create().withMode(CreateMode.EPHEMERAL).forPath(String.format(JSONRPC_INSTANCE_PATTERN, node.getName(), node.getInstanceId()), JSONObject.toJSONBytes(node, SerializerFeature.DisableCircularReferenceDetect));
         } catch (Throwable e) {
             LOGGER.error(e.getMessage());
         }
