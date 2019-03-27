@@ -42,15 +42,21 @@ import org.slf4j.LoggerFactory;
  *
  * @author xincao9@gmail.com
  */
-public class ZKDiscoveryServiceImpl implements DiscoveryService {
+public final class ZKDiscoveryServiceImpl implements DiscoveryService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ZKDiscoveryServiceImpl.class);
-    private final CuratorFramework client;
+    private CuratorFramework client;
     private static final String JSONRPC_ROOT = "/jsonrpc";
     private static final String JSONRPC_SERVICE_PATTERN = "/jsonrpc/%s";
     private static final String JSONRPC_INSTANCE_PATTERN = "/jsonrpc/%s/%s";
     private final Map<String, List<Endpoint>> services = new ConcurrentHashMap();
     private final ExecutorService watcherExecutorService = Executors.newFixedThreadPool(1);
+    
+    /**
+     * 构造器
+     */
+    public ZKDiscoveryServiceImpl () {
+    }
 
     /**
      * 构造器
@@ -58,6 +64,15 @@ public class ZKDiscoveryServiceImpl implements DiscoveryService {
      * @param zookeeper zookeeper地址，(格式host1:port1,host2:port2,...)
      */
     public ZKDiscoveryServiceImpl(String zookeeper) {
+        init(zookeeper);
+    }
+
+    /**
+     * 初始化方法，(仅在使用无参构造器时使用)
+     * 
+     * @param zookeeper 
+     */
+    public void init (String zookeeper) {
         RetryPolicy retryPolicy = new ExponentialBackoffRetry(1000, 3);
         this.client = CuratorFrameworkFactory.newClient(zookeeper, retryPolicy);
         this.client.start();
@@ -168,5 +183,5 @@ public class ZKDiscoveryServiceImpl implements DiscoveryService {
     @Override
     public void cancel(String instanceId) {
     }
-
+ 
 }
