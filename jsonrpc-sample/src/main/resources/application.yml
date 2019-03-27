@@ -1,0 +1,10 @@
+jsonrpc:
+    discovery:
+        zookeeper: localhost:2181
+    client:
+        serverList:
+            localhost: 12306
+        connectionTimeoutMS: 5000
+        invokeTimeoutMS: 1000
+    server:
+        port: 12304
