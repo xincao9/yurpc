@@ -15,6 +15,7 @@
  */
 package com.github.xincao9.jsonrpc.spring.boot.starter;
 
+import com.github.xincao9.jsonrpc.core.DiscoveryService;
 import com.github.xincao9.jsonrpc.core.config.ClientConfig;
 import com.github.xincao9.jsonrpc.core.JsonRPCClient;
 import com.github.xincao9.jsonrpc.core.impl.JsonRPCClientImpl;
@@ -30,9 +31,8 @@ import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.DisposableBean;
 import org.springframework.beans.factory.config.BeanFactoryPostProcessor;
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
-import org.springframework.beans.factory.support.BeanDefinitionRegistry;
-import org.springframework.beans.factory.support.BeanDefinitionRegistryPostProcessor;
 import org.springframework.context.EnvironmentAware;
+import org.springframework.context.annotation.Bean;
 import org.springframework.core.env.Environment;
 
 /**
@@ -40,7 +40,7 @@ import org.springframework.core.env.Environment;
  *
  * @author xincao9@gmail.com
  */
-public class JsonRPCAutoConfiguration implements EnvironmentAware, DisposableBean, BeanFactoryPostProcessor, BeanDefinitionRegistryPostProcessor {
+public class JsonRPCAutoConfiguration implements EnvironmentAware, DisposableBean, BeanFactoryPostProcessor {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(JsonRPCAutoConfiguration.class);
 
@@ -49,10 +49,12 @@ public class JsonRPCAutoConfiguration implements EnvironmentAware, DisposableBea
     private Boolean client;
     private JsonRPCClient jsonRPCClient;
     private JsonRPCServer jsonRPCServer;
+    private JsonRPCBeanPostProcessor jsonRPCBeanPostProcessor;
+    private DiscoveryService discoveryService;
 
     /**
      * 修改器
-     * 
+     *
      * @param environment 环境
      */
     @Override
@@ -64,9 +66,18 @@ public class JsonRPCAutoConfiguration implements EnvironmentAware, DisposableBea
      * 自动扫描，注册服务组件
      *
      * @return 注册服务组件
+     * @throws java.lang.Throwable  异常
      */
-    public JsonRPCBeanPostProcessor jsonRPCBeanPostProcessor() {
-        return new JsonRPCBeanPostProcessor(jsonRPCClient, jsonRPCServer);
+    @Bean
+    public JsonRPCBeanPostProcessor jsonRPCBeanPostProcessor() throws Throwable {
+        if (jsonRPCBeanPostProcessor != null) {
+            return jsonRPCBeanPostProcessor;
+        }
+        if (server || client) {
+            jsonRPCBeanPostProcessor = new JsonRPCBeanPostProcessor(jsonRPCClient(discoveryService()), jsonRPCServer(discoveryService()));
+            return jsonRPCBeanPostProcessor;
+        }
+        return null;
     }
 
     /**
@@ -110,61 +121,96 @@ public class JsonRPCAutoConfiguration implements EnvironmentAware, DisposableBea
         this.client = client;
     }
 
-    @Override
-    public void postProcessBeanDefinitionRegistry(BeanDefinitionRegistry registry) throws BeansException {
+    /**
+     * 服务发现注册组件
+     *
+     * @return 服务发现注册组件
+     */
+    @Bean
+    public DiscoveryService discoveryService() {
+        if (discoveryService != null) {
+            return discoveryService;
+        }
+        if ((client || server) && environment.containsProperty(ConfigConsts.DISCOVERY_ZOOKEEPER)) {
+            discoveryService = new ZKDiscoveryServiceImpl(environment.getProperty(ConfigConsts.DISCOVERY_ZOOKEEPER));
+            return discoveryService;
+        }
+        return null;
+    }
+
+    /**
+     * 服务端
+     *
+     * @param discoveryService 服务发现注册组件
+     * @return 服务端
+     * @throws java.lang.Throwable 异常
+     */
+    @Bean
+    public JsonRPCServer jsonRPCServer(DiscoveryService discoveryService) throws Throwable {
+        if (jsonRPCServer != null) {
+            return jsonRPCServer;
+        }
+        if (server) {
+            Properties pros = new Properties();
+            if (environment.containsProperty(ServerConsts.PORT)) {
+                pros.setProperty(ServerConsts.PORT, environment.getProperty(ServerConsts.PORT));
+            }
+            ServerConfig.init(pros);
+            jsonRPCServer = new JsonRPCServerImpl();
+            jsonRPCServer.setDiscoveryService(discoveryService);
+            jsonRPCServer.start();
+            return jsonRPCServer;
+        }
+        return null;
+    }
+
+    /**
+     * 客户端
+     *
+     * @param discoveryService 服务发现注册组件
+     * @return 客户端
+     * @throws java.lang.Throwable 异常
+     */
+    @Bean
+    public JsonRPCClient jsonRPCClient(DiscoveryService discoveryService) throws Throwable {
+        if (jsonRPCClient != null) {
+            return jsonRPCClient;
+        }
+        if (client) {
+            Properties pros = new Properties();
+            if (environment.containsProperty(ClientConsts.SERVER_LIST)) {
+                pros.setProperty(ClientConsts.SERVER_LIST, environment.getProperty(ClientConsts.SERVER_LIST));
+            }
+            if (environment.containsProperty(ClientConsts.CONNECTION_TIMEOUT_MS)) {
+                pros.setProperty(ClientConsts.CONNECTION_TIMEOUT_MS, environment.getProperty(ClientConsts.CONNECTION_TIMEOUT_MS));
+            }
+            if (environment.containsProperty(ClientConsts.INVOKE_TIMEOUT_MS)) {
+                pros.setProperty(ClientConsts.INVOKE_TIMEOUT_MS, environment.getProperty(ClientConsts.INVOKE_TIMEOUT_MS));
+            }
+            ClientConfig.init(pros);
+            jsonRPCClient = new JsonRPCClientImpl();
+            jsonRPCClient.setDiscoveryService(discoveryService);
+            jsonRPCClient.start();
+            return jsonRPCClient;
+        }
+        return null;
     }
 
     /**
      * 后置处理组件工厂
-     * 
+     *
      * @param beanFactory 容器上下文
      * @throws BeansException 组件异常
      */
     @Override
     public void postProcessBeanFactory(ConfigurableListableBeanFactory beanFactory) throws BeansException {
-        ZKDiscoveryServiceImpl discoveryServiceImpl = null;
-        if ((client || server) && environment.containsProperty(ConfigConsts.DISCOVERY_ZOOKEEPER)) {
-            discoveryServiceImpl = beanFactory.createBean(ZKDiscoveryServiceImpl.class);
-            discoveryServiceImpl.init(environment.getProperty(ConfigConsts.DISCOVERY_ZOOKEEPER));
-        }
-        if (server) {
-            try {
-                Properties pros = new Properties();
-                if (environment.containsProperty(ServerConsts.PORT)) {
-                    pros.setProperty(ServerConsts.PORT, environment.getProperty(ServerConsts.PORT));
-                }
-                ServerConfig.init(pros);
-                jsonRPCServer = beanFactory.createBean(JsonRPCServerImpl.class);
-                jsonRPCServer.setDiscoveryService(discoveryServiceImpl);
-                jsonRPCServer.start();
-            } catch (Throwable ex) {
-                throw new BeansException(ex.getMessage()) {
-                };
-            }
-        }
-        if (client) {
-            try {
-                Properties pros = new Properties();
-                if (environment.containsProperty(ClientConsts.SERVER_LIST)) {
-                    pros.setProperty(ClientConsts.SERVER_LIST, environment.getProperty(ClientConsts.SERVER_LIST));
-                }
-                if (environment.containsProperty(ClientConsts.CONNECTION_TIMEOUT_MS)) {
-                    pros.setProperty(ClientConsts.CONNECTION_TIMEOUT_MS, environment.getProperty(ClientConsts.CONNECTION_TIMEOUT_MS));
-                }
-                if (environment.containsProperty(ClientConsts.INVOKE_TIMEOUT_MS)) {
-                    pros.setProperty(ClientConsts.INVOKE_TIMEOUT_MS, environment.getProperty(ClientConsts.INVOKE_TIMEOUT_MS));
-                }
-                ClientConfig.init(pros);
-                jsonRPCClient = beanFactory.createBean(JsonRPCClientImpl.class);
-                jsonRPCClient.setDiscoveryService(discoveryServiceImpl);
-                jsonRPCClient.start();
-            } catch (Throwable ex) {
-                throw new BeansException(ex.getMessage()) {
-                };
-            }
-        }
         if (server || client) {
-             beanFactory.addBeanPostProcessor(jsonRPCBeanPostProcessor());
+            try {
+                beanFactory.addBeanPostProcessor(jsonRPCBeanPostProcessor());
+            } catch (Throwable e) {
+                throw new BeansException(e.getMessage()) {
+                };
+            }
         }
     }
 }
