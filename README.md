@@ -4,9 +4,10 @@
 
 ### high-performance RPC framework. 
 
-![architecture](https://github.com/xincao9/jsonrpc/blob/master/architecture.png)
-
 jsonrpc is a high-performance, Java based open source RPC framework. 
+
+
+![architecture](https://github.com/xincao9/jsonrpc/blob/master/architecture.png)
 
 #### example
 
