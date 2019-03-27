@@ -55,7 +55,7 @@ public class JsonRPCServerImpl implements JsonRPCServer {
     private EventLoopGroup workerGroup;
     private final Integer boss;
     private final Integer worker;
-    private final DiscoveryService discoveryService;
+    private DiscoveryService discoveryService;
 
     public JsonRPCServerImpl() {
         this(null);
@@ -161,5 +161,15 @@ public class JsonRPCServerImpl implements JsonRPCServer {
     @Override
     public Object getBean(String name) {
         return componentes.get(name);
+    }
+
+    /**
+     * 修改器
+     * 
+     * @param discoveryService 服务发现和注册组件
+     */
+    @Override
+    public void setDiscoveryService(DiscoveryService discoveryService) {
+        this.discoveryService = discoveryService;
     }
 }

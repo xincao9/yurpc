@@ -243,4 +243,14 @@ public class JsonRPCClientImpl implements JsonRPCClient {
         return this.clientInvocationHandler.proxy(clazz);
     }
 
+    /**
+     * 修改器
+     * 
+     * @param discoveryService 服务发现和注册组件
+     */
+    @Override
+    public void setDiscoveryService(DiscoveryService discoveryService) {
+        this.discoveryService = discoveryService;
+    }
+
 }

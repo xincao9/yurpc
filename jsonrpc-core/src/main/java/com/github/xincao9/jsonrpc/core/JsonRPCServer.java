@@ -85,4 +85,11 @@ public interface JsonRPCServer {
      * @return 服务组件
      */
     Object getBean(String name);
+
+    /**
+     * 修改器
+     * 
+     * @param discoveryService 服务发现和注册组件
+     */
+    void setDiscoveryService(DiscoveryService discoveryService);
 }

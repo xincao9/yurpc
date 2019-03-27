@@ -98,4 +98,11 @@ public interface JsonRPCClient {
      * @return 代理对象
      */
     <T> T proxy(Class<T> clazz);
+
+    /**
+     * 修改器
+     * 
+     * @param discoveryService 服务发现和注册组件
+     */
+    void setDiscoveryService(DiscoveryService discoveryService);
 }

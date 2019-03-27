@@ -15,6 +15,7 @@
  */
 package com.github.xincao9.jsonrpc.spring.boot.starter;
 
+import com.github.xincao9.jsonrpc.core.DiscoveryService;
 import com.github.xincao9.jsonrpc.core.config.ClientConfig;
 import com.github.xincao9.jsonrpc.core.JsonRPCClient;
 import com.github.xincao9.jsonrpc.core.impl.JsonRPCClientImpl;
@@ -116,6 +117,10 @@ public class JsonRPCAutoConfiguration implements EnvironmentAware, DisposableBea
      */
     @Override
     public void postProcessBeanFactory(ConfigurableListableBeanFactory beanFactory) throws BeansException {
+        DiscoveryService discoveryService = null;
+        if ((client || server) && environment.containsProperty(ConfigConsts.DISCOVERY_ZOOKEEPER)) {
+            discoveryService = new ZKDiscoveryServiceImpl(environment.getProperty(ConfigConsts.DISCOVERY_ZOOKEEPER));
+        }
         if (server) {
             try {
                 Properties pros = new Properties();
@@ -124,6 +129,7 @@ public class JsonRPCAutoConfiguration implements EnvironmentAware, DisposableBea
                 }
                 ServerConfig.init(pros);
                 jsonRPCServer = beanFactory.createBean(JsonRPCServerImpl.class);
+                jsonRPCServer.setDiscoveryService(discoveryService);
                 jsonRPCServer.start();
             } catch (Throwable ex) {
                 throw new BeansException(ex.getMessage()) {
@@ -144,6 +150,7 @@ public class JsonRPCAutoConfiguration implements EnvironmentAware, DisposableBea
                 }
                 ClientConfig.init(pros);
                 jsonRPCClient = beanFactory.createBean(JsonRPCClientImpl.class);
+                jsonRPCClient.setDiscoveryService(discoveryService);
                 jsonRPCClient.start();
             } catch (Throwable ex) {
                 throw new BeansException(ex.getMessage()) {

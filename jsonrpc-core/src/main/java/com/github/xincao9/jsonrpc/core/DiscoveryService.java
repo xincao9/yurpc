@@ -35,10 +35,10 @@ public interface DiscoveryService {
     /**
      * 获取注册表
      * 
-     * @param name 服务名字（接口名）
+     * @param service 服务名字（接口名）
      * @return 节点列表
      */
-    List<Endpoint> query (String name);
+    List<Endpoint> query (String service);
 
     /**
      * 续约
