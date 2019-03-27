@@ -43,6 +43,7 @@ public class Request {
     private final CountDownLatch countDownLatch = new CountDownLatch(1);
     private Response response;
     private Boolean sendOk;
+    private Boolean direct = Boolean.FALSE;
 
     /**
      * 创建请求体
@@ -195,6 +196,18 @@ public class Request {
 
     public void setSendOk(Boolean sendOk) {
         this.sendOk = sendOk;
+    }
+
+    public Boolean isDirect () {
+        return getDirect();
+    }
+
+    public Boolean getDirect() {
+        return direct;
+    }
+
+    public void setDirect(Boolean direct) {
+        this.direct = direct;
     }
 
     @Override

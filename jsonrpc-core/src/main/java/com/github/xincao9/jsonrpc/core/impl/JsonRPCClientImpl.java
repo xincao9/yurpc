@@ -153,7 +153,7 @@ public class JsonRPCClientImpl implements JsonRPCClient {
     @Override
     public <T> Response<T> invoke(Request request) throws Throwable {
         Objects.requireNonNull(request);
-        if (discoveryService != null) {
+        if (discoveryService != null && !request.isDirect()) {
             List<Endpoint> nodes = discoveryService.query(StringUtils.substringBeforeLast(request.getMethod(), "."));
             if (nodes != null && !nodes.isEmpty()) {
                 Endpoint node = nodes.get(RandomUtils.nextInt(0, nodes.size()));
