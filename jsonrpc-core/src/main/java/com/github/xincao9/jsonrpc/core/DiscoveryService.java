@@ -28,9 +28,9 @@ public interface DiscoveryService {
     /**
      * 注册
      * 
-     * @param node 服务信息
+     * @param endpoint 服务信息
      */
-    void register (Endpoint node);
+    void register (Endpoint endpoint);
 
     /**
      * 获取注册表
