@@ -57,8 +57,24 @@ public class JsonRPCServerImpl implements JsonRPCServer {
     private final Integer worker;
     private DiscoveryService discoveryService;
 
+    /**
+     * 构造器
+     */
     public JsonRPCServerImpl() {
         this(null);
+    }
+    
+    /**
+     * 构造器
+     * 
+     * @param port 端口
+     * @param discoveryService 服务组件
+     */
+    public JsonRPCServerImpl(Integer port, DiscoveryService discoveryService) {
+        this.port = port;
+        this.boss = ServerConfig.ioThreadBoss;
+        this.worker = ServerConfig.ioThreadWorker;
+        this.discoveryService = discoveryService;
     }
 
     /**

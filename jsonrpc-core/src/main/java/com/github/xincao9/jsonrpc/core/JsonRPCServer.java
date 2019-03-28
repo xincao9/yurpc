@@ -62,6 +62,28 @@ public interface JsonRPCServer {
 
     /**
      * 获得服务端
+     * 
+     * @param port 端口
+     * @param discoveryService 服务发现组件
+     * @return 
+     */
+    static JsonRPCServer defaultJsonRPCServer(Integer port, DiscoveryService discoveryService) {
+        ServerConfig.port = port;
+        return new JsonRPCServerImpl(port, discoveryService);
+    }
+
+    /**
+     * 获得服务端
+     *
+     * @param filename 配置文件名
+     * @return 服务端
+     */
+    static JsonRPCServer defaultJsonRPCServer(String filename) {
+        return defaultJsonRPCServer(filename, null);
+    }
+
+    /**
+     * 获得服务端
      *
      * @param discovery 服务发现组件
      * @return 服务端
