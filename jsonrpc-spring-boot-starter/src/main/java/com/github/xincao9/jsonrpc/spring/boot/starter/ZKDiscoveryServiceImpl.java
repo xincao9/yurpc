@@ -32,6 +32,8 @@ import org.apache.curator.framework.CuratorFrameworkFactory;
 import org.apache.curator.framework.recipes.cache.TreeCache;
 import org.apache.curator.framework.recipes.cache.TreeCacheEvent;
 import org.apache.curator.framework.recipes.cache.TreeCacheListener;
+import org.apache.curator.framework.state.ConnectionState;
+import org.apache.curator.framework.state.ConnectionStateListener;
 import org.apache.curator.retry.ExponentialBackoffRetry;
 import org.apache.zookeeper.CreateMode;
 import org.slf4j.Logger;
@@ -51,47 +53,65 @@ public final class ZKDiscoveryServiceImpl implements DiscoveryService {
     private static final String JSONRPC_INSTANCE_PATTERN = "/jsonrpc/%s/%s";
     private final Map<String, List<Endpoint>> services = new ConcurrentHashMap();
     private final ExecutorService watcherExecutorService = Executors.newFixedThreadPool(1);
-    
+    private final Map<String, byte[]> pathValue = new ConcurrentHashMap();
+
     /**
      * 构造器
      */
-    public ZKDiscoveryServiceImpl () {
+    public ZKDiscoveryServiceImpl() {
     }
 
     /**
      * 构造器
      *
      * @param zookeeper zookeeper地址，(格式host1:port1,host2:port2,...)
+     * @throws java.lang.Throwable 异常
      */
-    public ZKDiscoveryServiceImpl(String zookeeper) {
+    public ZKDiscoveryServiceImpl(String zookeeper) throws Throwable {
         init(zookeeper);
     }
 
     /**
      * 初始化方法，(仅在使用无参构造器时使用)
-     * 
-     * @param zookeeper 
+     *
+     * @param zookeeper
+     * @throws java.lang.Throwable 异常
      */
-    public void init (String zookeeper) {
+    public void init(String zookeeper) throws Throwable {
         RetryPolicy retryPolicy = new ExponentialBackoffRetry(1000, 3);
         this.client = CuratorFrameworkFactory.newClient(zookeeper, retryPolicy);
         this.client.start();
+        this.client.getConnectionStateListenable().addListener((ConnectionStateListener) (CuratorFramework cf, ConnectionState cs) -> {
+            if (cs == ConnectionState.CONNECTED) {
+                if (pathValue != null && !pathValue.isEmpty()) {
+                    pathValue.entrySet().forEach((entry) -> {
+                        String path = entry.getKey();
+                        byte[] value = entry.getValue();
+                        try {
+                            cf.create().withMode(CreateMode.EPHEMERAL).forPath(path, value);
+                        }catch (Throwable ex) {
+                            LOGGER.error(ex.getMessage());
+                        }
+                    });
+                }
+            }
+        }, watcherExecutorService);
     }
 
     /**
      * 监控服务
-     * 
+     *
      * @param service 服务名字（接口名）
      */
     private void watcher(String service) {
         try {
-            TreeCache treeCache = TreeCache.newBuilder(client, String.format(JSONRPC_SERVICE_PATTERN, service)).setExecutor(watcherExecutorService).build();
+            TreeCache treeCache = TreeCache.newBuilder(this.client, String.format(JSONRPC_SERVICE_PATTERN, service)).setExecutor(this.watcherExecutorService).build();
             treeCache.getListenable().addListener((TreeCacheListener) (CuratorFramework cf, TreeCacheEvent tce) -> {
                 TreeCacheEvent.Type type = tce.getType();
                 if (type == TreeCacheEvent.Type.NODE_ADDED || type == TreeCacheEvent.Type.NODE_REMOVED || type == TreeCacheEvent.Type.NODE_UPDATED) {
                     LOGGER.warn("service = {}, event = {} refresh", service, type);
                     try {
-                        services.put(service, queryzookeeper(service));
+                        this.services.put(service, queryzookeeper(service));
                     } catch (Throwable e) {
                         LOGGER.error(e.getMessage());
                     }
@@ -111,15 +131,18 @@ public final class ZKDiscoveryServiceImpl implements DiscoveryService {
     @Override
     public void register(Endpoint endpoint) {
         try {
-            if (client.checkExists().forPath(JSONRPC_ROOT) == null) {
-                client.create().withMode(CreateMode.PERSISTENT).forPath(JSONRPC_ROOT);
+            if (this.client.checkExists().forPath(JSONRPC_ROOT) == null) {
+                this.client.create().withMode(CreateMode.PERSISTENT).forPath(JSONRPC_ROOT);
             }
-            if (client.checkExists().forPath(String.format(JSONRPC_SERVICE_PATTERN, endpoint.getName())) == null) {
-                client.create().withMode(CreateMode.PERSISTENT).forPath(String.format(JSONRPC_SERVICE_PATTERN, endpoint.getName()));
+            if (this.client.checkExists().forPath(String.format(JSONRPC_SERVICE_PATTERN, endpoint.getName())) == null) {
+                this.client.create().withMode(CreateMode.PERSISTENT).forPath(String.format(JSONRPC_SERVICE_PATTERN, endpoint.getName()));
             }
-            client.create()
+            String path = String.format(JSONRPC_INSTANCE_PATTERN, endpoint.getName(), endpoint.getInstanceId());
+            byte[] value = JSONObject.toJSONBytes(endpoint, SerializerFeature.DisableCircularReferenceDetect);
+            this.client.create()
                     .withMode(CreateMode.EPHEMERAL)
-                    .forPath(String.format(JSONRPC_INSTANCE_PATTERN, endpoint.getName(), endpoint.getInstanceId()), JSONObject.toJSONBytes(endpoint, SerializerFeature.DisableCircularReferenceDetect));
+                    .forPath(path, value);
+            this.pathValue.put(path, value);
         } catch (Throwable e) {
             LOGGER.error(e.getMessage());
         }
@@ -133,32 +156,32 @@ public final class ZKDiscoveryServiceImpl implements DiscoveryService {
      */
     @Override
     public List<Endpoint> query(String service) {
-        if (!services.containsKey(service)) {
+        if (!this.services.containsKey(service)) {
             try {
-                services.put(service, queryzookeeper(service));
+                this.services.put(service, queryzookeeper(service));
                 watcher(service);
             } catch (Throwable e) {
                 LOGGER.error(e.getMessage());
             }
         }
-        return services.get(service);
+        return this.services.get(service);
     }
 
     /**
      * 获取注册表
-     * 
+     *
      * @param service 服务名字（接口名）
      * @return 节点列表
      * @throws Throwable 异常
      */
     private List<Endpoint> queryzookeeper(String service) throws Throwable {
-        List<String> paths = client.getChildren().forPath(String.format(JSONRPC_SERVICE_PATTERN, service));
+        List<String> paths = this.client.getChildren().forPath(String.format(JSONRPC_SERVICE_PATTERN, service));
         if (paths == null || paths.isEmpty()) {
             return Collections.EMPTY_LIST;
         }
         List<Endpoint> endpoints = new ArrayList();
         for (String path : paths) {
-            byte[] data = client.getData().forPath(String.format(JSONRPC_INSTANCE_PATTERN, service, path));
+            byte[] data = this.client.getData().forPath(String.format(JSONRPC_INSTANCE_PATTERN, service, path));
             if (data != null && data.length > 0) {
                 endpoints.add(JSONObject.parseObject(data, Endpoint.class));
             }
@@ -183,5 +206,5 @@ public final class ZKDiscoveryServiceImpl implements DiscoveryService {
     @Override
     public void cancel(String instanceId) {
     }
- 
+
 }
