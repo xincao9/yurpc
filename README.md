@@ -164,5 +164,5 @@ wrk -c 16 -t 2 -d 30s 'http://localhost:8080/stream'
 #### Contact
 
 * [issues](https://github.com/xincao9/jsonrpc/issues)
-* https://issues.sonatype.org/browse/OSSRH-47112
+* [sonatype](https://issues.sonatype.org/browse/OSSRH-47112)
 * xincao9@gmail.com
