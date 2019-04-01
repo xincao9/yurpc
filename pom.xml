@@ -4,7 +4,7 @@
     <groupId>com.github.xincao9</groupId>
     <artifactId>jsonrpc</artifactId>
     <name>jsonrpc</name>
-    <version>1.2.3</version>
+    <version>1.2.4</version>
     <packaging>pom</packaging>
     <description>high-performance RPC framework.</description>
     <properties>
