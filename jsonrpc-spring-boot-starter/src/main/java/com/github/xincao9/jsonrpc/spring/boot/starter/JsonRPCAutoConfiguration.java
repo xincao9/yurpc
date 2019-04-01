@@ -125,9 +125,10 @@ public class JsonRPCAutoConfiguration implements EnvironmentAware, DisposableBea
      * 服务发现注册组件
      *
      * @return 服务发现注册组件
+     * @throws java.lang.Throwable 异常
      */
     @Bean
-    public DiscoveryService discoveryService() {
+    public DiscoveryService discoveryService() throws Throwable {
         if (discoveryService != null) {
             return discoveryService;
         }
