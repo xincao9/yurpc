@@ -13,20 +13,25 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.github.xincao9.jsonrpc.benchmark;
+package com.github.xincao9.jsonrpc.benchmark.consumer.jsonrpc;
+
+import com.github.xincao9.jsonrpc.spring.boot.starter.EnableJsonRPC;
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 /**
- * 斐波那契服务
- * 
+ *
  * @author xincao9@gmail.com
  */
-public interface FibonacciSequenceService {
+@SpringBootApplication
+@EnableJsonRPC(client = true)
+public class JsonRPCApplication {
 
     /**
-     * 执行
-     * 
-     * @param n 项数
-     * @return 结果
+     *
+     * @param args
      */
-    Integer perform (Integer n);
+    public static void main(String... args) {
+        SpringApplication.run(JsonRPCApplication.class, args);
+    }
 }

@@ -13,29 +13,25 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.github.xincao9.jsonrpc.benchmark.server;
+package com.github.xincao9.jsonrpc.benchmark.consumer.dubbo;
 
-import com.github.xincao9.jsonrpc.benchmark.FibonacciSequenceService;
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 /**
- * 斐波那契服务
- * 
+ *
  * @author xincao9@gmail.com
  */
-public class FibonacciSequenceServiceImpl implements FibonacciSequenceService {
+@SpringBootApplication
+@EnableAutoConfiguration
+public class DubboApplication {
 
     /**
-     * 执行
-     * 
-     * @param n 项数
-     * @return 结果
+     *
+     * @param args
      */
-    @Override
-    public Integer perform(Integer n) {
-        if (n == 0 || n == 1) {
-            return 1;
-        }
-        return perform(n - 1) + perform (n - 2);
+    public static void main(String... args) {
+        SpringApplication.run(DubboApplication.class, args);
     }
-
 }

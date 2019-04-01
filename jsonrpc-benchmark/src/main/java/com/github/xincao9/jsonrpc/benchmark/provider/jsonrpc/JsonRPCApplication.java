@@ -13,20 +13,25 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.github.xincao9.jsonrpc.benchmark;
+package com.github.xincao9.jsonrpc.benchmark.provider.jsonrpc;
+
+import com.github.xincao9.jsonrpc.spring.boot.starter.EnableJsonRPC;
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 /**
- * 素数服务
- * 
+ *
  * @author xincao9@gmail.com
  */
-public interface PrimeNumberService {
+@SpringBootApplication
+@EnableJsonRPC(server = true)
+public class JsonRPCApplication {
 
     /**
-     * 执行
-     * 
-     * @param n 整数
-     * @return 是否为素数
+     *
+     * @param args
      */
-    Boolean perform (Integer n);
+    public static void main(String... args) {
+        SpringApplication.run(JsonRPCApplication.class, args);
+    }
 }

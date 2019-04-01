@@ -6,4 +6,4 @@ jsonrpc:
         connectionTimeoutMS: 5000
         invokeTimeoutMS: 1000
     server:
-        port: 12304
+        port: 12306

@@ -13,16 +13,25 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.github.xincao9.jsonrpc.benchmark.constant;
+package com.github.xincao9.jsonrpc.benchmark.provider.dubbo;
+
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 /**
- * 系统常量
- * 
+ *
  * @author xincao9@gmail.com
  */
-public class ConfigConsts {
+@SpringBootApplication
+@EnableAutoConfiguration
+public class DubboApplication {
 
-    public static final String ROLE = "role"; // 角色
-    public static final String PROVIDER = "provider"; // 提供者
-    public static final String CONSUMER = "consumer"; // 消费者
+    /**
+     *
+     * @param args
+     */
+    public static void main(String... args) {
+        SpringApplication.run(DubboApplication.class, args);
+    }
 }

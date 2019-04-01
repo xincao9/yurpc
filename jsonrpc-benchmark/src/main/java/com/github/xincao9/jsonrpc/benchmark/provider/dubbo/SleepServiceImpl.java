@@ -13,21 +13,23 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.github.xincao9.jsonrpc.benchmark.server;
+package com.github.xincao9.jsonrpc.benchmark.provider.dubbo;
 
 import com.github.xincao9.jsonrpc.benchmark.SleepService;
 import java.util.concurrent.TimeUnit;
+import org.apache.dubbo.config.annotation.Service;
 
 /**
  * 延时服务
- * 
+ *
  * @author xincao9@gmail.com
  */
+@Service(version = "1.0.0")
 public class SleepServiceImpl implements SleepService {
 
     /**
      * 执行
-     * 
+     *
      * @param ms 秒数
      */
     @Override
