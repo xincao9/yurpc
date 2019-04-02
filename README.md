@@ -168,6 +168,28 @@ Running 30s test @ http://localhost:9001/dubbo/stream
 Requests/sec:  10332.60
 Transfer/sec:      2.40MB
 
+wrk -c 128 -t 16 -d 30s 'http://localhost:9001/dubbo/sleep'
+
+Running 30s test @ http://localhost:9001/dubbo/sleep
+  16 threads and 128 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    28.59ms   15.57ms 132.69ms   58.34%
+    Req/Sec   281.17     35.11   440.00     72.15%
+  134779 requests in 30.10s, 17.99MB read
+Requests/sec:   4477.63
+Transfer/sec:    612.09KB
+
+wrk -c 128 -t 16 -d 30s 'http://localhost:9001/dubbo/sleep'
+
+Running 30s test @ http://localhost:9001/dubbo/sleep
+  16 threads and 128 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    29.20ms   15.51ms  71.46ms   57.97%
+    Req/Sec   274.92     33.02   414.00     66.60%
+  131789 requests in 30.10s, 17.59MB read
+Requests/sec:   4378.68
+Transfer/sec:    598.58KB
+
 jsonrpc 压力测试
 
 java -Dspring.profiles.active=dubbo-provider -cp target/jsonrpc-benchmark-1.2.4.jar com.github.xincao9.jsonrpc.benchmark.provider.dubbo.DubboApplication
@@ -195,9 +217,126 @@ Running 30s test @ http://localhost:8001/jsonrpc/stream
 Requests/sec:  14200.14
 Transfer/sec:      3.29MB
 
-结论：jsonrpc 在计算密集型业务中性能优于dubbo 30%,很容易达到网卡吞吐量的极限。分析原因，dubbo中为了适配多协议和耦合多种服务治理模块，导致性能损耗
+wrk -c 128 -t 16 -d 30s 'http://localhost:8001/jsonrpc/sleep'
+
+Running 30s test @ http://localhost:8001/jsonrpc/sleep
+  16 threads and 128 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    29.60ms   17.86ms 248.54ms   66.38%
+    Req/Sec   277.16     44.00   420.00     79.63%
+  132378 requests in 30.10s, 17.67MB read
+Requests/sec:   4397.55
+Transfer/sec:    601.16KB
+
+wrk -c 128 -t 16 -d 30s 'http://localhost:8001/jsonrpc/sleep'
+
+Running 30s test @ http://localhost:8001/jsonrpc/sleep
+  16 threads and 128 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    28.31ms   15.43ms  68.45ms   57.67%
+    Req/Sec   283.50     32.58   450.00     68.29%
+  135912 requests in 30.10s, 18.14MB read
+Requests/sec:   4514.74
+Transfer/sec:    617.15KB
 
 ```
+
+**数据表格**
+
+<table>
+<tr>
+<td>框架</td>
+<td>接口</td>
+<td>线程</td>
+<td>链接</td>
+<td>次数</td>
+<td>QPS</td>
+<td>吞吐量</td>
+<td>平均耗时</td>
+</tr>
+<tr>
+<td>dubbo</td>
+<td>/dubbo/stream</td>
+<td>2</td>
+<td>16</td>
+<td>1</td>
+<td>6052.90</td>
+<td>42.19MB</td>
+<td>4.30ms</td>
+</tr>
+<tr>
+<td>dubbo</td>
+<td>/dubbo/stream</td>
+<td>2</td>
+<td>16</td>
+<td>2</td>
+<td>10332.60</td>
+<td>71.97MB</td>
+<td>1.69ms</td>
+</tr>
+<tr>
+<td>jsonrpc</td>
+<td>/dubbo/stream</td>
+<td>2</td>
+<td>16</td>
+<td>1</td>
+<td>9119.72</td>
+<td>63.52MB</td>
+<td>2.07ms</td>
+</tr>
+<tr>
+<td>jsonrpc</td>
+<td>/dubbo/stream</td>
+<td>2</td>
+<td>16</td>
+<td>2</td>
+<td>14200.14</td>
+<td>98.84MB</td>
+<td>1.15ms</td>
+</tr>
+<tr>
+<td>dubbo</td>
+<td>/dubbo/sleep</td>
+<td>16</td>
+<td>128</td>
+<td>1</td>
+<td>4477.63</td>
+<td>17.99MB</td>
+<td>28.59ms</td>
+</tr>
+<tr>
+<td>dubbo</td>
+<td>/dubbo/sleep</td>
+<td>16</td>
+<td>128</td>
+<td>2</td>
+<td>4378.68</td>
+<td>17.59MB</td>
+<td>29.20ms</td>
+</tr>
+<tr>
+<td>jsonrpc</td>
+<td>/dubbo/sleep</td>
+<td>16</td>
+<td>128</td>
+<td>1</td>
+<td>4397.55</td>
+<td>17.67MB</td>
+<td>29.60ms</td>
+</tr>
+<tr>
+<td>jsonrpc</td>
+<td>/dubbo/sleep</td>
+<td>16</td>
+<td>128</td>
+<td>2</td>
+<td>4514.74</td>
+<td>18.14MB</td>
+<td>28.31ms</td>
+</tr>
+</table>
+
+**结论**：*jsonrpc 在计算密集型业务中性能优于dubbo 30%,很容易达到网卡吞吐量的极限。分析原因，dubbo中为了适配多协议和耦合多种服务治理模块，导致性能损耗.在IO密集型中没什么差距*
 
 **_tips_**
 
