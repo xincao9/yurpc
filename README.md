@@ -276,7 +276,7 @@ Transfer/sec:    617.15KB
 </tr>
 <tr>
 <td>jsonrpc</td>
-<td>/dubbo/stream</td>
+<td>/jsonrpc/stream</td>
 <td>2</td>
 <td>16</td>
 <td>1</td>
@@ -286,7 +286,7 @@ Transfer/sec:    617.15KB
 </tr>
 <tr>
 <td>jsonrpc</td>
-<td>/dubbo/stream</td>
+<td>/jsonrpc/stream</td>
 <td>2</td>
 <td>16</td>
 <td>2</td>
@@ -316,7 +316,7 @@ Transfer/sec:    617.15KB
 </tr>
 <tr>
 <td>jsonrpc</td>
-<td>/dubbo/sleep</td>
+<td>/jsonrpc/sleep</td>
 <td>16</td>
 <td>128</td>
 <td>1</td>
@@ -326,7 +326,7 @@ Transfer/sec:    617.15KB
 </tr>
 <tr>
 <td>jsonrpc</td>
-<td>/dubbo/sleep</td>
+<td>/jsonrpc/sleep</td>
 <td>16</td>
 <td>128</td>
 <td>2</td>
