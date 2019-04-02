@@ -14,7 +14,7 @@
 <dependency>
     <groupId>com.github.xincao9</groupId>
     <artifactId>jsonrpc-spring-boot-starter</artifactId>
-    <version>1.2.3</version>
+    <version>1.2.4</version>
 </dependency>
 ```
 
@@ -138,20 +138,65 @@ jsonrpc.server.port=12306
 **_benchmark_**
 
 ```
-1.Get the pressure measurement component
-wget https://oss.sonatype.org/service/local/repositories/releases/content/com/github/xincao9/jsonrpc-benchmark/1.2.3/jsonrpc-benchmark-1.2.3.jar
-2.Start service provider
-java -Drole=provider -jar jsonrpc-benchmark-1.2.3.jar
-3.Start service consumer
-java -Drole=consumer -jar jsonrpc-benchmark-1.2.3.jar
-4.Service providers that simulate IO-intensive applications perform stress tests (blocking time is pseudo-random at 0 to 50 ms)
-wrk -c 128 -t 10 -d 30s 'http://localhost:8080/sleep'
-5.Service providers that simulate computationally intensive applications perform stress tests (handling pseudo-random, Fibonacci numbers between 0 and 16)
-wrk -c 128 -t 10 -d 30s 'http://localhost:8080/fibonacci_sequence'
-6.Service providers that simulate computationally intensive applications perform stress tests (processing prime numbers between 1 and 300)
-wrk -c 128 -t 10 -d 30s 'http://localhost:8080/prime_number'
-7.NIC throughput
-wrk -c 16 -t 2 -d 30s 'http://localhost:8080/stream'
+Get the pressure measurement component
+wget https://oss.sonatype.org/service/local/repositories/releases/content/com/github/xincao9/jsonrpc-benchmark/1.2.4/jsonrpc-benchmark-1.2.4.jar
+
+dubbo 压力测试
+
+java -Dspring.profiles.active=jsonrpc-provider -cp target/jsonrpc-benchmark-1.2.4.jar com.github.xincao9.jsonrpc.benchmark.provider.jsonrpc.JsonRPCApplication
+java -Dspring.profiles.active=jsonrpc-consumer -cp target/jsonrpc-benchmark-1.2.4.jar com.github.xincao9.jsonrpc.benchmark.consumer.jsonrpc.JsonRPCApplication
+
+wrk -c 16 -t 2 -d 30s 'http://localhost:9001/dubbo/stream'
+
+Running 30s test @ http://localhost:9001/dubbo/stream
+  2 threads and 16 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     4.30ms   12.93ms 294.76ms   97.36%
+    Req/Sec     3.04k     1.32k    6.27k    70.67%
+  181921 requests in 30.06s, 42.19MB read
+Requests/sec:   6052.90
+Transfer/sec:      1.40MB
+
+wrk -c 16 -t 2 -d 30s 'http://localhost:9001/dubbo/stream'
+
+Running 30s test @ http://localhost:9001/dubbo/stream
+  2 threads and 16 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     1.69ms    1.88ms  54.01ms   97.53%
+    Req/Sec     5.19k   810.88     6.61k    74.67%
+  310323 requests in 30.03s, 71.97MB read
+Requests/sec:  10332.60
+Transfer/sec:      2.40MB
+
+jsonrpc 压力测试
+
+java -Dspring.profiles.active=dubbo-provider -cp target/jsonrpc-benchmark-1.2.4.jar com.github.xincao9.jsonrpc.benchmark.provider.dubbo.DubboApplication
+java -Dspring.profiles.active=dubbo-consumer -cp target/jsonrpc-benchmark-1.2.4.jar com.github.xincao9.jsonrpc.benchmark.consumer.dubbo.DubboApplication
+
+wrk -c 16 -t 2 -d 30s 'http://localhost:8001/jsonrpc/stream'
+
+Running 30s test @ http://localhost:8001/jsonrpc/stream
+  2 threads and 16 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     2.07ms    2.39ms  45.15ms   93.64%
+    Req/Sec     4.58k     2.12k    8.02k    58.33%
+  273896 requests in 30.03s, 63.52MB read
+Requests/sec:   9119.72
+Transfer/sec:      2.12MB
+
+wrk -c 16 -t 2 -d 30s 'http://localhost:8001/jsonrpc/stream'
+
+Running 30s test @ http://localhost:8001/jsonrpc/stream
+  2 threads and 16 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     1.15ms    1.24ms  46.94ms   98.75%
+    Req/Sec     7.13k   460.27     8.19k    80.33%
+  426195 requests in 30.01s, 98.84MB read
+Requests/sec:  14200.14
+Transfer/sec:      3.29MB
+
+结论：jsonrpc 在计算密集型业务中性能优于dubbo 30%,很容易达到网卡吞吐量的极限。分析原因，dubbo中为了适配多协议和耦合多种服务治理模块，导致性能损耗
+
 ```
 
 **_tips_**
