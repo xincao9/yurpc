@@ -241,7 +241,7 @@ Transfer/sec:    617.15KB
 
 ```
 
-**数据表格**
+**Data Form**
 
 <table>
 <tr>
