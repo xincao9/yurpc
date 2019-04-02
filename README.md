@@ -141,7 +141,7 @@ jsonrpc.server.port=12306
 Get the pressure measurement component
 wget https://oss.sonatype.org/service/local/repositories/releases/content/com/github/xincao9/jsonrpc-benchmark/1.2.4/jsonrpc-benchmark-1.2.4.jar
 
-dubbo 压力测试
+dubbo pressure test
 
 java -Dspring.profiles.active=jsonrpc-provider -cp target/jsonrpc-benchmark-1.2.4.jar com.github.xincao9.jsonrpc.benchmark.provider.jsonrpc.JsonRPCApplication
 java -Dspring.profiles.active=jsonrpc-consumer -cp target/jsonrpc-benchmark-1.2.4.jar com.github.xincao9.jsonrpc.benchmark.consumer.jsonrpc.JsonRPCApplication
@@ -190,7 +190,7 @@ Running 30s test @ http://localhost:9001/dubbo/sleep
 Requests/sec:   4378.68
 Transfer/sec:    598.58KB
 
-jsonrpc 压力测试
+jsonrpc pressure test
 
 java -Dspring.profiles.active=dubbo-provider -cp target/jsonrpc-benchmark-1.2.4.jar com.github.xincao9.jsonrpc.benchmark.provider.dubbo.DubboApplication
 java -Dspring.profiles.active=dubbo-consumer -cp target/jsonrpc-benchmark-1.2.4.jar com.github.xincao9.jsonrpc.benchmark.consumer.dubbo.DubboApplication
@@ -245,14 +245,14 @@ Transfer/sec:    617.15KB
 
 <table>
 <tr>
-<td>框架</td>
-<td>接口</td>
-<td>线程</td>
-<td>链接</td>
-<td>次数</td>
+<td>Frame</td>
+<td>interface</td>
+<td>thread</td>
+<td>link</td>
+<td>Numbers</td>
 <td>QPS</td>
-<td>吞吐量</td>
-<td>平均耗时</td>
+<td>throughput</td>
+<td>Average time </td>
 </tr>
 <tr>
 <td>dubbo</td>
@@ -336,7 +336,7 @@ Transfer/sec:    617.15KB
 </tr>
 </table>
 
-**结论**：*jsonrpc 在计算密集型业务中性能优于dubbo 30%,很容易达到网卡吞吐量的极限。分析原因，dubbo中为了适配多协议和耦合多种服务治理模块，导致性能损耗.在IO密集型中没什么差距*
+**Conclusion**: *jsonrpc outperforms dubbo 30% in compute-intensive services and easily reaches the limit of NIC throughput. Analysis of the reasons, dubbo in order to adapt to multiple protocols and coupling multiple service governance modules, resulting in performance loss. There is no gap in IO-intensive*
 
 **_tips_**
 
