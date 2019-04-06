@@ -18,6 +18,7 @@ package com.github.xincao9.jsonrpc.ui;
 import com.github.xincao9.jsonrpc.spring.boot.starter.EnableJsonRPC;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.scheduling.annotation.EnableScheduling;
 
 /**
  * 启动类
@@ -26,6 +27,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
  */
 @SpringBootApplication
 @EnableJsonRPC(client = true)
+@EnableScheduling
 public class Application {
 
     /**

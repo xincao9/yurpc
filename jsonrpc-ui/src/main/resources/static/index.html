@@ -6,36 +6,27 @@
         <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
     </head>
     <body>
-        <div id="timers" class="container">
-            <hr>
-            <div class="row table-responsive-md">
-                <table class="table table-striped table-dark">
-                    <thead>
-                        <tr>
-                            <th>编号</th>
-                            <th>主机</th>
-                            <th>端口</th>
-                            <th>方法</th>
-                            <th>QPS</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr v-for="timer in timers">
-                            <td>{{ timer.no }}</td>
-                            <td>{{ timer.host }}</td>
-                            <td>{{ timer.port }}</td>
-                            <td>{{ timer.method }}</td>
-                            <td>{{ timer.oneMinuteRate | floatFormat }}</td>
-                        </tr>
-                    </tbody>
-                </table>
+        <div id="app" class="container">
+            <div v-for="t in timers">
+                <hr>
+                <div class="row">
+                    <strong>{{ t.label }}</strong>
+                </div>
+                <div class="row">
+                    <div class="col">
+                        <line-chart
+                            v-bind:t="t"
+                            v-bind:key="t.label"
+                            ></line-chart>
+                    </div>
+                </div>
             </div>
             <footer class="footer navbar-fixed-bottom">
                 <hr>
                 <div class="row">
                     <div class="col"></div>
                     <div class="col">
-                        <p class="muted credit">©2019 Copyright: <a href="https://github.com/xincao9/jswitcher">xincao9</a></p>
+                        <p class="muted credit">©2019 Copyright: <a href="https://github.com/xincao9/jsonrpc">xincao9</a></p>
                     </div>
                     <div class="col"></div>
                 </div>
@@ -50,17 +41,34 @@
         <script src="https://unpkg.com/vue-chartjs/dist/vue-chartjs.min.js"></script>
 
         <script type="text/javascript">
-Vue.filter('datetime', function (ms) {
-    var date = new Date(ms);
-    return date.toLocaleString();
+Vue.component('line-chart', {
+    extends: VueChartJs.Line,
+    props: ['t'],
+    mounted() {
+        this.renderChart({
+            labels: this.t.x,
+            datasets: [
+                {
+                    label: "1分钟QPS",
+                    backgroundColor: '#f87979',
+                    data: this.t.y1
+                },
+                {
+                    label: "5分钟QPS",
+                    backgroundColor: '#9b59b6',
+                    data: this.t.y5
+                },
+                {
+                    label: "15分钟QPS",
+                    backgroundColor: '#337586',
+                    data: this.t.y15
+                }
+            ]
+        }, {responsive: true, maintainAspectRatio: false});
+    }
 });
-
-Vue.filter('floatFormat', function (value) {
-    return parseFloat(parseFloat(value).toFixed(2));
-});
-
-var timers = new Vue({
-    el: '#timers',
+var app = new Vue({
+    el: '#app',
     data() {
         return {
             timers: []
