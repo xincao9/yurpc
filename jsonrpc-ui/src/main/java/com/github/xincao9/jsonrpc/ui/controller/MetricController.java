@@ -31,6 +31,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Objects;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -67,6 +68,7 @@ public class MetricController {
             return ResponseEntity.ok(Collections.EMPTY_LIST);
         }
         List<Map<String, Object>> timer = new ArrayList();
+        int no = 1;
         for (Endpoint endpoint : endpoints) {
             Map<String, Map<String, Object>> map = getTimerByHostAndPort(endpoint.getHost(), endpoint.getPort());
             for (Entry<String, Map<String, Object>> entry : map.entrySet()) {
@@ -75,7 +77,8 @@ public class MetricController {
                 JSONObject v0 = JSONObject.parseObject(JSONObject.toJSONString(endpoint));
                 JSONObject v1 = JSONObject.parseObject(JSONObject.toJSONString(obj));
                 v0.putAll(v1);
-                v0.put("method", method);
+                v0.put("method", StringUtils.substringAfterLast(method, " "));
+                v0.put("no", no++);
                 timer.add(v0);
             }
         }
