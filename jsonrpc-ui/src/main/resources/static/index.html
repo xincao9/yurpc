@@ -57,7 +57,7 @@ Vue.filter('floatFormat', function (value) {
     return parseFloat(parseFloat(value).toFixed(2));
 });
 
-var keys = new Vue({
+var timers = new Vue({
     el: '#timers',
     data() {
         return {
@@ -67,14 +67,23 @@ var keys = new Vue({
     methods: {
     },
     mounted() {
-        axios.get('/metric/timer').then(
-                (response) => {
-            if (response.status !== 200) {
-                console.log(response);
-            } else {
-                this.timers = response.data;
-            }
-        });
+        if (this.timer) {
+            clearInterval(this.timer);
+        } else {
+            this.timer = setInterval(
+                    () => {
+                axios.get('/metric/timer').then(
+                        (response) => {
+                    if (response.status !== 200) {
+                        console.log(response);
+                    } else {
+                        this.timers = response.data;
+                    }
+                });
+            },
+                    1000);
+        }
+
     }
 });
         </script>
