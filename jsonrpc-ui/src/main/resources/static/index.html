@@ -6,19 +6,15 @@
         <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
     </head>
     <body>
-        <div id="app" class="container">
-            <div v-for="t in timers">
-                <hr>
-                <div class="row">
-                    <strong>{{ t.label }}</strong>
-                </div>
-                <div class="row">
-                    <div class="col">
-                        <line-chart
-                            v-bind:t="t"
-                            v-bind:key="t.label"
-                            ></line-chart>
-                    </div>
+        <div id="app" class="container-fluid">
+            <hr>
+            <div class="row">
+                <div class="col" v-for="t in timers">
+                    <strong>{{ t.method }}</strong>
+                    <line-chart
+                        v-bind:t="t"
+                        v-bind:key="t.method"
+                        ></line-chart>
                 </div>
             </div>
             <footer class="footer navbar-fixed-bottom">
@@ -51,17 +47,17 @@ Vue.component('line-chart', {
                 {
                     label: "1分钟QPS",
                     backgroundColor: '#f87979',
-                    data: this.t.y1
+                    data: this.t.m1
                 },
                 {
                     label: "5分钟QPS",
                     backgroundColor: '#9b59b6',
-                    data: this.t.y5
+                    data: this.t.m2
                 },
                 {
                     label: "15分钟QPS",
                     backgroundColor: '#337586',
-                    data: this.t.y15
+                    data: this.t.m3
                 }
             ]
         }, {responsive: true, maintainAspectRatio: false});
@@ -82,7 +78,7 @@ var app = new Vue({
         } else {
             this.timer = setInterval(
                     () => {
-                axios.get('/metric/timer').then(
+                axios.get('/metric/timers').then(
                         (response) => {
                     if (response.status !== 200) {
                         console.log(response);

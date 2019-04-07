@@ -16,6 +16,7 @@
 
 package com.github.xincao9.jsonrpc.core;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -30,5 +31,5 @@ public interface MetricService {
      * 
      * @return 计时信息
      */
-    Map<String, Map<String, Object>> timer();
+    List<Map<String, Object>> getTimers();
 }

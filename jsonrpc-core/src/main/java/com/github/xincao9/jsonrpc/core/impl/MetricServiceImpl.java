@@ -20,10 +20,10 @@ import com.codahale.metrics.Slf4jReporter;
 import com.codahale.metrics.Timer;
 import com.github.xincao9.jsonrpc.core.MetricService;
 import com.github.xincao9.jsonrpc.core.constant.MetricConsts;
-import java.util.Collections;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
-import java.util.SortedMap;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.TimeUnit;
 
@@ -54,29 +54,24 @@ public class MetricServiceImpl implements MetricService {
      * @return 计时信息
      */
     @Override
-    public Map<String, Map<String, Object>> timer() {
-        SortedMap<String, Timer> sm = metricRegistry.getTimers();
-        if (sm == null || sm.isEmpty()) {
-            return Collections.EMPTY_MAP;
-        }
-        Map<String, Map<String, Object>> map = new HashMap();
-        sm.entrySet().forEach((entry) -> {
-            String name = entry.getKey();
-            Timer timer = entry.getValue();
-            Map<String, Object> obj = new HashMap();
-            obj.put(MetricConsts.COUNT, timer.getCount());
-            obj.put(MetricConsts.FIFTEEN_MINUTE_RATE, timer.getFifteenMinuteRate());
-            obj.put(MetricConsts.FIVE_MINUTE_RATE, timer.getFiveMinuteRate());
-            obj.put(MetricConsts.MEAN_RATE, timer.getMeanRate());
-            obj.put(MetricConsts.ONE_MINUTE_RATE, timer.getOneMinuteRate());
-            map.put(name, obj);
+    public List<Map<String, Object>> getTimers() {
+        List<Map<String, Object>> rows = new ArrayList();
+        timers.forEach((String method, Timer timer) -> {
+            Map<String, Object> row = new HashMap();
+            row.put(MetricConsts.METHOD, method);
+            row.put(MetricConsts.COUNT, timer.getCount());
+            row.put(MetricConsts.FIFTEEN_MINUTE_RATE, timer.getFifteenMinuteRate());
+            row.put(MetricConsts.FIVE_MINUTE_RATE, timer.getFiveMinuteRate());
+            row.put(MetricConsts.MEAN_RATE, timer.getMeanRate());
+            row.put(MetricConsts.ONE_MINUTE_RATE, timer.getOneMinuteRate());
+            rows.add(row);
         });
-        return map;
+        return rows;
     }
 
     /**
      * 获得计时器
-     * 
+     *
      * @param name 方法名
      * @return 计时器
      */
