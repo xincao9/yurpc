@@ -9,6 +9,8 @@ spring:
     devtools:
         livereload:
             enabled: true
-            port: 35729
+            port: 35728
     restart:
         enabled: true
+server:
+    port: 9090

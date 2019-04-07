@@ -7,10 +7,10 @@
     </head>
     <body>
         <div id="app" class="container-fluid">
-            <hr>
             <div class="row">
-                <div class="col" v-for="t in timers">
-                    <strong>{{ t.method }}</strong>
+                <div class="col-md-6" v-for="t in timers">
+                    <hr>
+                    <p>{{ t.method }}</p>
                     <line-chart
                         v-bind:t="t"
                         v-bind:key="t.method"
