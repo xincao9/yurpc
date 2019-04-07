@@ -4,7 +4,7 @@
     <parent>
         <groupId>com.github.xincao9</groupId>
         <artifactId>jsonrpc</artifactId>
-        <version>1.2.4</version>
+        <version>1.2.5</version>
     </parent>
     <artifactId>jsonrpc-benchmark</artifactId>
     <packaging>jar</packaging>
@@ -21,13 +21,6 @@
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
-<!--            <dependency>
-                <groupId>org.apache.dubbo</groupId>
-                <artifactId>dubbo-dependencies-bom</artifactId>
-                <version>${dubbo.version}</version>
-                <type>pom</type>
-                <scope>import</scope>
-            </dependency>-->
         <dependency>
             <groupId>org.apache.dubbo</groupId>
             <artifactId>dubbo</artifactId>
