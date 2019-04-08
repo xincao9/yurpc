@@ -14,7 +14,7 @@
 <dependency>
     <groupId>com.github.xincao9</groupId>
     <artifactId>jsonrpc-spring-boot-starter</artifactId>
-    <version>1.2.4</version>
+    <version>1.2.5</version>
 </dependency>
 ```
 
@@ -139,12 +139,12 @@ jsonrpc.server.port=12306
 
 ```
 Get the pressure measurement component
-wget https://oss.sonatype.org/service/local/repositories/releases/content/com/github/xincao9/jsonrpc-benchmark/1.2.4/jsonrpc-benchmark-1.2.4.jar
+wget https://oss.sonatype.org/service/local/repositories/releases/content/com/github/xincao9/jsonrpc-benchmark/1.2.5/jsonrpc-benchmark-1.2.5.jar
 
 dubbo pressure test
 
-java -Dspring.profiles.active=dubbo-provider -cp target/jsonrpc-benchmark-1.2.4.jar com.github.xincao9.jsonrpc.benchmark.provider.dubbo.DubboApplication
-java -Dspring.profiles.active=dubbo-consumer -cp target/jsonrpc-benchmark-1.2.4.jar com.github.xincao9.jsonrpc.benchmark.consumer.dubbo.DubboApplication
+java -Dspring.profiles.active=dubbo-provider -cp target/jsonrpc-benchmark-1.2.5.jar com.github.xincao9.jsonrpc.benchmark.provider.dubbo.DubboApplication
+java -Dspring.profiles.active=dubbo-consumer -cp target/jsonrpc-benchmark-1.2.5.jar com.github.xincao9.jsonrpc.benchmark.consumer.dubbo.DubboApplication
 
 wrk -c 16 -t 2 -d 30s 'http://localhost:9001/dubbo/stream'
 
@@ -192,8 +192,8 @@ Transfer/sec:    598.58KB
 
 jsonrpc pressure test
 
-java -Dspring.profiles.active=jsonrpc-provider -cp target/jsonrpc-benchmark-1.2.4.jar com.github.xincao9.jsonrpc.benchmark.provider.jsonrpc.JsonRPCApplication
-java -Dspring.profiles.active=jsonrpc-consumer -cp target/jsonrpc-benchmark-1.2.4.jar com.github.xincao9.jsonrpc.benchmark.consumer.jsonrpc.JsonRPCApplication
+java -Dspring.profiles.active=jsonrpc-provider -cp target/jsonrpc-benchmark-1.2.5.jar com.github.xincao9.jsonrpc.benchmark.provider.jsonrpc.JsonRPCApplication
+java -Dspring.profiles.active=jsonrpc-consumer -cp target/jsonrpc-benchmark-1.2.5.jar com.github.xincao9.jsonrpc.benchmark.consumer.jsonrpc.JsonRPCApplication
 
 wrk -c 16 -t 2 -d 30s 'http://localhost:8001/jsonrpc/stream'
 
@@ -344,6 +344,46 @@ Transfer/sec:    617.15KB
 * Not only supports the boot mode of springboot
 * Native boot mode, the default configuration file is named config.properties
 * @EnableJsonRPC(server = true, client = true) Indicates that the service is a consumer even if the provider
+
+### Install jsonrpc-ui
+
+```
+## create a table of storage jsonrpc-ui information
+
+CREATE DATABASE `jsonrpc-ui` /*!40100 DEFAULT CHARACTER SET utf8 */;
+
+USE `jsonrpc-ui`;
+
+CREATE TABLE `timer` (
+  `id` bigint(11) unsigned NOT NULL AUTO_INCREMENT,
+  `host` varchar(64) NOT NULL,
+  `port` int(11) NOT NULL,
+  `method` varchar(128) NOT NULL,
+  `count` bigint(11) unsigned NOT NULL,
+  `one_minute_rate` bigint(11) unsigned NOT NULL,
+  `five_minute_rate` bigint(11) unsigned NOT NULL,
+  `fifteen_minute_rate` bigint(11) unsigned NOT NULL,
+  `ct` varchar(64) NOT NULL,
+  `create_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+```
+
+**_Install_**
+
+
+1. [download jsonrpc-ui](https://search.maven.org/remotecontent?filepath=com/github/xincao9/jsonrpc-ui/1.2.5/jsonrpc-ui-1.2.5.jar)
+2. java -jar jsonrpc-ui-1.2.5.jar
+    --jsonrpc.discovery.zookeeper=localhost:2181
+    --spring.datasource.url=jdbc:mysql://localhost:3306/jsonrpc-ui?useUnicode=true&characterEncoding=UTF-8&zeroDateTimeBehavior=convertToNull&autoReconnect=true
+    --spring.datasource.username=root
+    --spring.datasource.password=
+3. [ui url](http://localhost:9090)
+
+**_Used_**
+
+![keys](https://github.com/xincao9/jswitcher/blob/master/keys.png)
 
 #### Contact
 
