@@ -4,7 +4,8 @@ import java.io.Serializable;
 import java.util.Date;
 
 /**
- *
+ * 定时器
+ * 
  * @author xincao9@gmail.com
  */
 public class Timer implements Serializable {

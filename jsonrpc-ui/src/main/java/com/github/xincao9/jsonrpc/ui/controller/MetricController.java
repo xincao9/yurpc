@@ -81,7 +81,6 @@ public class MetricController {
         String ct = sdf.format(new Date());
         endpoints.forEach((endpoint) -> {
             List<Map<String, Object>> rows = getTimerByHostAndPort(endpoint.getHost(), endpoint.getPort());
-            LOGGER.info("rows = {}", JSON.toJSONString(rows));            
             if (!(rows == null || rows.isEmpty())) {
                 rows.stream().forEachOrdered((row) -> {
                     row.put("host", endpoint.getHost());
@@ -101,25 +100,24 @@ public class MetricController {
     @GetMapping("timers")
     public ResponseEntity<List<Map<String, Object>>> timers() {
         List<String> methods = timerDAO.getMethods();
-        if (methods.isEmpty()) {
+        if (methods == null || methods.isEmpty()) {
             return ResponseEntity.ok().build();
         }
-        List<Map<String, Object>> resp = new ArrayList();
+        List<Map<String, Object>> resp = new ArrayList(methods.size());
         AtomicInteger no = new AtomicInteger(0);
-        for (String method : methods) {
+        methods.forEach((method) -> {
             List<Timer> timers = timerDAO.getTimerByMethod(method);
-            if (timers == null || timers.isEmpty()) {
-                continue;
+            if (!(timers == null || timers.isEmpty())) {
+                Map<String, Object> obj = new HashMap();
+                obj.put("no", no.incrementAndGet());
+                obj.put(MetricConsts.METHOD, StringUtils.substringAfterLast(method, " "));
+                obj.put("x", timers.stream().map((t) -> t.getCt()).collect(Collectors.toList()));
+                obj.put("m1", timers.stream().map((t) -> t.getOneMinuteRate()).collect(Collectors.toList()));
+                obj.put("m2", timers.stream().map((t) -> t.getFiveMinuteRate()).collect(Collectors.toList()));
+                obj.put("m3", timers.stream().map((t) -> t.getFifteenMinuteRate()).collect(Collectors.toList()));
+                resp.add(obj);
             }
-            Map<String, Object> obj = new HashMap();
-            obj.put("no", no.incrementAndGet());
-            obj.put(MetricConsts.METHOD, StringUtils.substringAfterLast(method, " "));
-            obj.put("x", timers.stream().map((t) -> t.getCt()).collect(Collectors.toList()));
-            obj.put("m1", timers.stream().map((t) -> t.getOneMinuteRate()).collect(Collectors.toList()));
-            obj.put("m2", timers.stream().map((t) -> t.getFiveMinuteRate()).collect(Collectors.toList()));
-            obj.put("m3", timers.stream().map((t) -> t.getFifteenMinuteRate()).collect(Collectors.toList()));
-            resp.add(obj);
-        }
+        });
         return ResponseEntity.ok(resp);
     }
 

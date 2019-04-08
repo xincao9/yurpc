@@ -13,7 +13,8 @@ import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.stereotype.Repository;
 
 /**
- *
+ * 定时器仓库
+ * 
  * @author xincao9@gmail.com
  */
 @Repository
@@ -26,6 +27,12 @@ public class TimerDAO {
     @Autowired
     private NamedParameterJdbcDaoSupport namedParameterJdbcDaoSupport;
 
+    /**
+     * 获得定时器列表
+     * 
+     * @param method 方法
+     * @return 定时器列表
+     */
     public List<Timer> getTimerByMethod(String method) {
         Map<String, Object> map = new HashMap();
         map.put("method", method);
@@ -49,6 +56,11 @@ public class TimerDAO {
         });
     }
 
+    /**
+     * 保存
+     * 
+     * @param timer 参数
+     */
     public void save (Map<String, Object> timer) {
         namedParameterJdbcDaoSupport.getNamedParameterJdbcTemplate().update(SAVE, timer);
     }
