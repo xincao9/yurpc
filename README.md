@@ -148,47 +148,7 @@ java -Dspring.profiles.active=dubbo-consumer -cp target/jsonrpc-benchmark-1.2.5.
 
 wrk -c 16 -t 2 -d 30s 'http://localhost:9001/dubbo/stream'
 
-Running 30s test @ http://localhost:9001/dubbo/stream
-  2 threads and 16 connections
-  Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     4.30ms   12.93ms 294.76ms   97.36%
-    Req/Sec     3.04k     1.32k    6.27k    70.67%
-  181921 requests in 30.06s, 42.19MB read
-Requests/sec:   6052.90
-Transfer/sec:      1.40MB
-
-wrk -c 16 -t 2 -d 30s 'http://localhost:9001/dubbo/stream'
-
-Running 30s test @ http://localhost:9001/dubbo/stream
-  2 threads and 16 connections
-  Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     1.69ms    1.88ms  54.01ms   97.53%
-    Req/Sec     5.19k   810.88     6.61k    74.67%
-  310323 requests in 30.03s, 71.97MB read
-Requests/sec:  10332.60
-Transfer/sec:      2.40MB
-
 wrk -c 128 -t 16 -d 30s 'http://localhost:9001/dubbo/sleep'
-
-Running 30s test @ http://localhost:9001/dubbo/sleep
-  16 threads and 128 connections
-  Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency    28.59ms   15.57ms 132.69ms   58.34%
-    Req/Sec   281.17     35.11   440.00     72.15%
-  134779 requests in 30.10s, 17.99MB read
-Requests/sec:   4477.63
-Transfer/sec:    612.09KB
-
-wrk -c 128 -t 16 -d 30s 'http://localhost:9001/dubbo/sleep'
-
-Running 30s test @ http://localhost:9001/dubbo/sleep
-  16 threads and 128 connections
-  Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency    29.20ms   15.51ms  71.46ms   57.97%
-    Req/Sec   274.92     33.02   414.00     66.60%
-  131789 requests in 30.10s, 17.59MB read
-Requests/sec:   4378.68
-Transfer/sec:    598.58KB
 
 jsonrpc pressure test
 
@@ -197,47 +157,7 @@ java -Dspring.profiles.active=jsonrpc-consumer -cp target/jsonrpc-benchmark-1.2.
 
 wrk -c 16 -t 2 -d 30s 'http://localhost:8001/jsonrpc/stream'
 
-Running 30s test @ http://localhost:8001/jsonrpc/stream
-  2 threads and 16 connections
-  Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     2.07ms    2.39ms  45.15ms   93.64%
-    Req/Sec     4.58k     2.12k    8.02k    58.33%
-  273896 requests in 30.03s, 63.52MB read
-Requests/sec:   9119.72
-Transfer/sec:      2.12MB
-
-wrk -c 16 -t 2 -d 30s 'http://localhost:8001/jsonrpc/stream'
-
-Running 30s test @ http://localhost:8001/jsonrpc/stream
-  2 threads and 16 connections
-  Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     1.15ms    1.24ms  46.94ms   98.75%
-    Req/Sec     7.13k   460.27     8.19k    80.33%
-  426195 requests in 30.01s, 98.84MB read
-Requests/sec:  14200.14
-Transfer/sec:      3.29MB
-
 wrk -c 128 -t 16 -d 30s 'http://localhost:8001/jsonrpc/sleep'
-
-Running 30s test @ http://localhost:8001/jsonrpc/sleep
-  16 threads and 128 connections
-  Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency    29.60ms   17.86ms 248.54ms   66.38%
-    Req/Sec   277.16     44.00   420.00     79.63%
-  132378 requests in 30.10s, 17.67MB read
-Requests/sec:   4397.55
-Transfer/sec:    601.16KB
-
-wrk -c 128 -t 16 -d 30s 'http://localhost:8001/jsonrpc/sleep'
-
-Running 30s test @ http://localhost:8001/jsonrpc/sleep
-  16 threads and 128 connections
-  Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency    28.31ms   15.43ms  68.45ms   57.67%
-    Req/Sec   283.50     32.58   450.00     68.29%
-  135912 requests in 30.10s, 18.14MB read
-Requests/sec:   4514.74
-Transfer/sec:    617.15KB
 
 ```
 
