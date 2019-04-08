@@ -71,7 +71,7 @@ public class MetricController {
         refresh();
     }
 
-    @Scheduled(cron = "*/10 * * * * *")
+    @Scheduled(cron = "*/60 * * * * *")
     private void refresh() {
         List<Endpoint> endpoints = discoveryService.query(MetricService.class.getTypeName());
         if (endpoints == null || endpoints.isEmpty()) {
@@ -79,6 +79,7 @@ public class MetricController {
         }
         SimpleDateFormat sdf = new SimpleDateFormat("yy/MM/dd HH:mm");
         String ct = sdf.format(new Date());
+        LOGGER.info("refresh ct = {}", ct);
         endpoints.forEach((endpoint) -> {
             List<Map<String, Object>> rows = getTimerByHostAndPort(endpoint.getHost(), endpoint.getPort());
             if (!(rows == null || rows.isEmpty())) {
