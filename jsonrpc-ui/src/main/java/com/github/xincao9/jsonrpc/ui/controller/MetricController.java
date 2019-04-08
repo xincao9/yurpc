@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 Personal.
+ * Copyright 2019 xincao9@gmail.com.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -33,7 +33,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
-import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 import javax.annotation.PostConstruct;
@@ -63,7 +63,7 @@ public class MetricController {
     @Autowired
     private JsonRPCClient jsonRPCClient;
 
-    private final Map<String, List<Map<String, Object>>> timers = new ConcurrentHashMap();
+    private final List<Map<String, Object>> timers = new CopyOnWriteArrayList();
 
     @PostConstruct
     public void initMethod() {
@@ -77,10 +77,18 @@ public class MetricController {
             return;
         }
         SimpleDateFormat sdf = new SimpleDateFormat("yy/MM/dd HH:mm");
-        String ct = sdf.format(new Date());
-        endpoints.stream().map((endpoint) -> getTimerByHostAndPort(endpoint.getHost(), endpoint.getPort())).filter((rows) -> !(rows == null || rows.isEmpty())).forEachOrdered((rows) -> {
-            timers.put(ct, rows);
-        });
+        String createTime = sdf.format(new Date());
+        endpoints.stream()
+                .map((endpoint) -> getTimerByHostAndPort(endpoint.getHost(), endpoint.getPort()))
+                .filter((rows) -> !(rows == null || rows.isEmpty()))
+                .forEachOrdered((rows) -> {
+                    rows.stream().map((row) -> {
+                        row.put("createTime", createTime);
+                        return row;
+                    }).forEachOrdered((row) -> {
+                        timers.add(row);
+                    });
+                });
     }
 
     /**
@@ -90,35 +98,51 @@ public class MetricController {
      */
     @GetMapping("timers")
     public ResponseEntity<List<Map<String, Object>>> timers() {
+        if (timers.isEmpty()) {
+            return ResponseEntity.ok().build();
+        }
         List<String> x = new ArrayList(timers.size());
-        timers.keySet().forEach((t) -> {
-            x.add(t);
+        timers.stream().map((t) -> String.valueOf(t.get("createTime"))).forEachOrdered((t) -> {
+            if (!x.contains(t)) {
+                x.add(t);
+            }
         });
-        Map<String, List<Map<String, Object>>> map = timers.values().stream().flatMap((t) -> {
-            return t.stream();
-        }).collect(Collectors.groupingBy((t) -> {
+        Map<String, List<Map<String, Object>>> methodGroup = timers.stream().collect(Collectors.groupingBy((t) -> {
             return String.valueOf(t.get(MetricConsts.METHOD));
         }));
+        List<Map<String, Object>> resp = new ArrayList();
         AtomicInteger no = new AtomicInteger(0);
-        List<Map<String, Object>> resp = map.entrySet().stream().map((entry) -> {
+        methodGroup.entrySet().stream().forEachOrdered((mg) -> {
             Map<String, Object> obj = new HashMap();
-            obj.put(MetricConsts.METHOD, StringUtils.substringAfterLast(entry.getKey(), " "));
             obj.put("no", no.incrementAndGet());
             obj.put("x", x);
-            List<Map<String, Object>> value = entry.getValue();
+            String key = mg.getKey();
+            List<Map<String, Object>> value = mg.getValue();
+            obj.put(MetricConsts.METHOD, StringUtils.substringAfterLast(key, " "));
             List<Long> m1 = new ArrayList();
             List<Long> m2 = new ArrayList();
             List<Long> m3 = new ArrayList();
-            value.stream().forEach((Map<String, Object> t) -> {
-                m1.add(Double.valueOf(String.valueOf(t.get(MetricConsts.ONE_MINUTE_RATE))).longValue());
-                m2.add(Double.valueOf(String.valueOf(t.get(MetricConsts.FIVE_MINUTE_RATE))).longValue());
-                m3.add(Double.valueOf(String.valueOf(t.get(MetricConsts.FIFTEEN_MINUTE_RATE))).longValue());
+            Map<String, List<Map<String, Object>>> timeGroup = value.stream().collect(Collectors.groupingBy((o) -> {
+                return String.valueOf(o.get("createTime"));
+            }));
+            x.stream().map((time) -> timeGroup.get(time)).filter((group) -> group != null && !group.isEmpty()).forEachOrdered((group) -> {
+                long m1c = 0;
+                long m2c = 0;
+                long m3c = 0;
+                for (Map<String, Object> m : group) {
+                    m1c += Double.valueOf(String.valueOf(m.get(MetricConsts.ONE_MINUTE_RATE))).longValue();
+                    m2c += Double.valueOf(String.valueOf(m.get(MetricConsts.FIVE_MINUTE_RATE))).longValue();
+                    m3c += Double.valueOf(String.valueOf(m.get(MetricConsts.FIFTEEN_MINUTE_RATE))).longValue();
+                }
+                m1.add(m1c);
+                m2.add(m2c);
+                m3.add(m3c);
             });
             obj.put("m1", m1);
             obj.put("m2", m2);
             obj.put("m3", m3);
-            return obj;
-        }).collect(Collectors.toList());
+            resp.add(obj);
+        });
         return ResponseEntity.ok(resp);
     }
 
