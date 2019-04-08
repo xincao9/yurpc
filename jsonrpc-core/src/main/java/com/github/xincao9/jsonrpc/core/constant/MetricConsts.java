@@ -24,8 +24,9 @@ public class MetricConsts {
 
     public static final String METHOD = "method";
     public static final String COUNT = "count";
-    public static final String FIFTEEN_MINUTE_RATE = "fifteenMinuteRate";
-    public static final String FIVE_MINUTE_RATE = "fiveMinuteRate";
-    public static final String MEAN_RATE = "meanRate";
-    public static final String ONE_MINUTE_RATE = "oneMinuteRate";
+    public static final String ONE_MINUTE_RATE = "one_minute_rate";
+    public static final String FIVE_MINUTE_RATE = "five_minute_rate";
+    public static final String FIFTEEN_MINUTE_RATE = "fifteen_minute_rate";
+    public static final String MEAN_RATE = "mean_rate";
+    
 }

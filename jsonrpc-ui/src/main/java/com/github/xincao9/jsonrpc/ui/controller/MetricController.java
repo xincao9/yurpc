@@ -26,6 +26,8 @@ import com.github.xincao9.jsonrpc.core.constant.ResponseCode;
 import com.github.xincao9.jsonrpc.core.protocol.Endpoint;
 import com.github.xincao9.jsonrpc.core.protocol.Request;
 import com.github.xincao9.jsonrpc.core.protocol.Response;
+import com.github.xincao9.jsonrpc.ui.entity.Timer;
+import com.github.xincao9.jsonrpc.ui.repository.TimerDAO;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -33,7 +35,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
-import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 import javax.annotation.PostConstruct;
@@ -62,8 +63,8 @@ public class MetricController {
     private DiscoveryService discoveryService;
     @Autowired
     private JsonRPCClient jsonRPCClient;
-
-    private final List<Map<String, Object>> timers = new CopyOnWriteArrayList();
+    @Autowired
+    private TimerDAO timerDAO;
 
     @PostConstruct
     public void initMethod() {
@@ -77,18 +78,19 @@ public class MetricController {
             return;
         }
         SimpleDateFormat sdf = new SimpleDateFormat("yy/MM/dd HH:mm");
-        String createTime = sdf.format(new Date());
-        endpoints.stream()
-                .map((endpoint) -> getTimerByHostAndPort(endpoint.getHost(), endpoint.getPort()))
-                .filter((rows) -> !(rows == null || rows.isEmpty()))
-                .forEachOrdered((rows) -> {
-                    rows.stream().map((row) -> {
-                        row.put("createTime", createTime);
-                        return row;
-                    }).forEachOrdered((row) -> {
-                        timers.add(row);
-                    });
+        String ct = sdf.format(new Date());
+        endpoints.forEach((endpoint) -> {
+            List<Map<String, Object>> rows = getTimerByHostAndPort(endpoint.getHost(), endpoint.getPort());
+            LOGGER.info("rows = {}", JSON.toJSONString(rows));            
+            if (!(rows == null || rows.isEmpty())) {
+                rows.stream().forEachOrdered((row) -> {
+                    row.put("host", endpoint.getHost());
+                    row.put("port", endpoint.getPort());
+                    row.put("ct", ct);
+                    timerDAO.save(row);
                 });
+            }
+        });
     }
 
     /**
@@ -98,51 +100,26 @@ public class MetricController {
      */
     @GetMapping("timers")
     public ResponseEntity<List<Map<String, Object>>> timers() {
-        if (timers.isEmpty()) {
+        List<String> methods = timerDAO.getMethods();
+        if (methods.isEmpty()) {
             return ResponseEntity.ok().build();
         }
-        List<String> x = new ArrayList(timers.size());
-        timers.stream().map((t) -> String.valueOf(t.get("createTime"))).forEachOrdered((t) -> {
-            if (!x.contains(t)) {
-                x.add(t);
-            }
-        });
-        Map<String, List<Map<String, Object>>> methodGroup = timers.stream().collect(Collectors.groupingBy((t) -> {
-            return String.valueOf(t.get(MetricConsts.METHOD));
-        }));
         List<Map<String, Object>> resp = new ArrayList();
         AtomicInteger no = new AtomicInteger(0);
-        methodGroup.entrySet().stream().forEachOrdered((mg) -> {
+        for (String method : methods) {
+            List<Timer> timers = timerDAO.getTimerByMethod(method);
+            if (timers == null || timers.isEmpty()) {
+                continue;
+            }
             Map<String, Object> obj = new HashMap();
             obj.put("no", no.incrementAndGet());
-            obj.put("x", x);
-            String key = mg.getKey();
-            List<Map<String, Object>> value = mg.getValue();
-            obj.put(MetricConsts.METHOD, StringUtils.substringAfterLast(key, " "));
-            List<Long> m1 = new ArrayList();
-            List<Long> m2 = new ArrayList();
-            List<Long> m3 = new ArrayList();
-            Map<String, List<Map<String, Object>>> timeGroup = value.stream().collect(Collectors.groupingBy((o) -> {
-                return String.valueOf(o.get("createTime"));
-            }));
-            x.stream().map((time) -> timeGroup.get(time)).filter((group) -> group != null && !group.isEmpty()).forEachOrdered((group) -> {
-                long m1c = 0;
-                long m2c = 0;
-                long m3c = 0;
-                for (Map<String, Object> m : group) {
-                    m1c += Double.valueOf(String.valueOf(m.get(MetricConsts.ONE_MINUTE_RATE))).longValue();
-                    m2c += Double.valueOf(String.valueOf(m.get(MetricConsts.FIVE_MINUTE_RATE))).longValue();
-                    m3c += Double.valueOf(String.valueOf(m.get(MetricConsts.FIFTEEN_MINUTE_RATE))).longValue();
-                }
-                m1.add(m1c);
-                m2.add(m2c);
-                m3.add(m3c);
-            });
-            obj.put("m1", m1);
-            obj.put("m2", m2);
-            obj.put("m3", m3);
+            obj.put(MetricConsts.METHOD, StringUtils.substringAfterLast(method, " "));
+            obj.put("x", timers.stream().map((t) -> t.getCt()).collect(Collectors.toList()));
+            obj.put("m1", timers.stream().map((t) -> t.getOneMinuteRate()).collect(Collectors.toList()));
+            obj.put("m2", timers.stream().map((t) -> t.getFiveMinuteRate()).collect(Collectors.toList()));
+            obj.put("m3", timers.stream().map((t) -> t.getFifteenMinuteRate()).collect(Collectors.toList()));
             resp.add(obj);
-        });
+        }
         return ResponseEntity.ok(resp);
     }
 
