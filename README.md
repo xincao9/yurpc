@@ -285,13 +285,8 @@ CREATE TABLE `timer` (
 
 **_Install_**
 
-
 1. [download jsonrpc-ui](https://search.maven.org/remotecontent?filepath=com/github/xincao9/jsonrpc-ui/1.2.5/jsonrpc-ui-1.2.5.jar)
-2. java -jar jsonrpc-ui-1.2.5.jar
-    --jsonrpc.discovery.zookeeper=localhost:2181
-    --spring.datasource.url=jdbc:mysql://localhost:3306/jsonrpc-ui?useUnicode=true&characterEncoding=UTF-8&zeroDateTimeBehavior=convertToNull&autoReconnect=true
-    --spring.datasource.username=root
-    --spring.datasource.password=
+2. java -jar jsonrpc-ui-1.2.5.jar --jsonrpc.discovery.zookeeper=localhost:2181 --spring.datasource.url=jdbc:mysql://localhost:3306/jsonrpc-ui?useUnicode=true&characterEncoding=UTF-8&zeroDateTimeBehavior=convertToNull&autoReconnect=true --spring.datasource.username=root --spring.datasource.password=
 3. [ui url](http://localhost:9090)
 
 **_Used_**
