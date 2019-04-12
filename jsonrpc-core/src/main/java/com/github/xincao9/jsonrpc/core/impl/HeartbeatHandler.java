@@ -18,6 +18,7 @@ package com.github.xincao9.jsonrpc.core.impl;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
 import io.netty.channel.ChannelFutureListener;
+import io.netty.channel.ChannelHandler.Sharable;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
 import io.netty.handler.timeout.IdleStateEvent;
@@ -28,6 +29,7 @@ import io.netty.util.CharsetUtil;
  * 
  * @author xincao9@gmail.com
  */
+@Sharable
 public class HeartbeatHandler extends ChannelInboundHandlerAdapter {
 
     private static final ByteBuf HEARTBEAT_SEQUENCE = Unpooled.unreleasableBuffer(Unpooled.copiedBuffer("HEARTBEAT", CharsetUtil.UTF_8));
