@@ -89,7 +89,7 @@ public final class ZKDiscoveryServiceImpl implements DiscoveryService {
                         byte[] value = entry.getValue();
                         try {
                             cf.create().withMode(CreateMode.EPHEMERAL).forPath(path, value);
-                        }catch (Throwable ex) {
+                        } catch (Throwable ex) {
                             LOGGER.error(ex.getMessage());
                         }
                     });
@@ -157,11 +157,15 @@ public final class ZKDiscoveryServiceImpl implements DiscoveryService {
     @Override
     public List<Endpoint> query(String service) {
         if (!this.services.containsKey(service)) {
-            try {
-                this.services.put(service, queryzookeeper(service));
-                watcher(service);
-            } catch (Throwable e) {
-                LOGGER.error(e.getMessage());
+            synchronized (this) {
+                if (!this.services.containsKey(service)) {
+                    try {
+                        this.services.put(service, queryzookeeper(service));
+                        watcher(service);
+                    } catch (Throwable e) {
+                        LOGGER.error(e.getMessage());
+                    }
+                }
             }
         }
         return this.services.get(service);
