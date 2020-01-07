@@ -17,12 +17,11 @@ package com.github.xincao9.jsonrpc.core.constant;
 
 /**
  * 服务端常量
- * 
+ *
  * @author xincao9@gmail.com
  */
 public class ServerConsts {
 
-    public static final String DEFAULT_CONFIG_FILENAME = "/config.properties";
     public static final String PORT = "jsonrpc.server.port";
     public static final String DEFAULT_PORT = "12306";
     public static final Integer DEFAULT_IO_THREAD_BOSS = 1;

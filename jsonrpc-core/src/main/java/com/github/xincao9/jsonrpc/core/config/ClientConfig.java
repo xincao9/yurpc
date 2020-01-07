@@ -17,6 +17,7 @@ package com.github.xincao9.jsonrpc.core.config;
 
 import com.github.xincao9.jsonrpc.core.protocol.Pair;
 import com.github.xincao9.jsonrpc.core.constant.ClientConsts;
+import com.github.xincao9.jsonrpc.core.constant.SystemConsts;
 import com.github.xincao9.jsonrpc.core.util.PropertiesUtils;
 import java.util.ArrayList;
 import java.util.List;
@@ -39,7 +40,7 @@ public class ClientConfig {
      * @param filename 配置文件名
      */
     public static void init(String filename) {
-        Properties pros = PropertiesUtils.read(filename, ClientConsts.DEFAULT_CONFIG_FILENAME);
+        Properties pros = PropertiesUtils.read(filename, SystemConsts.DEFAULT_CONFIG_FILENAME);
         init(pros);
     }
 
