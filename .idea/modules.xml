@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/jsonrpc.iml" filepath="$PROJECT_DIR$/jsonrpc.iml" />
+      <module fileurl="file://$PROJECT_DIR$/yurpc-benchmark/jsonrpc-benchmark.iml" filepath="$PROJECT_DIR$/yurpc-benchmark/jsonrpc-benchmark.iml" />
+      <module fileurl="file://$PROJECT_DIR$/jsonrpc-ui/jsonrpc-ui.iml" filepath="$PROJECT_DIR$/jsonrpc-ui/jsonrpc-ui.iml" />
+      <module fileurl="file://$PROJECT_DIR$/yurpc.iml" filepath="$PROJECT_DIR$/yurpc.iml" />
+      <module fileurl="file://$PROJECT_DIR$/yurpc-core/yurpc-core.iml" filepath="$PROJECT_DIR$/yurpc-core/yurpc-core.iml" />
+      <module fileurl="file://$PROJECT_DIR$/yurpc-sample/yurpc-sample.iml" filepath="$PROJECT_DIR$/yurpc-sample/yurpc-sample.iml" />
+      <module fileurl="file://$PROJECT_DIR$/yurpc-spring-boot-starter/yurpc-spring-boot-starter.iml" filepath="$PROJECT_DIR$/yurpc-spring-boot-starter/yurpc-spring-boot-starter.iml" />
+    </modules>
+  </component>
+</project>

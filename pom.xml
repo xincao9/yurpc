@@ -2,8 +2,8 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.github.xincao9</groupId>
-    <artifactId>jsonrpc</artifactId>
-    <name>jsonrpc</name>
+    <artifactId>yurpc</artifactId>
+    <name>yurpc</name>
     <version>1.2.5</version>
     <packaging>pom</packaging>
     <description>high-performance RPC framework.</description>
@@ -16,24 +16,22 @@
         <dependencies>
             <dependency>
                 <groupId>com.github.xincao9</groupId>
-                <artifactId>jsonrpc-core</artifactId>
+                <artifactId>yurpc-core</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
                 <groupId>com.github.xincao9</groupId>
-                <artifactId>jsonrpc-spring-boot-starter</artifactId>
+                <artifactId>yurpc-spring-boot-starter</artifactId>
                 <version>${project.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
     <modules>
-        <module>jsonrpc-core</module>
-        <module>jsonrpc-spring-boot-starter</module>
-        <module>jsonrpc-sample</module>
-        <module>jsonrpc-benchmark</module>
-        <module>jsonrpc-ui</module>
+        <module>yurpc-core</module>
+        <module>yurpc-spring-boot-starter</module>
+        <module>yurpc-sample</module>
     </modules>
-    <url>https://github.com/xincao9/jsonrpc</url>
+    <url>https://github.com/xincao9/yurpc</url>
     <developers>
         <developer>
             <email>xincao9@gmail.com</email>
@@ -52,7 +50,7 @@
     </organization>
     <issueManagement>
         <system>Github Issues</system>
-        <url>https://github.com/xincao9/jsonrpc/issues</url>
+        <url>https://github.com/xincao9/yurpc/issues</url>
     </issueManagement>
     <licenses>
         <license>
@@ -63,9 +61,9 @@
     </licenses>
     <scm>
         <tag>master</tag>
-        <url>git@github.com:xincao9/jsonrpc.git</url>
-        <connection>scm:git:git@github.com:xincao9/jsonrpc.git</connection>
-        <developerConnection>scm:git:git@github.com:xincao9/jsonrpc.git</developerConnection>
+        <url>git@github.com:xincao9/yurpc.git</url>
+        <connection>scm:git:git@github.com:xincao9/yurpc.git</connection>
+        <developerConnection>scm:git:git@github.com:xincao9/yurpc.git</developerConnection>
     </scm>
     <distributionManagement>
         <repository>

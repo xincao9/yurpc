@@ -1,0 +1,7 @@
+com/github/xincao9/yurpc/sample/Say.class
+com/github/xincao9/yurpc/sample/provider/ApplicationProvider.class
+com/github/xincao9/yurpc/sample/provider/Provider.class
+com/github/xincao9/yurpc/sample/consumer/Consumer.class
+com/github/xincao9/yurpc/sample/consumer/ApplicationConsumer.class
+com/github/xincao9/yurpc/sample/provider/SayServiceImpl.class
+com/github/xincao9/yurpc/sample/SayService.class
