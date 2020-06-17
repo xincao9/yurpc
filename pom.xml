@@ -61,9 +61,9 @@
     </licenses>
     <scm>
         <tag>master</tag>
-        <url>git@github.com:xincao9/yurpc.git</url>
-        <connection>scm:git:git@github.com:xincao9/yurpc.git</connection>
-        <developerConnection>scm:git:git@github.com:xincao9/yurpc.git</developerConnection>
+        <url>git@github.com:xincao9/YuRPC.git</url>
+        <connection>scm:git:git@github.com:xincao9/YuRPC.git</connection>
+        <developerConnection>scm:git:git@github.com:xincao9/YuRPC.git</developerConnection>
     </scm>
     <distributionManagement>
         <repository>
