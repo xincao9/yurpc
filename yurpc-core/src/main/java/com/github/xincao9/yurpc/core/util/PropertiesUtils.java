@@ -15,6 +15,7 @@
  */
 package com.github.xincao9.yurpc.core.util;
 
+import java.io.IOException;
 import java.util.Properties;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -45,7 +46,7 @@ public class PropertiesUtils {
             Properties pros = new Properties();
             pros.load(PropertiesUtils.class.getResourceAsStream(filename));
             return pros;
-        } catch (Throwable e) {
+        } catch (IOException e) {
             LOGGER.warn(e.getMessage());
         }
         return new Properties();

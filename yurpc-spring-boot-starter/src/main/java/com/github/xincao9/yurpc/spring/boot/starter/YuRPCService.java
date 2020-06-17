@@ -25,7 +25,7 @@ import org.springframework.core.annotation.AliasFor;
 import org.springframework.stereotype.Component;
 
 /**
- * JsonRPC 服务注解
+ * YuRPC 服务注解
  *
  * @author xincao9@gmail.com
  */

@@ -129,7 +129,7 @@ public class YuRPCClientImpl implements YuRPCClient {
             Channel channel = entry.getValue();
             if (channel != null) {
                 channel.close().addListener((Future<? super Void> future) -> {
-                    LOGGER.warn("close the connection to the jsonrpc service address = {}, cause = {}", address, future.cause());
+                    LOGGER.warn("close the connection to the yurpc service address = {}, cause = {}", address, future.cause());
                 });
             }
         });
@@ -174,7 +174,7 @@ public class YuRPCClientImpl implements YuRPCClient {
             request.setSendOk(Boolean.FALSE);
             this.requests.remove(request.getId());
             request.putResponse(null);
-            LOGGER.error("jsonrpc.invoke() request = {} failure exception = {}", request, f.cause());
+            LOGGER.error("yurpc.invoke() request = {} failure exception = {}", request, f.cause());
         });
         try {
             return request.waitResponse(ClientConfig.invokeTimeoutMS, TimeUnit.MILLISECONDS);
@@ -183,7 +183,7 @@ public class YuRPCClientImpl implements YuRPCClient {
         }
         this.requests.remove(request.getId());
         request.putResponse(null);
-        LOGGER.error("jsonrpc.invoke() request = {} timeout (wait time > {} ms)", request, ClientConfig.invokeTimeoutMS);
+        LOGGER.error("yurpc.invoke() request = {} timeout (wait time > {} ms)", request, ClientConfig.invokeTimeoutMS);
         return Response.createResponse(request.getId(), ResponseCode.INVOKE_TIMEOUT, ResponseCode.INVOKE_TIMEOUT_MSG);
     }
 

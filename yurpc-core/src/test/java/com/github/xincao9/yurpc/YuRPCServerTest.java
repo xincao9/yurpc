@@ -19,8 +19,6 @@ import com.alibaba.fastjson.JSONObject;
 import com.alibaba.fastjson.serializer.SerializerFeature;
 import com.github.xincao9.yurpc.core.YuRPCClient;
 import com.github.xincao9.yurpc.core.YuRPCServer;
-import java.util.Collections;
-import java.util.Map;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
@@ -42,7 +40,7 @@ public class YuRPCServerTest {
      */
     @BeforeClass
     public static void setUpClass() throws Throwable {
-        yuRPCServer = YuRPCServer.defaultJsonRPCServer();
+        yuRPCServer = YuRPCServer.defaultYuRPCServer();
         yuRPCServer.register(new SayServiceImpl());
         yuRPCServer.start();
     }
@@ -64,7 +62,7 @@ public class YuRPCServerTest {
      */
     @Test
     public void testMethod() throws Throwable {
-        YuRPCClient yuRPCClient = YuRPCClient.defaultJsonRPCClient();
+        YuRPCClient yuRPCClient = YuRPCClient.defaultYuRPCClient();
         yuRPCClient.start();
         SayService sayService = yuRPCClient.proxy(SayService.class);
         for (int no = 0; no < 100; no++) {

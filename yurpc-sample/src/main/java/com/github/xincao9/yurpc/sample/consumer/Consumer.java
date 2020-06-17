@@ -38,7 +38,7 @@ public class Consumer {
      * @throws Throwable 异常
      */
     public static void main (String... args) throws Throwable {
-        YuRPCClient yuRPCClient = YuRPCClient.defaultJsonRPCClient();
+        YuRPCClient yuRPCClient = YuRPCClient.defaultYuRPCClient();
         yuRPCClient.start();
         SayService sayService = yuRPCClient.proxy(SayService.class);
         for (int no = 0; no < 100; no++) {

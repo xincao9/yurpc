@@ -59,7 +59,7 @@ public interface YuRPCClient {
      * @param discoveryService 服务组件
      * @return 客户端
      */
-    static YuRPCClient defaultJsonRPCClient(String filename, DiscoveryService discoveryService) {
+    static YuRPCClient defaultYuRPCClient(String filename, DiscoveryService discoveryService) {
         ClientConfig.init(filename);
         return new YuRPCClientImpl(discoveryService);
     }
@@ -69,8 +69,8 @@ public interface YuRPCClient {
      *
      * @return 客户端
      */
-    static YuRPCClient defaultJsonRPCClient() {
-        return defaultJsonRPCClient("", null);
+    static YuRPCClient defaultYuRPCClient() {
+        return YuRPCClient.defaultYuRPCClient("", null);
     }
 
     /**
@@ -79,8 +79,8 @@ public interface YuRPCClient {
      * @param discoveryService 服务组件
      * @return 客户端
      */
-    static YuRPCClient defaultJsonRPCClient(DiscoveryService discoveryService) {
-        return defaultJsonRPCClient("", discoveryService);
+    static YuRPCClient defaultYuRPCClient(DiscoveryService discoveryService) {
+        return YuRPCClient.defaultYuRPCClient("", discoveryService);
     }
 
     /**

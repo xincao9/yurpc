@@ -122,10 +122,10 @@ public class YuRPCServerImpl implements YuRPCServer {
                 .childOption(ChannelOption.SO_KEEPALIVE, false)
                 .childOption(ChannelOption.TCP_NODELAY, true);
         ChannelFuture f = bootstrap.bind("0.0.0.0", port).addListener((Future<? super Void> future) -> {
-            LOGGER.warn("start the jsonrpc service port = {}, cause = {}", this.port, future.cause());
+            LOGGER.warn("start the yurpc service port = {}, cause = {}", this.port, future.cause());
         });
         f.channel().closeFuture().addListener((Future<? super Void> future) -> {
-            LOGGER.warn("turn off jsonrpc service port = {}, cause = {}", this.port, future.cause());
+            LOGGER.warn("turn off yurpc service port = {}, cause = {}", this.port, future.cause());
         });
     }
 

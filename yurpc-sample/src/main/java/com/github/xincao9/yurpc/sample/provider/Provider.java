@@ -32,9 +32,10 @@ public class Provider {
      * 入口方法
      *
      * @param args 参数
+     * @throws java.lang.Throwable
      */
     public static void main(String... args) throws Throwable {
-        YuRPCServer yuRPCServer = YuRPCServer.defaultJsonRPCServer();
+        YuRPCServer yuRPCServer = YuRPCServer.defaultYuRPCServer();
         yuRPCServer.register(new SayServiceImpl());
         yuRPCServer.start();
         Runtime.getRuntime().addShutdownHook(new Thread(() -> {

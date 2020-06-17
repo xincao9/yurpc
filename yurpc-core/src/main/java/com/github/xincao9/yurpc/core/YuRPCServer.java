@@ -46,7 +46,7 @@ public interface YuRPCServer {
      * @param discovery 服务发现组件
      * @return 服务端
      */
-    static YuRPCServer defaultJsonRPCServer(String filename, DiscoveryService discovery) throws RuntimeException {
+    static YuRPCServer defaultYuRPCServer(String filename, DiscoveryService discovery) throws RuntimeException {
         ServerConfig.init(filename);
         return new YuRPCServerImpl(discovery);
     }
@@ -56,8 +56,8 @@ public interface YuRPCServer {
      *
      * @return 服务端
      */
-    static YuRPCServer defaultJsonRPCServer() {
-        return defaultJsonRPCServer("", null);
+    static YuRPCServer defaultYuRPCServer() {
+        return YuRPCServer.defaultYuRPCServer("", null);
     }
 
     /**
@@ -67,7 +67,7 @@ public interface YuRPCServer {
      * @param discoveryService 服务发现组件
      * @return
      */
-    static YuRPCServer defaultJsonRPCServer(Integer port, DiscoveryService discoveryService) {
+    static YuRPCServer defaultYuRPCServer(Integer port, DiscoveryService discoveryService) {
         ServerConfig.port = port;
         return new YuRPCServerImpl(port, discoveryService);
     }
@@ -78,8 +78,8 @@ public interface YuRPCServer {
      * @param filename 配置文件名
      * @return 服务端
      */
-    static YuRPCServer defaultJsonRPCServer(String filename) {
-        return defaultJsonRPCServer(filename, null);
+    static YuRPCServer defaultYuRPCServer(String filename) {
+        return YuRPCServer.defaultYuRPCServer(filename, null);
     }
 
     /**
@@ -88,8 +88,8 @@ public interface YuRPCServer {
      * @param discovery 服务发现组件
      * @return 服务端
      */
-    static YuRPCServer defaultJsonRPCServer(DiscoveryService discovery) {
-        return defaultJsonRPCServer("", discovery);
+    static YuRPCServer defaultYuRPCServer(DiscoveryService discovery) {
+        return YuRPCServer.defaultYuRPCServer("", discovery);
     }
 
     /**

@@ -89,7 +89,7 @@ public final class ZKDiscoveryServiceImpl implements DiscoveryService {
                         byte[] value = entry.getValue();
                         try {
                             cf.create().withMode(CreateMode.EPHEMERAL).forPath(path, value);
-                        } catch (Throwable ex) {
+                        } catch (Exception ex) {
                             LOGGER.error(ex.getMessage());
                         }
                     });
@@ -118,7 +118,7 @@ public final class ZKDiscoveryServiceImpl implements DiscoveryService {
                 }
             });
             treeCache.start();
-        } catch (Throwable e) {
+        } catch (Exception e) {
             LOGGER.error(e.getMessage());
         }
     }
@@ -143,7 +143,7 @@ public final class ZKDiscoveryServiceImpl implements DiscoveryService {
                     .withMode(CreateMode.EPHEMERAL)
                     .forPath(path, value);
             this.pathValue.put(path, value);
-        } catch (Throwable e) {
+        } catch (Exception e) {
             LOGGER.error(e.getMessage());
         }
     }
