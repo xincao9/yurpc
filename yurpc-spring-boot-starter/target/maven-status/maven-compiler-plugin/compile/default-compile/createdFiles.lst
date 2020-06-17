@@ -1,0 +1,10 @@
+com/github/xincao9/yurpc/spring/boot/starter/EnableJsonRPC.class
+com/github/xincao9/yurpc/spring/boot/starter/ConfigConsts.class
+com/github/xincao9/yurpc/spring/boot/starter/YuRPCAutowired.class
+com/github/xincao9/yurpc/spring/boot/starter/ZKDiscoveryServiceImpl.class
+com/github/xincao9/yurpc/spring/boot/starter/YuRPCService.class
+com/github/xincao9/yurpc/spring/boot/starter/YuRPCBeanPostProcessor$1.class
+com/github/xincao9/yurpc/spring/boot/starter/YuRPCImportBeanDefinitionRegistrar.class
+com/github/xincao9/yurpc/spring/boot/starter/YuRPCAutoConfiguration$1.class
+com/github/xincao9/yurpc/spring/boot/starter/YuRPCBeanPostProcessor.class
+com/github/xincao9/yurpc/spring/boot/starter/YuRPCAutoConfiguration.class
