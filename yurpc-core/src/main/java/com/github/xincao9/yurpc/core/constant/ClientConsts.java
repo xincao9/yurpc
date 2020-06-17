@@ -22,11 +22,11 @@ package com.github.xincao9.yurpc.core.constant;
  */
 public class ClientConsts {
 
-    public static final String SERVER_LIST = "jsonrpc.client.serverList";
+    public static final String SERVER_LIST = "yurpc.client.serverList";
     public static final String DEFAULT_SERVER_LIST = "127.0.0.1:12306";
-    public static final String CONNECTION_TIMEOUT_MS = "jsonrpc.client.connectionTimeoutMS";
+    public static final String CONNECTION_TIMEOUT_MS = "yurpc.client.connectionTimeoutMS";
     public static final String DEFAULT_CONNECTION_TIMEOUT_MS = "5000";
-    public static final String INVOKE_TIMEOUT_MS = "jsonrpc.client.invokeTimeoutMS";
+    public static final String INVOKE_TIMEOUT_MS = "yurpc.client.invokeTimeoutMS";
     public static final String DEFAULT_INVOKE_TIMEOUT_MS = "1000";
 
 }

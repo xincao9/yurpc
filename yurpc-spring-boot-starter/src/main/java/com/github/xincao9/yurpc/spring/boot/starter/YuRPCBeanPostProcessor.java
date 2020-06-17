@@ -53,7 +53,7 @@ public class YuRPCBeanPostProcessor implements BeanPostProcessor {
     public Object postProcessBeforeInitialization(Object bean, String beanName) throws BeansException {
         if (this.yuRPCServer != null && bean != null && bean.getClass().isAnnotationPresent(YuRPCService.class)) {
             this.yuRPCServer.register(bean);
-            LOGGER.info("register jsonrpc service = {}", beanName);
+            LOGGER.info("register yurpc service = {}", beanName);
         }
         if (this.yuRPCClient != null && bean != null) {
 //            Class clazz = AopUtils.getTargetClass(bean); // AOP代理的目标类 https://github.com/spring-projects/spring-framework/issues/20132

@@ -15,7 +15,7 @@
  */
 package com.github.xincao9.yurpc.sample.provider;
 
-import com.github.xincao9.yurpc.spring.boot.starter.EnableJsonRPC;
+import com.github.xincao9.yurpc.spring.boot.starter.EnableYuRPC;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
@@ -25,7 +25,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
  * @author xincao9@gmail.com
  */
 @SpringBootApplication
-@EnableJsonRPC(server = true)
+@EnableYuRPC(server = true)
 public class ApplicationProvider {
 
     /**

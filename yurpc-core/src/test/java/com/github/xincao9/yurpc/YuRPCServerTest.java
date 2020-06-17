@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.github.xincao9.jsonrpc;
+package com.github.xincao9.yurpc;
 
 import com.alibaba.fastjson.JSONObject;
 import com.alibaba.fastjson.serializer.SerializerFeature;
@@ -70,7 +70,7 @@ public class YuRPCServerTest {
         for (int no = 0; no < 100; no++) {
             String value = RandomStringUtils.randomAscii(128);
             Say say = new Say(no, value);
-            System.out.println(sayService.perform(Collections.singletonMap(no, say)));
+            System.out.println(sayService.perform(say));
         }
         yuRPCClient.shutdown();
     }
@@ -107,16 +107,16 @@ public class YuRPCServerTest {
         }
     }
 
-    public static interface SayService {
+    public interface SayService {
 
-        Map<Integer, Say> perform(Map<Integer, Say> words);
+        Say perform(Say say);
     }
 
     public static class SayServiceImpl implements SayService {
 
         @Override
-        public Map<Integer, Say> perform(Map<Integer, Say> words) {
-            return words;
+        public Say perform(Say say) {
+            return say;
         }
 
     }

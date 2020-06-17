@@ -22,7 +22,7 @@ package com.github.xincao9.yurpc.core.constant;
  */
 public class ServerConsts {
 
-    public static final String PORT = "jsonrpc.server.port";
+    public static final String PORT = "yurpc.server.port";
     public static final String DEFAULT_PORT = "12306";
     public static final Integer DEFAULT_IO_THREAD_BOSS = 1;
     public static final Integer DEFAULT_IO_THREAD_WORKER = Runtime.getRuntime().availableProcessors();

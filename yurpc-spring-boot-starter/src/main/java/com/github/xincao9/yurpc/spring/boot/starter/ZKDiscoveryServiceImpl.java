@@ -48,9 +48,9 @@ public final class ZKDiscoveryServiceImpl implements DiscoveryService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ZKDiscoveryServiceImpl.class);
     private CuratorFramework client;
-    private static final String JSONRPC_ROOT = "/jsonrpc";
-    private static final String JSONRPC_SERVICE_PATTERN = "/jsonrpc/%s";
-    private static final String JSONRPC_INSTANCE_PATTERN = "/jsonrpc/%s/%s";
+    private static final String YURPC_ROOT = "/yurpc";
+    private static final String YURPC_SERVICE_PATTERN = "/yurpc/%s";
+    private static final String YURPC_INSTANCE_PATTERN = "/yurpc/%s/%s";
     private final Map<String, List<Endpoint>> services = new ConcurrentHashMap();
     private final ExecutorService watcherExecutorService = Executors.newFixedThreadPool(1);
     private final Map<String, byte[]> pathValue = new ConcurrentHashMap();
@@ -105,7 +105,7 @@ public final class ZKDiscoveryServiceImpl implements DiscoveryService {
      */
     private void watcher(String service) {
         try {
-            TreeCache treeCache = TreeCache.newBuilder(this.client, String.format(JSONRPC_SERVICE_PATTERN, service)).setExecutor(this.watcherExecutorService).build();
+            TreeCache treeCache = TreeCache.newBuilder(this.client, String.format(YURPC_SERVICE_PATTERN, service)).setExecutor(this.watcherExecutorService).build();
             treeCache.getListenable().addListener((TreeCacheListener) (CuratorFramework cf, TreeCacheEvent tce) -> {
                 TreeCacheEvent.Type type = tce.getType();
                 if (type == TreeCacheEvent.Type.NODE_ADDED || type == TreeCacheEvent.Type.NODE_REMOVED || type == TreeCacheEvent.Type.NODE_UPDATED) {
@@ -131,13 +131,13 @@ public final class ZKDiscoveryServiceImpl implements DiscoveryService {
     @Override
     public void register(Endpoint endpoint) {
         try {
-            if (this.client.checkExists().forPath(JSONRPC_ROOT) == null) {
-                this.client.create().withMode(CreateMode.PERSISTENT).forPath(JSONRPC_ROOT);
+            if (this.client.checkExists().forPath(YURPC_ROOT) == null) {
+                this.client.create().withMode(CreateMode.PERSISTENT).forPath(YURPC_ROOT);
             }
-            if (this.client.checkExists().forPath(String.format(JSONRPC_SERVICE_PATTERN, endpoint.getName())) == null) {
-                this.client.create().withMode(CreateMode.PERSISTENT).forPath(String.format(JSONRPC_SERVICE_PATTERN, endpoint.getName()));
+            if (this.client.checkExists().forPath(String.format(YURPC_SERVICE_PATTERN, endpoint.getName())) == null) {
+                this.client.create().withMode(CreateMode.PERSISTENT).forPath(String.format(YURPC_SERVICE_PATTERN, endpoint.getName()));
             }
-            String path = String.format(JSONRPC_INSTANCE_PATTERN, endpoint.getName(), endpoint.getInstanceId());
+            String path = String.format(YURPC_INSTANCE_PATTERN, endpoint.getName(), endpoint.getInstanceId());
             byte[] value = JSONObject.toJSONBytes(endpoint, SerializerFeature.DisableCircularReferenceDetect);
             this.client.create()
                     .withMode(CreateMode.EPHEMERAL)
@@ -179,13 +179,13 @@ public final class ZKDiscoveryServiceImpl implements DiscoveryService {
      * @throws Throwable 异常
      */
     private List<Endpoint> queryzookeeper(String service) throws Throwable {
-        List<String> paths = this.client.getChildren().forPath(String.format(JSONRPC_SERVICE_PATTERN, service));
+        List<String> paths = this.client.getChildren().forPath(String.format(YURPC_SERVICE_PATTERN, service));
         if (paths == null || paths.isEmpty()) {
             return Collections.EMPTY_LIST;
         }
         List<Endpoint> endpoints = new ArrayList();
         for (String path : paths) {
-            byte[] data = this.client.getData().forPath(String.format(JSONRPC_INSTANCE_PATTERN, service, path));
+            byte[] data = this.client.getData().forPath(String.format(YURPC_INSTANCE_PATTERN, service, path));
             if (data != null && data.length > 0) {
                 endpoints.add(JSONObject.parseObject(data, Endpoint.class));
             }

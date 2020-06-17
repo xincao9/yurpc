@@ -1,4 +1,4 @@
-jsonrpc:
+yurpc:
     discovery:
         zookeeper: localhost:2181
     client:

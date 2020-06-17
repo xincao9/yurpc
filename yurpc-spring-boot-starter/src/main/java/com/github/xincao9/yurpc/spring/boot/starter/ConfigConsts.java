@@ -21,5 +21,5 @@ package com.github.xincao9.yurpc.spring.boot.starter;
  */
 public class ConfigConsts {
 
-    public static final String DISCOVERY_ZOOKEEPER = "jsonrpc.discovery.zookeeper";
+    public static final String DISCOVERY_ZOOKEEPER = "yurpc.discovery.zookeeper";
 }

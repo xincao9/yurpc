@@ -69,12 +69,12 @@ public class YuRPCAutoConfiguration implements EnvironmentAware, DisposableBean,
      * @throws java.lang.Throwable  异常
      */
     @Bean
-    public YuRPCBeanPostProcessor jsonRPCBeanPostProcessor() throws Throwable {
+    public YuRPCBeanPostProcessor yuRPCBeanPostProcessor() throws Throwable {
         if (yuRPCBeanPostProcessor != null) {
             return yuRPCBeanPostProcessor;
         }
         if (server || client) {
-            yuRPCBeanPostProcessor = new YuRPCBeanPostProcessor(jsonRPCClient(discoveryService()), jsonRPCServer(discoveryService()));
+            yuRPCBeanPostProcessor = new YuRPCBeanPostProcessor(yuRPCClient(discoveryService()), yuRPCServer(discoveryService()));
             return yuRPCBeanPostProcessor;
         }
         return null;
@@ -147,7 +147,7 @@ public class YuRPCAutoConfiguration implements EnvironmentAware, DisposableBean,
      * @throws java.lang.Throwable 异常
      */
     @Bean
-    public YuRPCServer jsonRPCServer(DiscoveryService discoveryService) throws Throwable {
+    public YuRPCServer yuRPCServer(DiscoveryService discoveryService) throws Throwable {
         if (yuRPCServer != null) {
             return yuRPCServer;
         }
@@ -173,7 +173,7 @@ public class YuRPCAutoConfiguration implements EnvironmentAware, DisposableBean,
      * @throws java.lang.Throwable 异常
      */
     @Bean
-    public YuRPCClient jsonRPCClient(DiscoveryService discoveryService) throws Throwable {
+    public YuRPCClient yuRPCClient(DiscoveryService discoveryService) throws Throwable {
         if (yuRPCClient != null) {
             return yuRPCClient;
         }
@@ -207,7 +207,7 @@ public class YuRPCAutoConfiguration implements EnvironmentAware, DisposableBean,
     public void postProcessBeanFactory(ConfigurableListableBeanFactory beanFactory) throws BeansException {
         if (server || client) {
             try {
-                beanFactory.addBeanPostProcessor(jsonRPCBeanPostProcessor());
+                beanFactory.addBeanPostProcessor(yuRPCBeanPostProcessor());
             } catch (Throwable e) {
                 throw new BeansException(e.getMessage()) {
                 };

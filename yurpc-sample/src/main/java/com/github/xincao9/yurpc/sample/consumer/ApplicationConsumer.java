@@ -17,7 +17,7 @@ package com.github.xincao9.yurpc.sample.consumer;
 
 import com.github.xincao9.yurpc.sample.Say;
 import com.github.xincao9.yurpc.sample.SayService;
-import com.github.xincao9.yurpc.spring.boot.starter.EnableJsonRPC;
+import com.github.xincao9.yurpc.spring.boot.starter.EnableYuRPC;
 import com.github.xincao9.yurpc.spring.boot.starter.YuRPCAutowired;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.boot.CommandLineRunner;
@@ -31,7 +31,7 @@ import org.springframework.context.annotation.Bean;
  * @author xincao9@gmail.com
  */
 @SpringBootApplication
-@EnableJsonRPC(client = true)
+@EnableYuRPC(client = true)
 public class ApplicationConsumer {
 
     @YuRPCAutowired

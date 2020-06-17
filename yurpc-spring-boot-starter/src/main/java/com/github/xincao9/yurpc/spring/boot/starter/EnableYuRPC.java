@@ -31,7 +31,7 @@ import org.springframework.context.annotation.Import;
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
 @Import({YuRPCImportBeanDefinitionRegistrar.class})
-public @interface EnableJsonRPC {
+public @interface EnableYuRPC {
 
     /**
      * 服务角色

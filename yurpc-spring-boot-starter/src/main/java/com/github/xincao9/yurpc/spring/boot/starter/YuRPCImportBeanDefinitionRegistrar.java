@@ -36,7 +36,7 @@ public class YuRPCImportBeanDefinitionRegistrar implements ImportBeanDefinitionR
      */
     @Override
     public void registerBeanDefinitions(AnnotationMetadata am, BeanDefinitionRegistry bdr) {
-        Map<String, Object> attributes = am.getAnnotationAttributes(EnableJsonRPC.class.getName());
+        Map<String, Object> attributes = am.getAnnotationAttributes(EnableYuRPC.class.getName());
         BeanDefinitionBuilder bdb = BeanDefinitionBuilder.rootBeanDefinition(YuRPCAutoConfiguration.class);
         if (attributes != null && attributes.containsKey("server")) {
             bdb.addPropertyValue("server", (Boolean) attributes.get("server"));
