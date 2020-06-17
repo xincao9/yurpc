@@ -24,15 +24,17 @@ import com.github.xincao9.yurpc.core.constant.ServerConsts;
 import com.github.xincao9.yurpc.core.YuRPCServer;
 import com.github.xincao9.yurpc.core.impl.YuRPCServerImpl;
 import com.github.xincao9.yurpc.core.config.ServerConfig;
+
 import java.util.Properties;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.DisposableBean;
+import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.config.BeanFactoryPostProcessor;
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
 import org.springframework.context.EnvironmentAware;
-import org.springframework.context.annotation.Bean;
 import org.springframework.core.env.Environment;
 
 /**
@@ -40,7 +42,7 @@ import org.springframework.core.env.Environment;
  *
  * @author xincao9@gmail.com
  */
-public class YuRPCAutoConfiguration implements EnvironmentAware, DisposableBean, BeanFactoryPostProcessor {
+public class YuRPCAutoConfiguration implements EnvironmentAware, InitializingBean, DisposableBean, BeanFactoryPostProcessor {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(YuRPCAutoConfiguration.class);
 
@@ -49,8 +51,8 @@ public class YuRPCAutoConfiguration implements EnvironmentAware, DisposableBean,
     private Boolean client;
     private YuRPCClient yuRPCClient;
     private YuRPCServer yuRPCServer;
-    private YuRPCBeanPostProcessor yuRPCBeanPostProcessor;
     private DiscoveryService discoveryService;
+    private YuRPCBeanPostProcessor yuRPCBeanPostProcessor;
 
     /**
      * 修改器
@@ -66,15 +68,11 @@ public class YuRPCAutoConfiguration implements EnvironmentAware, DisposableBean,
      * 自动扫描，注册服务组件
      *
      * @return 注册服务组件
-     * @throws java.lang.Throwable  异常
+     * @throws java.lang.Throwable 异常
      */
-    @Bean
-    public YuRPCBeanPostProcessor yuRPCBeanPostProcessor() throws Throwable {
-        if (yuRPCBeanPostProcessor != null) {
-            return yuRPCBeanPostProcessor;
-        }
+    public YuRPCBeanPostProcessor yuRPCBeanPostProcessor(YuRPCClient yuRPCClient, YuRPCServer yuRPCServer) throws Throwable {
         if (server || client) {
-            yuRPCBeanPostProcessor = new YuRPCBeanPostProcessor(yuRPCClient(discoveryService()), yuRPCServer(discoveryService()));
+            yuRPCBeanPostProcessor = new YuRPCBeanPostProcessor(yuRPCClient, yuRPCServer);
             return yuRPCBeanPostProcessor;
         }
         return null;
@@ -127,11 +125,7 @@ public class YuRPCAutoConfiguration implements EnvironmentAware, DisposableBean,
      * @return 服务发现注册组件
      * @throws java.lang.Throwable 异常
      */
-    @Bean
     public DiscoveryService discoveryService() throws Throwable {
-        if (discoveryService != null) {
-            return discoveryService;
-        }
         if ((client || server) && environment.containsProperty(ConfigConsts.DISCOVERY_ZOOKEEPER)) {
             discoveryService = new ZKDiscoveryServiceImpl(environment.getProperty(ConfigConsts.DISCOVERY_ZOOKEEPER));
             return discoveryService;
@@ -146,11 +140,7 @@ public class YuRPCAutoConfiguration implements EnvironmentAware, DisposableBean,
      * @return 服务端
      * @throws java.lang.Throwable 异常
      */
-    @Bean
     public YuRPCServer yuRPCServer(DiscoveryService discoveryService) throws Throwable {
-        if (yuRPCServer != null) {
-            return yuRPCServer;
-        }
         if (server) {
             Properties pros = new Properties();
             if (environment.containsProperty(ServerConsts.PORT)) {
@@ -172,11 +162,7 @@ public class YuRPCAutoConfiguration implements EnvironmentAware, DisposableBean,
      * @return 客户端
      * @throws java.lang.Throwable 异常
      */
-    @Bean
     public YuRPCClient yuRPCClient(DiscoveryService discoveryService) throws Throwable {
-        if (yuRPCClient != null) {
-            return yuRPCClient;
-        }
         if (client) {
             Properties pros = new Properties();
             if (environment.containsProperty(ClientConsts.SERVER_LIST)) {
@@ -207,11 +193,23 @@ public class YuRPCAutoConfiguration implements EnvironmentAware, DisposableBean,
     public void postProcessBeanFactory(ConfigurableListableBeanFactory beanFactory) throws BeansException {
         if (server || client) {
             try {
-                beanFactory.addBeanPostProcessor(yuRPCBeanPostProcessor());
+                beanFactory.addBeanPostProcessor(yuRPCBeanPostProcessor);
             } catch (Throwable e) {
                 throw new BeansException(e.getMessage()) {
                 };
             }
+        }
+    }
+
+    @Override
+    public void afterPropertiesSet() throws Exception {
+        try {
+            discoveryService();
+            yuRPCClient(discoveryService);
+            yuRPCServer(discoveryService);
+            yuRPCBeanPostProcessor(yuRPCClient, yuRPCServer);
+        } catch (Throwable e) {
+            throw new Exception(e.getCause());
         }
     }
 }
