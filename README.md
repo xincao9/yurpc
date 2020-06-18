@@ -2,7 +2,7 @@
 
 ### 高性能RPC框架
 
-#### yurpc 是一个基于java的高性能开源RPC框架，在API使用中借鉴了dubbo面向接口编程，使用过dubbo的可以很容易迁移享受高性能带来的服务体验。提供springboot高度集成starter包，实现几乎零配置使用
+#### yurpc 基于java的高性能开源RPC框架，使用上类dubbo面向接口编程，很容易迁移并享受高性能带来的服务体验。提供springboot高度集成starter包，实现零配置使用
 
 ![logo](https://github.com/xincao9/YuRPC/blob/master/architecture.png)
 
