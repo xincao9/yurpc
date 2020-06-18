@@ -21,6 +21,7 @@ import org.slf4j.LoggerFactory;
 
 /**
  * 服务提供者
+ * java -jar target/yurpc-sample-1.2.5.jar
  *
  * @author xincao9@gmail.com
  */
