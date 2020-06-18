@@ -17,7 +17,6 @@ package com.github.xincao9.yurpc.core.impl;
 
 import com.github.xincao9.yurpc.core.YuRPCServer;
 import com.alibaba.fastjson.JSONObject;
-import com.codahale.metrics.Timer;
 import com.github.xincao9.yurpc.core.protocol.Request;
 import com.github.xincao9.yurpc.core.protocol.Response;
 import com.github.xincao9.yurpc.core.constant.ResponseCode;
@@ -46,14 +45,10 @@ public class ServerHandler extends SimpleChannelInboundHandler<String> {
     private YuRPCServer yuRPCServer;
     private final ExecutorService processor = Executors.newCachedThreadPool();
     private final Map<String, Class> nameClass = new ConcurrentHashMap();
-    private final MetricServiceImpl metricServiceImpl = new MetricServiceImpl();
 
     private void submit(Boolean requestType, Method method, Long rid, Object component, Object[] params, ChannelHandlerContext ctx) {
         processor.submit(() -> {
-            Timer.Context context = null;
             try {
-                Timer timer = metricServiceImpl.getTimerByName(method.toGenericString());
-                context = timer.time();
                 Response response;
                 if (requestType) {
                     response = Response.createResponse(rid, method.invoke(component, params));
@@ -65,10 +60,6 @@ public class ServerHandler extends SimpleChannelInboundHandler<String> {
             } catch (Throwable e) {
                 LOGGER.error(e.getMessage());
                 exception(ctx, rid, ResponseCode.SERVER_ERROR, ResponseCode.SERVER_ERROR_MSG);
-            } finally {
-                if (context != null) {
-                    context.stop();
-                }
             }
         });
     }
@@ -159,6 +150,5 @@ public class ServerHandler extends SimpleChannelInboundHandler<String> {
      */
     public void setYuRPCServer(YuRPCServer yuRPCServer) {
         this.yuRPCServer = yuRPCServer;
-        this.yuRPCServer.register(metricServiceImpl);
     }
 }
