@@ -16,7 +16,6 @@
 package com.github.xincao9.yurpc.spring.boot.starter;
 
 /**
- *
  * @author xincao9@gmail.com
  */
 public class ConfigConsts {

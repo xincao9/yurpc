@@ -16,6 +16,7 @@
 package com.github.xincao9.yurpc.spring.boot.starter;
 
 import java.util.Map;
+
 import org.springframework.beans.factory.support.BeanDefinitionBuilder;
 import org.springframework.beans.factory.support.BeanDefinitionRegistry;
 import org.springframework.context.annotation.ImportBeanDefinitionRegistrar;
@@ -31,7 +32,7 @@ public class YuRPCImportBeanDefinitionRegistrar implements ImportBeanDefinitionR
     /**
      * 注册组件
      *
-     * @param am 注解元信息
+     * @param am  注解元信息
      * @param bdr 组件注册器
      */
     @Override

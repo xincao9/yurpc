@@ -37,7 +37,7 @@ public class Consumer {
      * @param args 参数
      * @throws Throwable 异常
      */
-    public static void main (String... args) throws Throwable {
+    public static void main(String... args) throws Throwable {
         YuRPCClient yuRPCClient = YuRPCClient.defaultYuRPCClient();
         yuRPCClient.start();
         SayService sayService = yuRPCClient.proxy(SayService.class);
