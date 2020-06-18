@@ -19,7 +19,6 @@
         <slf4j.version>1.7.25</slf4j.version>
         <commons-lang3.version>3.7</commons-lang3.version>
         <commons-codec.version>1.11</commons-codec.version>
-        <metrics.version>4.0.5</metrics.version>
         <junit.version>4.12</junit.version>
     </properties>
     <dependencyManagement>
