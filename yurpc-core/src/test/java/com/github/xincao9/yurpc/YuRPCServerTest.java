@@ -65,11 +65,15 @@ public class YuRPCServerTest {
         YuRPCClient yuRPCClient = YuRPCClient.defaultYuRPCClient();
         yuRPCClient.start();
         SayService sayService = yuRPCClient.proxy(SayService.class);
-        for (int no = 0; no < 100; no++) {
+        int size = 100000;
+        long startTime = System.currentTimeMillis();
+        for (int no = 0; no < size; no++) {
             String value = RandomStringUtils.randomAscii(128);
             Say say = new Say(no, value);
             System.out.println(sayService.perform(say));
         }
+        long costTime = System.currentTimeMillis() - startTime;
+        System.out.println(String.format("性能测试 RT = %f, TPS = %d", costTime * 1.0 / size, size / (costTime / 1000)));
         yuRPCClient.shutdown();
     }
 
