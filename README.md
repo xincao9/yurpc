@@ -1,12 +1,12 @@
-## YuRPC
+## yurpc
 
 ### 高性能RPC框架
 
 #### yurpc 基于java的高性能开源RPC框架，使用上类dubbo面向接口编程，很容易迁移并享受高性能带来的服务体验。提供springboot高度集成starter包，实现零配置使用
 
-![logo](https://github.com/xincao9/YuRPC/blob/master/architecture.png)
+![logo](https://github.com/xincao9/yurpc/blob/master/architecture.png)
 
-#### YuRPC 实战
+#### yurpc 实战
 
 **_maven 依赖_**
 
@@ -136,13 +136,13 @@ yurpc.server.port=12306 // 服务监听端口
 
 **_温馨提示_**
 
-* 欢迎查看示例 [examples](https://github.com/xincao9/YuRPC/tree/master/yurpc-sample)
+* 欢迎查看示例 [examples](https://github.com/xincao9/yurpc/tree/master/yurpc-sample)
 * yurpc 本身并不是必须和springboot一起使用，在示例中可以查看
 * 单独使用的话，配置文件名为 config.properties，在示例中可以查看
 * @EnableYuRPC(server = true, client = true) 意味着服务角色同为消费端和提供者使用
 
 #### 联系方式
 
-* [https://github.com/xincao9/YuRPC/issues](https://github.com/xincao9/YuRPC/issues)
+* [https://github.com/xincao9/yurpc/issues](https://github.com/xincao9/yurpc/issues)
 * [https://issues.sonatype.org/browse/OSSRH-47112](https://issues.sonatype.org/browse/OSSRH-47112)
 * xincao9@gmail.com
