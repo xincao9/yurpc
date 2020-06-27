@@ -52,7 +52,7 @@ public class YuRPCServerTest {
      * @throws Throwable
      */
     @Setup
-    public void setUpClass() throws Throwable {
+    public void setUp() throws Throwable {
         yuRPCServer = YuRPCServer.defaultYuRPCServer();
         yuRPCServer.register(new SayServiceImpl());
         yuRPCServer.start();
@@ -67,7 +67,7 @@ public class YuRPCServerTest {
      * @throws Throwable
      */
     @TearDown
-    public void tearDownClass() throws Throwable {
+    public void tearDown() throws Throwable {
         yuRPCServer.shutdown();
         yuRPCClient.shutdown();
     }
@@ -87,9 +87,9 @@ public class YuRPCServerTest {
     @Test
     public void testMethod() throws Throwable {
         Options opt = new OptionsBuilder()
-            .include(getClass().getSimpleName())
-            .forks(1)
-            .build();
+                .include(getClass().getSimpleName())
+                .forks(1)
+                .build();
         new Runner(opt).run();
     }
 
