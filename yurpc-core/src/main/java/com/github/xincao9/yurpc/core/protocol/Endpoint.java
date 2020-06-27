@@ -91,6 +91,7 @@ public class Endpoint {
         this.createTime = createTime;
     }
 
+    @Override
     public String toString () {
         return JSONObject.toJSONString(this, SerializerFeature.DisableCircularReferenceDetect);
     }
