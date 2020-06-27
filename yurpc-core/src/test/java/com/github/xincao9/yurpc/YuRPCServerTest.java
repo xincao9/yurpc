@@ -20,29 +20,45 @@ import com.alibaba.fastjson.serializer.SerializerFeature;
 import com.github.xincao9.yurpc.core.YuRPCClient;
 import com.github.xincao9.yurpc.core.YuRPCServer;
 import org.apache.commons.lang3.RandomStringUtils;
-import org.junit.AfterClass;
-import org.junit.BeforeClass;
 import org.junit.Test;
+import org.openjdk.jmh.annotations.*;
+import org.openjdk.jmh.runner.Runner;
+import org.openjdk.jmh.runner.options.Options;
+import org.openjdk.jmh.runner.options.OptionsBuilder;
+
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * 服务组件测试
  *
  * @author xincao9@gmail.com
  */
+@BenchmarkMode(Mode.Throughput)
+@Warmup(iterations = 5)
+@Measurement(iterations = 5, time = 5, timeUnit = TimeUnit.SECONDS)
+@OutputTimeUnit(TimeUnit.SECONDS)
+@State(Scope.Benchmark)
 public class YuRPCServerTest {
 
-    private static YuRPCServer yuRPCServer;
+    private YuRPCServer yuRPCServer;
+    private YuRPCClient yuRPCClient;
+    private SayService sayService;
+    private AtomicInteger no = new AtomicInteger(0);
 
     /**
      * 启动服务组件
      *
      * @throws Throwable
      */
-    @BeforeClass
-    public static void setUpClass() throws Throwable {
+    @Setup
+    public void setUpClass() throws Throwable {
         yuRPCServer = YuRPCServer.defaultYuRPCServer();
         yuRPCServer.register(new SayServiceImpl());
         yuRPCServer.start();
+        yuRPCClient = YuRPCClient.defaultYuRPCClient();
+        yuRPCClient.start();
+        sayService = yuRPCClient.proxy(SayService.class);
     }
 
     /**
@@ -50,9 +66,17 @@ public class YuRPCServerTest {
      *
      * @throws Throwable
      */
-    @AfterClass
-    public static void tearDownClass() throws Throwable {
+    @TearDown
+    public void tearDownClass() throws Throwable {
         yuRPCServer.shutdown();
+        yuRPCClient.shutdown();
+    }
+
+    @Benchmark
+    public void perform() {
+        String value = RandomStringUtils.randomAscii(128);
+        Say say = new Say(no.incrementAndGet(), value);
+        System.out.println(sayService.perform(say));
     }
 
     /**
@@ -62,19 +86,11 @@ public class YuRPCServerTest {
      */
     @Test
     public void testMethod() throws Throwable {
-        YuRPCClient yuRPCClient = YuRPCClient.defaultYuRPCClient();
-        yuRPCClient.start();
-        SayService sayService = yuRPCClient.proxy(SayService.class);
-        int size = 100000;
-        long startTime = System.currentTimeMillis();
-        for (int no = 0; no < size; no++) {
-            String value = RandomStringUtils.randomAscii(128);
-            Say say = new Say(no, value);
-            System.out.println(sayService.perform(say));
-        }
-        long costTime = System.currentTimeMillis() - startTime;
-        System.out.println(String.format("性能测试 RT = %f, TPS = %d", costTime * 1.0 / size, size / (costTime / 1000)));
-        yuRPCClient.shutdown();
+        Options opt = new OptionsBuilder()
+            .include(getClass().getSimpleName())
+            .forks(1)
+            .build();
+        new Runner(opt).run();
     }
 
     public static class Say {
