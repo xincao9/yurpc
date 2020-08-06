@@ -68,7 +68,7 @@ public interface SayService {
 **_提供者实现服务接口_**
 
 ```
-@YuRPCService
+@YUProvider
 public class SayServiceImpl implements SayService {
 
     @Override
@@ -99,7 +99,7 @@ public class ApplicationProvider {
 @EnableYuRPC(client = true)
 public class ApplicationConsumer {
 
-    @YuRPCAutowired
+    @YUConsumer
     private SayService sayService; // 可以在任何spring bean 中注入yurpc服务
 
 
