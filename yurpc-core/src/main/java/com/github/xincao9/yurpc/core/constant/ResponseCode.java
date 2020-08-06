@@ -33,8 +33,8 @@ public class ResponseCode {
     public static final Integer PARAMETER_ERROR = 4;
     public static final String PARAMETER_ERROR_MSG = "PARAMETER ERROR";
     public static final Integer NOT_FOUND_COMPONENT = 5;
-    public static final String NOT_FOUND_COMPONENT_MSG = "NOT FOUND COMPONENT";
+    public static final String NOT_FOUND_COMPONENT_MSG = "COMPONENT CLASS: %s NOT FOUND";
     public static final Integer NOT_FOUND_METHOD = 6;
-    public static final String NOT_FOUND_METHOD_MSG = "NOT FOUND METHOD";
+    public static final String NOT_FOUND_METHOD_MSG = "CLASS: %s METHOD: %s NOT FOUND!";
 
 }
