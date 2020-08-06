@@ -47,12 +47,11 @@ public class ServerHandler extends SimpleChannelInboundHandler<String> {
     private final Map<String, Class> nameClass = new ConcurrentHashMap();
 
     public ServerHandler() {
-        Executors.newCachedThreadPool();
         processor = new ThreadPoolExecutor(Runtime.getRuntime().availableProcessors(),
                 256,
                 60L,
                 TimeUnit.SECONDS,
-                new SynchronousQueue<>());
+                new SynchronousQueue<>(), new ThreadPoolExecutor.CallerRunsPolicy());
     }
 
     private void submit(Boolean requestType, Method method, Long rid, Object component, Object[] params, ChannelHandlerContext ctx) {
