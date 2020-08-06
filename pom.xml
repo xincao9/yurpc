@@ -4,7 +4,7 @@
     <groupId>com.github.xincao9</groupId>
     <artifactId>yurpc</artifactId>
     <name>yurpc</name>
-    <version>1.2.5</version>
+    <version>1.2.6</version>
     <packaging>pom</packaging>
     <description>high-performance RPC framework.</description>
     <properties>

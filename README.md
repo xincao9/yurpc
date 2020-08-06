@@ -14,7 +14,7 @@
 <dependency>
     <groupId>com.github.xincao9</groupId>
     <artifactId>yurpc-spring-boot-starter</artifactId>
-    <version>1.2.5</version>
+    <version>1.2.6</version>
 </dependency>
 ```
 
