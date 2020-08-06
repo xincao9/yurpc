@@ -104,7 +104,7 @@ public class ClientInvocationHandler implements InvocationHandler {
      * @return 接口的代理类
      */
     public <T> T proxy(Class<T> clazz) {
-        if (clazz.isInterface() == false) {
+        if (!clazz.isInterface()) {
             LOGGER.error("{} is not interface", clazz.getCanonicalName());
             return null;
         }

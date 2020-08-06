@@ -111,7 +111,7 @@ public final class ZKDiscoveryServiceImpl implements DiscoveryService {
                 if (type == TreeCacheEvent.Type.NODE_ADDED || type == TreeCacheEvent.Type.NODE_REMOVED || type == TreeCacheEvent.Type.NODE_UPDATED) {
                     LOGGER.warn("service = {}, event = {} refresh", service, type);
                     try {
-                        this.services.put(service, queryzookeeper(service));
+                        this.services.put(service, queryZookeeper(service));
                     } catch (Throwable e) {
                         LOGGER.error(e.getMessage());
                     }
@@ -160,7 +160,7 @@ public final class ZKDiscoveryServiceImpl implements DiscoveryService {
             synchronized (this) {
                 if (!this.services.containsKey(service)) {
                     try {
-                        this.services.put(service, queryzookeeper(service));
+                        this.services.put(service, queryZookeeper(service));
                         watcher(service);
                     } catch (Throwable e) {
                         LOGGER.error(e.getMessage());
@@ -178,7 +178,7 @@ public final class ZKDiscoveryServiceImpl implements DiscoveryService {
      * @return 节点列表
      * @throws Throwable 异常
      */
-    private List<Endpoint> queryzookeeper(String service) throws Throwable {
+    private List<Endpoint> queryZookeeper(String service) throws Throwable {
         List<String> paths = this.client.getChildren().forPath(String.format(YURPC_SERVICE_PATTERN, service));
         if (paths == null || paths.isEmpty()) {
             return Collections.EMPTY_LIST;
