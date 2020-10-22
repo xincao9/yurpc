@@ -17,14 +17,14 @@ package com.github.xincao9.yurpc.sample.provider;
 
 import com.github.xincao9.yurpc.sample.Say;
 import com.github.xincao9.yurpc.sample.SayService;
-import com.github.xincao9.yurpc.spring.boot.starter.YUProvider;
+import com.github.xincao9.yurpc.spring.boot.starter.Provider;
 
 /**
  * 招呼服务实现
  *
  * @author xincao9@gmail.com
  */
-@YUProvider
+@Provider
 public class SayServiceImpl implements SayService {
 
     /**

@@ -126,11 +126,11 @@ public class YuRPCAutoConfiguration implements EnvironmentAware, InitializingBea
      * @throws java.lang.Throwable 异常
      */
     public DiscoveryService discoveryService() throws Throwable {
-        if ((client || server) && environment.containsProperty(ConfigConsts.DISCOVERY_ZOOKEEPER)) {
-            discoveryService = new ZKDiscoveryServiceImpl(environment.getProperty(ConfigConsts.DISCOVERY_ZOOKEEPER));
-            return discoveryService;
+        if (!client && !server) {
+            return null;
         }
-        return null;
+        discoveryService = new ZKDiscoveryServiceImpl(environment.getProperty(ConfigConsts.DISCOVERY_ZOOKEEPER, "localhost:2181"));
+        return discoveryService;
     }
 
     /**
@@ -141,18 +141,18 @@ public class YuRPCAutoConfiguration implements EnvironmentAware, InitializingBea
      * @throws java.lang.Throwable 异常
      */
     public YuRPCServer yuRPCServer(DiscoveryService discoveryService) throws Throwable {
-        if (server) {
-            Properties pros = new Properties();
-            if (environment.containsProperty(ServerConsts.PORT)) {
-                pros.setProperty(ServerConsts.PORT, environment.getProperty(ServerConsts.PORT));
-            }
-            ServerConfig.init(pros);
-            yuRPCServer = new YuRPCServerImpl();
-            yuRPCServer.setDiscoveryService(discoveryService);
-            yuRPCServer.start();
-            return yuRPCServer;
+        if (!server) {
+            return null;
         }
-        return null;
+        Properties pros = new Properties();
+        if (environment.containsProperty(ServerConsts.PORT)) {
+            pros.setProperty(ServerConsts.PORT, environment.getProperty(ServerConsts.PORT));
+        }
+        ServerConfig.init(pros);
+        yuRPCServer = new YuRPCServerImpl();
+        yuRPCServer.setDiscoveryService(discoveryService);
+        yuRPCServer.start();
+        return yuRPCServer;
     }
 
     /**
@@ -163,24 +163,24 @@ public class YuRPCAutoConfiguration implements EnvironmentAware, InitializingBea
      * @throws java.lang.Throwable 异常
      */
     public YuRPCClient yuRPCClient(DiscoveryService discoveryService) throws Throwable {
-        if (client) {
-            Properties pros = new Properties();
-            if (environment.containsProperty(ClientConsts.SERVER_LIST)) {
-                pros.setProperty(ClientConsts.SERVER_LIST, environment.getProperty(ClientConsts.SERVER_LIST));
-            }
-            if (environment.containsProperty(ClientConsts.CONNECTION_TIMEOUT_MS)) {
-                pros.setProperty(ClientConsts.CONNECTION_TIMEOUT_MS, environment.getProperty(ClientConsts.CONNECTION_TIMEOUT_MS));
-            }
-            if (environment.containsProperty(ClientConsts.INVOKE_TIMEOUT_MS)) {
-                pros.setProperty(ClientConsts.INVOKE_TIMEOUT_MS, environment.getProperty(ClientConsts.INVOKE_TIMEOUT_MS));
-            }
-            ClientConfig.init(pros);
-            yuRPCClient = new YuRPCClientImpl();
-            yuRPCClient.setDiscoveryService(discoveryService);
-            yuRPCClient.start();
-            return yuRPCClient;
+        if (!client) {
+            return null;
         }
-        return null;
+        Properties pros = new Properties();
+        if (environment.containsProperty(ClientConsts.SERVER_LIST)) {
+            pros.setProperty(ClientConsts.SERVER_LIST, environment.getProperty(ClientConsts.SERVER_LIST));
+        }
+        if (environment.containsProperty(ClientConsts.CONNECTION_TIMEOUT_MS)) {
+            pros.setProperty(ClientConsts.CONNECTION_TIMEOUT_MS, environment.getProperty(ClientConsts.CONNECTION_TIMEOUT_MS));
+        }
+        if (environment.containsProperty(ClientConsts.INVOKE_TIMEOUT_MS)) {
+            pros.setProperty(ClientConsts.INVOKE_TIMEOUT_MS, environment.getProperty(ClientConsts.INVOKE_TIMEOUT_MS));
+        }
+        ClientConfig.init(pros);
+        yuRPCClient = new YuRPCClientImpl();
+        yuRPCClient.setDiscoveryService(discoveryService);
+        yuRPCClient.start();
+        return yuRPCClient;
     }
 
     /**

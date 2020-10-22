@@ -53,7 +53,7 @@ public class YuRPCBeanPostProcessor implements BeanPostProcessor {
      */
     @Override
     public Object postProcessBeforeInitialization(Object bean, String beanName) throws BeansException {
-        if (this.yuRPCServer != null && bean != null && bean.getClass().isAnnotationPresent(YUProvider.class)) {
+        if (this.yuRPCServer != null && bean != null && bean.getClass().isAnnotationPresent(Provider.class)) {
             this.yuRPCServer.register(bean);
             LOGGER.info("register yurpc service = {}", beanName);
         }
@@ -63,7 +63,7 @@ public class YuRPCBeanPostProcessor implements BeanPostProcessor {
             Field[] fields = clazz.getDeclaredFields();
             if (fields != null && fields.length > 0) {
                 for (Field field : fields) {
-                    if (field.isAnnotationPresent(YUConsumer.class)) {
+                    if (field.isAnnotationPresent(Consumer.class)) {
                         Object obj = this.yuRPCClient.proxy(field.getType());
                         try {
                             field.setAccessible(true);

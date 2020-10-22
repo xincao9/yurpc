@@ -57,12 +57,6 @@ public final class ZKDiscoveryServiceImpl implements DiscoveryService {
 
     /**
      * 构造器
-     */
-    public ZKDiscoveryServiceImpl() {
-    }
-
-    /**
-     * 构造器
      *
      * @param zookeeper zookeeper地址，(格式host1:port1,host2:port2,...)
      * @throws java.lang.Throwable 异常

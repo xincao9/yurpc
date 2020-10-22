@@ -21,20 +21,11 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-import org.springframework.core.annotation.AliasFor;
-import org.springframework.stereotype.Component;
-
 /**
- * YuRPC 服务注解
- *
  * @author xincao9@gmail.com
  */
-@Target({ElementType.TYPE})
+@Target(ElementType.FIELD)
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
-@Component
-public @interface YUProvider {
-
-    @AliasFor(annotation = Component.class)
-    String value() default "";
+public @interface Consumer {
 }
